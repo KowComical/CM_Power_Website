@@ -21,7 +21,7 @@ def main():
 
     category_name = st.sidebar.selectbox(
         'Select Energy Type',
-        ['total', 'coal', 'gas', 'hydro', 'nuclear', 'oil', 'other', 'solar', 'wind', 'fossil', 'renewables'],
+        ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'],
         index=0  # 将默认值设置为'power'
     )
 
