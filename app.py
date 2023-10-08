@@ -4,10 +4,15 @@ import base64
 import math
 from streamlit_echarts import st_echarts, JsCode
 from st_pages import show_pages_from_config
+import json
 
 show_pages_from_config()
 
 st.set_page_config(layout="wide")
+
+# Reading the dictionary from the text file
+with open('colors.txt', 'r') as file:
+    COLORS = json.load(file)
 
 
 # 主程序
@@ -29,7 +34,7 @@ def main():
 
     # 获取颜色信息
     unique_years_all = df_7mean['year'].unique()
-    colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all))))
+    colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
 
     # 在侧边栏上显示图例
     st.sidebar.subheader("Legend: Year Colors")
@@ -164,22 +169,23 @@ def get_csv_download_link(df, filename="data.csv"):
 
 
 # 获取线条颜色的辅助函数
-def get_line_colors(num_years):
-    base_grey = 200  # 从RGB(200, 200, 200)开始，是浅灰色
-    decrement = 15  # 减少以加深颜色，每年减少15
+def get_line_colors(num_years, category_name):
+    base_grey = 200  # Starting from RGB(200, 200, 200), which is light grey
+    decrement = 15  # Decrease to darken the color, decrementing by 15 each year
 
     colors = []
 
-    # 为最新的年份之前的每年创建颜色调色板
+    # Create a color palette for each year prior to the latest year
     for _ in range(num_years - 1):
         rgb_color = f'rgb({base_grey},{base_grey},{base_grey})'
         colors.append(rgb_color)
-        base_grey = max(50, base_grey - decrement)  # 不要太暗，停在RGB(50, 50, 50)
+        base_grey = max(50, base_grey - decrement)  # Don't go too dark, stop at RGB(50, 50, 50)
 
-    # 添加最后一年（2023）的颜色
-    colors.append('rgb(220,20,60)')  # 一个好看的深红色
+    # Add color for the latest year
+    colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))  # Use color from COLORS dict or fallback to deep red
 
     return colors
+
 
 
 if __name__ == '__main__':
