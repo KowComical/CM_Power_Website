@@ -25,7 +25,7 @@ def main():
 
 @st.cache_data
 def data_read():
-    df_7mean = pd.read_csv('/data/xuanrenSong/CM_Power_Website/data/data_for_stacked_area_chart.csv')
+    df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
 
     df_7mean['date'] = pd.to_datetime(df_7mean['date'])
 
