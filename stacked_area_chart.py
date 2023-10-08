@@ -17,7 +17,7 @@ COLORS = {
 
 def main():
     df_7mean = data_read()
-    st.write(df_7mean.columns)
+
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean)
 
     st_echarts(options=option,
@@ -27,6 +27,7 @@ def main():
 @st.cache_data
 def data_read():
     df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
+    df_7mean['perentage'] = round(df_7mean['perentage'],2)
 
     df_7mean['date'] = pd.to_datetime(df_7mean['date'])
 
