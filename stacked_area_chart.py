@@ -2,17 +2,11 @@ import streamlit as st
 import pandas as pd
 import math
 from streamlit_echarts import st_echarts
+import json
 
-COLORS = {
-    "coal": "#9A7155",
-    "oil": "#C2C2C2",
-    "hydro": "#76D3B2",
-    "nuclear": "#FF7C94",
-    "other": "#A1D073",
-    "solar": "#FFF26D",
-    "wind": "#F7A863",
-}
-
+# Reading the dictionary from the text file
+with open('colors.txt', 'r') as file:
+    COLORS = json.load(file)
 
 
 def main():
