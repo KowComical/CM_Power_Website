@@ -17,6 +17,7 @@ COLORS = {
 
 def main():
     df_7mean = data_read()
+    st.write(df_7mean.columns)
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean)
 
     st_echarts(options=option,
