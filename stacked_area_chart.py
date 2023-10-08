@@ -4,15 +4,15 @@ import math
 from streamlit_echarts import st_echarts
 
 COLORS = {
-    "coal": "#8D6449",  # Inner Brown/Roast segment
-    "gas": "#D69F7E",  # Outer Brown/Roast segment
-    "oil": "#B0B0B0",  # Inner Other/Peapod/Musty segment
-    "hydro": "#66C2A4",  # Outer Green/Vegetative segment
-    "nuclear": "#FF6B85",  # Outer Sweet/Floral segment
-    "other": "#8FC15E",  # Inner Green/Vegetative segment
-    "solar": "#FFEB59",  # Outer Sour/Aromatics segment
-    "wind": "#F69D50",  # Outer Fruity segment
+    "coal": "#9A7155",
+    "oil": "#C2C2C2",
+    "hydro": "#76D3B2",
+    "nuclear": "#FF7C94",
+    "other": "#A1D073",
+    "solar": "#FFF26D",
+    "wind": "#F7A863",
 }
+
 
 
 def main():
