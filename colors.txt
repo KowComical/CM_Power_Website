@@ -1,0 +1,1 @@
+{"coal": "#9A7155", "oil": "#C2C2C2", "hydro": "#76D3B2", "nuclear": "#FF7C94", "other": "#A1D073", "solar": "#FFF26D", "wind": "#F7A863"}
