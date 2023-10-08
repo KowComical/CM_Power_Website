@@ -146,8 +146,8 @@ def generate_grid_option(df_7mean, category_name):
 # 数据处理函数，通过 st.cache_data 进行缓存
 @st.cache_data
 def data_read():
-    df = pd.read_csv('/data/xuanrenSong/CM_Power_Website/data/data_for_download.csv')
-    df_7mean = pd.read_csv('/data/xuanrenSong/CM_Power_Website/data/data_for_line_chart.csv')
+    df = pd.read_csv('./data/data_for_download.csv')
+    df_7mean = pd.read_csv('./data/data_for_line_chart.csv')
 
     df['date'] = pd.to_datetime(df['date'])
     df_7mean['date'] = pd.to_datetime(df_7mean['date'])
