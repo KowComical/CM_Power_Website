@@ -27,7 +27,7 @@ def main():
 @st.cache_data
 def data_read():
     df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
-    df_7mean['perentage'] = round(df_7mean['perentage'],2)
+    df_7mean['percentage'] = round(df_7mean['percentage'],2)
 
     df_7mean['date'] = pd.to_datetime(df_7mean['date'])
 
