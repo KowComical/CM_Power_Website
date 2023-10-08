@@ -91,7 +91,7 @@ def generate_grid_option(df_7mean, category_name):
 
     # 创建存储每年颜色的字典
     unique_years_all = df_7mean['year'].unique()
-    colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all))))
+    colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
 
     # 创建图表的网格
     for idx, country in enumerate(countries):
