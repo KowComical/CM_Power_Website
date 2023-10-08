@@ -1,0 +1,12 @@
+[[pages]]
+path = "app.py"
+name = "Line chart"
+icon = "📈"
+
+[[pages]]
+path = "stacked_area_chart.py"
+name = "Stacked Area Chart"
+icon = "🏳️‍🌈"
+
+
+
