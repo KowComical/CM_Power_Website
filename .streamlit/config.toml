@@ -1,0 +1,9 @@
+[theme]
+base="light"
+
+[server]
+runOnSave=true
+
+#[browser]
+#layout="wide"
+
