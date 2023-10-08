@@ -36,7 +36,7 @@ def data_read():
 
 def generate_grid_area_option(df_7mean):
     countries = df_7mean['country'].unique().tolist()
-    energy_types = df_7mean['type'].unique().tolist()
+    energy_types = ['coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other']
 
     COLS = 4
     ROWS = int(math.ceil(len(countries) / COLS))
