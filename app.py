@@ -45,11 +45,20 @@ def main():
     )
 
 def get_date_ranges(df, category_name):
-    """Get min and max values for each date excluding the latest year."""
+    """Get min and max values for each date (month-day) excluding the latest year."""
     latest_year = df['year'].max()
     df_excluding_latest = df[df['year'] != latest_year]
-    grouped = df_excluding_latest[df_excluding_latest['type'] == category_name].groupby('date')
-    return grouped['value'].min().tolist(), grouped['value'].max().tolist()
+
+    # Create a month-day column to group by
+    df_excluding_latest['month_day'] = df_excluding_latest['date'].dt.strftime('%m-%d')
+    grouped = df_excluding_latest[df_excluding_latest['type'] == category_name].groupby('month_day')
+
+    # Get the min and max for each month-day
+    min_vals = grouped['value'].min().tolist()
+    max_vals = grouped['value'].max().tolist()
+    
+    return min_vals, max_vals
+
 
 def generate_grid_option(df_7mean, category_name):
     countries = df_7mean['country'].unique().tolist()
@@ -113,26 +122,21 @@ def generate_grid_option(df_7mean, category_name):
 
         # Add shadow range for all years excluding the latest
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
-        option["series"].append({
-            "name": f"Shadow {country}",
-            "type": 'line',
-            "xAxisIndex": idx,
-            "yAxisIndex": idx,
-            "data": list(zip(formatted_dates, date_min_values)),
-            "areaStyle": {'color': 'rgba(150, 150, 150, 0.2)'},
-            "showSymbol": False,
-            "lineStyle": {"opacity": 0},
-        })
+        
+        # The area chart data format for ECharts
+        area_data = [{"value": date_max_values[i], "itemStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
+                      "areaStyle": {"opacity": 1, "color": 'rgba(150, 150, 150, 0.2)'}}
+                     for i in range(len(formatted_dates))]
 
         option["series"].append({
             "name": f"Shadow {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": list(zip(formatted_dates, date_max_values)),
-            "areaStyle": {'color': 'rgba(150, 150, 150, 0.2)'},
+            "data": area_data,
             "showSymbol": False,
             "lineStyle": {"opacity": 0},
+            "stack": "shadow"
         })
 
         # Add the line for the latest year
@@ -143,9 +147,7 @@ def generate_grid_option(df_7mean, category_name):
             "xAxisIndex": idx,
             "yAxisIndex": idx,
             "data": latest_year_data['value'].tolist(),
-            "itemStyle": {
-                "color": colors_for_years[latest_year_data['year'].iloc[0]]
-            },
+            "itemStyle": {"color": colors_for_years[latest_year_data['year'].iloc[0]]},
         })
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
