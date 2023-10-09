@@ -124,7 +124,8 @@ def generate_grid_option(df_7mean, category_name):
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
         # The area chart data format for ECharts
-        area_data = [{"value": date_max_values[i], "itemStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
+        area_data = [{"value": [formatted_dates[i], date_min_values[i], date_max_values[i]], 
+                      "itemStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
                       "areaStyle": {"opacity": 1, "color": 'rgba(150, 150, 150, 0.2)'}}
                      for i in range(len(formatted_dates))]
 
@@ -148,7 +149,9 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": latest_year_data['value'].tolist(),
             "itemStyle": {"color": colors_for_years[latest_year_data['year'].iloc[0]]},
+            "smooth": True
         })
+
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
 
