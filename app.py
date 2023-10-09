@@ -107,11 +107,13 @@ def generate_grid_option(df_7mean, category_name):
         option["yAxis"].append({
             "gridIndex": idx,
             "type": "value",
+            "min": min_val,
+            "max": max_val,
             "name": country,
             "nameTextStyle": {
-                "fontSize": 14,
+                "fontSize": 14,  # 根据需要进行调整
                 "fontWeight": "bold",
-                "padding": [0, 0, 0, 200]
+                "padding": [0, 0, 0, 200]  # 如果需要，添加一些填充。[上，右，下，左]
             }
         })
 
@@ -141,19 +143,6 @@ def generate_grid_option(df_7mean, category_name):
             "showSymbol": False,
             "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 0}
         })
-
-        option["visualMap"] = {
-            "type": "continuous",
-            "seriesIndex": idx+1,  # This refers to the max series
-            "dimension": 1,
-            "min": 0,
-            "max": max(date_max_values),
-            "inRange": {
-                "color": ['rgba(150, 150, 150, 0.2)', 'rgba(150, 150, 150, 0.2)']
-            },
-            "show": False
-        }
-        
 
 
         # # Add the line for the latest year
