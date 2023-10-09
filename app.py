@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+from st_pages import show_pages_from_config
+show_pages_from_config()
 
 # Set Streamlit Configuration
 st.set_page_config(layout="wide")
