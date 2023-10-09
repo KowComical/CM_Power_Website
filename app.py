@@ -127,25 +127,25 @@ def generate_grid_option(df_7mean, category_name):
             "data": date_min_values,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0.5,  # Set opacity to 0 to hide the line
-            },
-            "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 0} # Set the opacity to 0 to make it transparent
+                "opacity": 0,  # Set opacity to 0 to hide the line
+            }
         })
-
-
-        # Add the max series
+        
+        # Add the max series (difference)
         option["series"].append({
             "name": f"Max {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": date_max_values,
+            "data": [date_max_values[i] - date_min_values[i] for i in range(len(date_max_values))],  # Difference between max and min
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0.5,  # Set opacity to 0.5 for a more visible line
+                "opacity": 0.5,  # Adjust for visibility
             },
-            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'}
+            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
+            "stack": "combined"  # This will stack the difference on top of the min values
         })
+        
 
 
         # # Add the line for the latest year
