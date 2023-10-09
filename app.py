@@ -27,10 +27,12 @@ def main():
 
     df, df_7mean = data_read()
 
+    st.write(df_7mean)
+
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
 
-    st_echarts(options=option,
-               height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+    # st_echarts(options=option,
+    #            height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
     # 获取颜色信息
     unique_years_all = df_7mean['year'].unique()
