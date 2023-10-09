@@ -80,6 +80,31 @@ def generate_grid_option(df_7mean, category_name):
     colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
     date_min_values, date_max_values = get_date_ranges(df_7mean, category_name)
 
+    renderItem_js_code = """
+    function(params, api) {
+        var coords = [
+            api.coord([api.value(0), api.value(1)]),
+            api.coord([api.value(0), api.value(2)])
+        ];
+        return {
+            type: 'group',
+            children: [{
+                type: 'polygon',
+                shape: {
+                    points: [
+                        coords[0][0], coords[0][1],
+                        coords[1][0], coords[1][1],
+                        coords[1][0], coords[0][1]
+                    ]
+                },
+                style: {
+                    fill: 'rgba(150, 150, 150, 0.2)'
+                }
+            }]
+        };
+    }
+    """
+
     for idx, country in enumerate(countries):
         option["grid"].append({
             "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT}%",
@@ -121,30 +146,7 @@ def generate_grid_option(df_7mean, category_name):
                 "y": [1, 2]
             },
             "data": list(zip(formatted_dates, date_min_values, date_max_values)),
-            "renderItem": {
-                "type": 'group',
-                "children": [{
-                    "type": 'polygon',
-                    "shape": {
-                        "points": JsCode("""
-                            function(params, api) {
-                                var coords = [
-                                    api.coord([api.value(0), api.value(1)]),
-                                    api.coord([api.value(0), api.value(2)])
-                                ];
-                                return [
-                                    coords[0][0], coords[0][1],
-                                    coords[1][0], coords[1][1],
-                                    coords[1][0], coords[0][1]
-                                ];
-                            }
-                        """)
-                    },
-                    "style": {
-                        "fill": 'rgba(150, 150, 150, 0.2)'
-                    }
-                }]
-            },
+            "renderItem": renderItem_js_code,
             "z": 0
         })
 
@@ -163,6 +165,7 @@ def generate_grid_option(df_7mean, category_name):
             })
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
+
 
 @st.cache
 def data_read():
