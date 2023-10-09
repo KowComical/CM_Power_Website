@@ -109,8 +109,8 @@ def generate_grid_option(df_7mean, category_name):
         option["yAxis"].append({
             "gridIndex": idx,
             "type": "value",
-            # "min": min_val,
-            # "max": max_val,
+            "min": min_val,
+            "max": max_val,
             "name": country,
             "nameTextStyle": {
                 "fontSize": 14,  # 根据需要进行调整
