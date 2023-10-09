@@ -78,32 +78,6 @@ def generate_grid_option(df_7mean, category_name):
 
     unique_years_all = df_7mean['year'].unique()
     colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
-    date_min_values, date_max_values = get_date_ranges(df_7mean, category_name)
-
-    renderItem_js_code = """
-    function(params, api) {
-        var coords = [
-            api.coord([api.value(0), api.value(1)]),
-            api.coord([api.value(0), api.value(2)])
-        ];
-        return {
-            type: 'group',
-            children: [{
-                type: 'polygon',
-                shape: {
-                    points: [
-                        coords[0][0], coords[0][1],
-                        coords[1][0], coords[1][1],
-                        coords[1][0], coords[0][1]
-                    ]
-                },
-                style: {
-                    fill: 'rgba(150, 150, 150, 0.2)'
-                }
-            }]
-        };
-    }
-    """
 
     for idx, country in enumerate(countries):
         option["grid"].append({
@@ -135,19 +109,6 @@ def generate_grid_option(df_7mean, category_name):
                 "fontWeight": "bold",
                 "padding": [0, 0, 0, 200]
             }
-        })
-
-        option["series"].append({
-            "type": 'custom',
-            "xAxisIndex": idx,
-            "yAxisIndex": idx,
-            "encode": {
-                "x": 0,
-                "y": [1, 2]
-            },
-            "data": list(zip(formatted_dates, date_min_values, date_max_values)),
-            "renderItem": renderItem_js_code,
-            "z": 0
         })
 
         unique_years = country_data['year'].unique()
