@@ -141,6 +141,18 @@ def generate_grid_option(df_7mean, category_name):
             "showSymbol": False,
             "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'}
         })
+
+        option["visualMap"] = {
+            "type": "continuous",
+            "seriesIndex": idx+1,  # This refers to the max series
+            "dimension": 1,
+            "min": 0,
+            "max": max(date_max_values),
+            "inRange": {
+                "color": ['rgba(150, 150, 150, 0.2)', 'rgba(150, 150, 150, 0.2)']
+            },
+            "show": False
+        }
         
 
 
