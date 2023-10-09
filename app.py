@@ -122,42 +122,39 @@ def generate_grid_option(df_7mean, category_name):
         # Get min and max values for shadow area
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
-        # Add a base (dummy) series that is always below the min series
+        # Add a dummy series with shadow color below the min series
         option["series"].append({
-            "name": f"Base {country}",
+            "name": f"Dummy {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": [0] * len(date_min_values),  # Assuming 0 is below all your min values
-            "stack": "combined",
+            "data": [value - 1 for value in date_min_values],  # This should be below your min data
             "showSymbol": False,
-            "areaStyle": {},
+            "areaStyle": {"color": 'rgba(150, 150, 150, 1)'},
             "z": 99  # Below the Min series
         })
         
-        # Add the min series stacked on top of the base series
+        # Add the min series with white areaStyle to cover the dummy series
         option["series"].append({
             "name": f"Min {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
             "data": date_min_values,
-            "stack": "combined",
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(150, 150, 150, 1)'},  # Desired shadow color
+            "areaStyle": {"color": 'rgba(255,255,255,1)'},  # White color
             "z": 100  # On top
         })
         
-        # Add the max series stacked on top of both base and min series without fill
+        # Add the max series without any fill
         option["series"].append({
             "name": f"Max {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
             "data": date_max_values,
-            "stack": "combined",
             "showSymbol": False,
-            "z": 101  # On top of both Base and Min series
+            "z": 98  # Below both Min and Dummy series
         })
 
 
