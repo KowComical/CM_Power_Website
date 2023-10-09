@@ -23,7 +23,7 @@ def main():
 
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
 
-    # st_echarts(options=option, height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+    st_echarts(options=option, height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
     unique_years_all = df_7mean['year'].unique()
     colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
@@ -126,24 +126,34 @@ def generate_grid_option(df_7mean, category_name):
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
         # The area chart data format for ECharts
-        area_data = [{"value": [formatted_dates[i], date_min_values[i], date_max_values[i]], 
-                      "itemStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
-                      "areaStyle": {"opacity": 1, "color": 'rgba(150, 150, 150, 0.2)'}}
+        area_data = [{"value": [formatted_dates[i], date_min_values[i], date_max_values[i]]}
                      for i in range(len(formatted_dates))]
 
         option["series"].append({
             "name": f"Shadow {country}",
-            "type": 'line',
+            "type": 'custom',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
             "data": area_data,
-            "showSymbol": False,
-            "lineStyle": {
-                "opacity": 0.5,   # Adjust this to your liking. 0.5 means 50% opacity.
-                "color": "grey"   # This is the color of the line.
-            },
-            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
-            "stack": "shadow"
+            "renderItem": JsCode("""
+                function(params, api) {
+                    var coords = [
+                        api.coord([api.value(0, params.dataIndex), api.value(1, params.dataIndex)]),
+                        api.coord([api.value(0, params.dataIndex), api.value(2, params.dataIndex)])
+                    ];
+                    return {
+                        type: 'polygon',
+                        shape: {
+                            points: coords.concat([
+                                [coords[1][0], coords[0][1]]
+                            ])
+                        },
+                        style: {
+                            fill: 'rgba(150, 150, 150, 0.2)',
+                        },
+                    };
+                }
+            """)
         })
 
 
