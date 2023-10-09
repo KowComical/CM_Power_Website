@@ -129,7 +129,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": [value - 1 for value in date_min_values],  # This should be below your min data
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(150, 150, 150, 1)'},
+            "areaStyle": {"color": 'rgba(255, 255, 255, 1)'},
             "z": 99  # Below the Min series
         })
         
