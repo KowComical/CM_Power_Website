@@ -109,10 +109,10 @@ def generate_grid_option(df_7mean, category_name):
         
         max_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
         min_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
-        difference_data = [{"value": [formatted_dates[i], date_min_values[i] - date_max_values[i]]} for i in range(len(formatted_dates))]
-
-        # Add the maxium data series
-
+        # Assuming max_data and min_data are the top and bottom bounds of the shaded region
+        shadow_data = [{"value": [formatted_dates[i], date_max_values[i] - date_min_values[i]]} for i in range(len(formatted_dates))]
+        
+        # Add the maximum data series
         option["series"].append({
             "name": f"Shadow Max {country}",
             "type": 'line',
@@ -123,25 +123,27 @@ def generate_grid_option(df_7mean, category_name):
             "lineStyle": {
                 "opacity": 0,
             },
+            "stack": "shadow"
         })
-
+        
         # Add the shadow range
-
         option["series"].append({
-            "name": f"Shadow Max {country}",
+            "name": f"Shadow Range {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": difference_data,
+            "data": shadow_data,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0.5,
+                "opacity": 0,  # Make the line invisible
+            },
+            "areaStyle": {   # This creates the shaded region
                 "color": "grey"
             },
             "stack": "shadow"
         })
         
-        # add the minium data series
+        # Add the minimum data series
         option["series"].append({
             "name": f"Shadow Min {country}",
             "type": 'line',
@@ -152,7 +154,9 @@ def generate_grid_option(df_7mean, category_name):
             "lineStyle": {
                 "opacity": 0,
             },
+            "stack": "shadow"
         })
+
 
         # # Add the line for the latest year
         # latest_year_data = country_data[country_data['year'] == country_data['year'].max()]
