@@ -36,10 +36,34 @@ def main():
     unique_years_all = df_7mean['year'].unique()
     colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
 
-    # 在侧边栏上显示图例
     st.sidebar.subheader("Legend: Year Colors")
-    for year, color in colors_for_years.items():
-        st.sidebar.markdown(f"<span style='color: {color};'>■</span> {year}", unsafe_allow_html=True)
+
+    # Start the table
+    st.sidebar.markdown("<table>", unsafe_allow_html=True)
+    
+    year_color_pairs = list(colors_for_years.items())
+    
+    for i in range(0, len(year_color_pairs), 2):  # Loop through pairs
+        # Get first item
+        year1, color1 = year_color_pairs[i]
+        
+        # Check if there's a second item
+        if i + 1 < len(year_color_pairs):
+            year2, color2 = year_color_pairs[i + 1]
+        else:
+            year2, color2 = "", ""
+    
+        # Add row to the table
+        st.sidebar.markdown(f"""
+            <tr style='cursor: pointer;'>
+                <td style='padding: 5px;'><span style='color: {color1};'>■</span> {year1}</td>
+                <td style='padding: 5px;'><span style='color: {color2};'>■</span> {year2}</td>
+            </tr>
+            """, unsafe_allow_html=True)
+    
+    # End the table
+    st.sidebar.markdown("</table>", unsafe_allow_html=True)
+
 
     # 使用 Streamlit 的下载按钮进行一键下载
     if category_name == 'total':
