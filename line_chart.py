@@ -3,10 +3,7 @@ import pandas as pd
 import base64
 import math
 from streamlit_echarts import st_echarts, JsCode
-from st_pages import show_pages_from_config
 import json
-
-show_pages_from_config()
 
 st.set_page_config(layout="wide")
 
