@@ -136,7 +136,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": area_data,
             "showSymbol": False,
-            "lineStyle": {"opacity": 0},
+            "lineStyle": {"opacity": 1},
             "stack": "shadow"
         })
 
