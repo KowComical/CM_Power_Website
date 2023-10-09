@@ -109,8 +109,8 @@ def generate_grid_option(df_7mean, category_name):
         option["yAxis"].append({
             "gridIndex": idx,
             "type": "value",
-            "min": min_val,
-            "max": max_val,
+            # "min": min_val,
+            # "max": max_val,
             "name": country,
             "nameTextStyle": {
                 "fontSize": 14,  # 根据需要进行调整
@@ -128,7 +128,7 @@ def generate_grid_option(df_7mean, category_name):
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": [value - 1 for value in date_min_values],
+            "data": [0] * len(date_min_values),  # Assuming 0 is below all your min values
             "stack": "combined",
             "showSymbol": False,
             "areaStyle": {},
@@ -159,6 +159,7 @@ def generate_grid_option(df_7mean, category_name):
             "showSymbol": False,
             "z": 101  # On top of both Base and Min series
         })
+
 
 
         # # Add the line for the latest year
