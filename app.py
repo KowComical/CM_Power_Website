@@ -130,7 +130,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_min_values,
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 0},
+            "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 1},
             "z": -1  # Higher value will be on top
         })
         
