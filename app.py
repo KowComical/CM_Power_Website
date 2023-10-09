@@ -1,8 +1,12 @@
 import streamlit as st
 import pandas as pd
-import json
+import base64
 import math
 from streamlit_echarts import st_echarts, JsCode
+from st_pages import show_pages_from_config
+import json
+
+show_pages_from_config()
 
 st.set_page_config(layout="wide")
 
@@ -10,33 +14,38 @@ st.set_page_config(layout="wide")
 with open('colors.txt', 'r') as file:
     COLORS = json.load(file)
 
+
+# 主程序
 def main():
     st.sidebar.title('Power Generation Visualization')
 
     category_name = st.sidebar.selectbox(
         'Select Energy Type',
         ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'],
-        index=0
+        index=0  # 将默认值设置为'power'
     )
 
     df, df_7mean = data_read()
 
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
 
-    st_echarts(options=option, height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+    st_echarts(options=option,
+               height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
+    # 获取颜色信息
     unique_years_all = df_7mean['year'].unique()
     colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
 
+    # 在侧边栏上显示图例
     st.sidebar.subheader("Legend: Year Colors")
     for year, color in colors_for_years.items():
         st.sidebar.markdown(f"<span style='color: {color};'>■</span> {year}", unsafe_allow_html=True)
 
+    # 使用 Streamlit 的下载按钮进行一键下载
     if category_name == 'total':
         csv_data = df[df['type'] != 'total'].to_csv(index=False)
     else:
         csv_data = df[df['type'] == category_name].to_csv(index=False)
-
     st.sidebar.download_button(
         label=f"Download {category_name} Data as CSV",
         data=csv_data,
@@ -44,34 +53,30 @@ def main():
         mime="text/csv"
     )
 
-def get_date_ranges(df, category_name):
-    """Get min and max values for each date (month-day) excluding the latest year."""
-    latest_year = df['year'].max()
-    df_excluding_latest = df[df['year'] != latest_year].reset_index(drop=True)
 
-    # Create a month-day column to group by
-    df_excluding_latest['month_day'] = df_excluding_latest['date'].dt.strftime('%m-%d')
-    grouped = df_excluding_latest[df_excluding_latest['type'] == category_name].groupby('month_day')
-
-    # Get the min and max for each month-day
-    min_vals = grouped['value'].min().tolist()
-    max_vals = grouped['value'].max().tolist()
-    
-    return min_vals, max_vals
-
-
+# 生成 ECharts 配置的函数
 def generate_grid_option(df_7mean, category_name):
+    # 获取所有国家
     countries = df_7mean['country'].unique().tolist()
-    
+    num_countries = len(countries)
+
+    # 定义全局设置
+    # 动态计算行数和列数
     COLS = 4
-    ROWS = int(math.ceil(len(countries) / COLS))
+
+    # 计算所需的行数以容纳所有国家，每行4列
+    ROWS = int(math.ceil(num_countries / COLS))
     WIDTH = 100 / COLS
     HEIGHT = 100 / ROWS
-    ROWS_PER_GRID = math.ceil(len(countries) / COLS)
-    PLOT_HEIGHT = 250
-    WIDTH_ADJUSTMENT = 0.8
-    HEIGHT_ADJUSTMENT = 2.5
 
+    ROWS_PER_GRID = math.ceil(len(countries) / COLS)
+    PLOT_HEIGHT = 250  # 根据需要进行调整
+
+    # 调整间距
+    WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
+    HEIGHT_ADJUSTMENT = 2.5  # 增加或减少以调整垂直间距
+
+    # 格式化日期以用于 x 轴
     formatted_dates = df_7mean['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
 
     option = {
@@ -84,10 +89,14 @@ def generate_grid_option(df_7mean, category_name):
         "series": []
     }
 
+    # 创建存储每年颜色的字典
     unique_years_all = df_7mean['year'].unique()
     colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
 
+    # 创建图表的网格
     for idx, country in enumerate(countries):
+
+        # 创建网格并进行间距调整
         option["grid"].append({
             "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
@@ -96,10 +105,12 @@ def generate_grid_option(df_7mean, category_name):
             "containLabel": True
         })
 
+        # 过滤当前国家的数据
         country_data = df_7mean[df_7mean['country'] == country]
         min_val = float(round(country_data[country_data['type'] == category_name]['value'].min() * 0.95))
         max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
 
+        # 为网格创建 x 和 y 轴
         option["xAxis"].append({
             "gridIndex": idx,
             "type": "category",
@@ -119,69 +130,36 @@ def generate_grid_option(df_7mean, category_name):
             }
         })
 
-        # Get min and max values for shadow area
-        date_min_values, date_max_values = get_date_ranges(country_data, category_name)
-
-        # Add the Dummy series (with transparent line and not shown in tooltip)
-        option["series"].append({
-            "name": f"Dummy {country}",
-            "type": 'line',
-            "xAxisIndex": idx,
-            "yAxisIndex": idx,
-            "data": [value - 1 for value in date_min_values],
-            "showSymbol": False,  # Exclude from tooltip
-            "lineStyle": {"color": 'rgba(0, 0, 0, 0)'},  # Transparent line
-            "areaStyle": {"color": 'rgba(255, 255, 255, 1)'},
-            "z": 98  # Below the Min series
-        })
-        
-        # Add the Min series (with transparent line)
-        option["series"].append({
-            "name": f"Min {country}",
-            "type": 'line',
-            "xAxisIndex": idx,
-            "yAxisIndex": idx,
-            "data": date_min_values,
-            "showSymbol": False,
-            "lineStyle": {"color": 'rgba(0, 0, 0, 0)'},  # Transparent line
-            "areaStyle": {"color": 'rgba(255, 255, 255, 1)'},
-            "z": 99  # On top
-        })
-        
-        # Add the Max series (with transparent line and area)
-        option["series"].append({
-            "name": f"Max {country}",
-            "type": 'line',
-            "xAxisIndex": idx,
-            "yAxisIndex": idx,
-            "data": date_max_values,
-            "showSymbol": False,
-            "lineStyle": {"color": 'rgba(0, 0, 0, 0)'},  # Transparent line
-            "areaStyle": {"color": 'rgba(150, 150, 150, 1)'},
-            "z": 97  # Below both Min and Dummy series
-        })
-
-
-
-
-        # # Add the line for the latest year
-        # latest_year_data = country_data[country_data['year'] == country_data['year'].max()]
-        # option["series"].append({
-        #     "name": f"{country} {latest_year_data['year'].iloc[0]}",
-        #     "type": 'line',
-        #     "xAxisIndex": idx,
-        #     "yAxisIndex": idx,
-        #     "data": latest_year_data['value'].tolist(),
-        #     "itemStyle": {"color": colors_for_years[latest_year_data['year'].iloc[0]]},
-        #     "smooth": True
-        # })
-
+        # 为每年生成系列数据
+        unique_years = country_data['year'].unique()
+        for year in unique_years:
+            year_data = country_data[country_data['year'] == year]
+            option["series"].append({
+                "name": f"{country} {year}",
+                "type": "line",
+                "xAxisIndex": idx,
+                "yAxisIndex": idx,
+                "data": year_data[year_data['type'] == category_name]['value'].tolist(),
+                "itemStyle": {
+                    "color": colors_for_years[year],
+                    "opacity": 0.2  # default opacity for all lines
+                },
+                "emphasis": {  # Add this block for emphasis styling
+                    "lineStyle": {
+                        "width": 4
+                    },
+                    "itemStyle": {
+                        "opacity": 1
+                    }
+                },
+                "selectedMode": "single",  # Add this line to allow single line selection
+            })
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
 
 
-
-@st.cache
+# 数据处理函数，通过 st.cache_data 进行缓存
+@st.cache_data
 def data_read():
     df = pd.read_csv('./data/data_for_download.csv')
     df_7mean = pd.read_csv('./data/data_for_line_chart.csv')
@@ -191,19 +169,34 @@ def data_read():
 
     return df, df_7mean
 
+
+# 获取 CSV 下载链接的辅助函数
+def get_csv_download_link(df, filename="data.csv"):
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">下载 CSV 文件</a>'
+    return href
+
+
+# 获取线条颜色的辅助函数
 def get_line_colors(num_years, category_name):
-    base_grey = 200
-    decrement = 15
+    base_grey = 200  # Starting from RGB(200, 200, 200), which is light grey
+    decrement = 15  # Decrease to darken the color, decrementing by 15 each year
+
     colors = []
 
+    # Create a color palette for each year prior to the latest year
     for _ in range(num_years - 1):
         rgb_color = f'rgb({base_grey},{base_grey},{base_grey})'
         colors.append(rgb_color)
-        base_grey = max(50, base_grey - decrement)
+        base_grey = max(50, base_grey - decrement)  # Don't go too dark, stop at RGB(50, 50, 50)
 
-    colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))
+    # Add color for the latest year
+    colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))  # Use color from COLORS dict or fallback to deep red
 
     return colors
+
+
 
 if __name__ == '__main__':
     main()
