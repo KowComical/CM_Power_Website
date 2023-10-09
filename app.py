@@ -142,7 +142,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_min_values,
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(255,255,255,1)'},  # White color
+            "areaStyle": {"color": 'rgba(255,255,255,0)'},  # White color
             "z": 100  # On top
         })
         
