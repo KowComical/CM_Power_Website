@@ -1,10 +1,16 @@
 import streamlit as st
 import pandas as pd
 from st_pages import show_pages_from_config
+import json
+
 show_pages_from_config()
 
 # Set Streamlit Configuration
 st.set_page_config(layout="wide")
+
+# Reading the dictionary from the text file
+with open('./data/colors.txt', 'r') as file:
+    COLORS = json.load(file)
 
 
 def main():
@@ -82,20 +88,7 @@ def remote_css(url):
 
 
 def header_bg(table_type):
-    color_map = {
-        "coal": "#836A58",
-        "oil": "#F2A5A0",
-        "gas": "#A4BADF",
-        "hydro": "#A4D4B4",
-        "nuclear": "#F4B6BC",
-        "other": "#CDE199",
-        "solar": "#FFF9D7",
-        "wind": "#FFD4A5",
-        "fossil": "#A89E92",        # A muted blend for fossil
-        "renewables": "#CBE2DA",
-    }
-    return color_map.get(table_type, "#BAD2DE")  # A soft warm default color
-
+    return COLORS.get(table_type, "#BAD2DE")  # A soft warm default color
 
 
 def read_data_sources_from_file(filename):
