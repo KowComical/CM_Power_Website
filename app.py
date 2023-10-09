@@ -110,7 +110,7 @@ def generate_grid_option(df_7mean, category_name):
         max_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
         min_data = [{"value": [formatted_dates[i], date_min_values[i]]} for i in range(len(formatted_dates))]
         
-        # The Max line is your upper bound
+        # Max Line - Visible upper bound
         option["series"].append({
             "name": f"Max {country}",
             "type": 'line',
@@ -119,13 +119,12 @@ def generate_grid_option(df_7mean, category_name):
             "data": max_data,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0  # Invisible line
-            },
-            "stack": "shadow"
+                "opacity": 1  # Visible line
+            }
         })
         
-        # The shadow or difference line fills the area between Max and Min
-        shadow_data = [{"value": [formatted_dates[i], date_min_values[i] - date_max_values[i]]} for i in range(len(formatted_dates))]
+        # Shadow Line - Represents the difference between Max and Min and fills the area in between
+        shadow_data = [{"value": [formatted_dates[i], date_min_values[i]]} for i in range(len(formatted_dates))]
         option["series"].append({
             "name": f"Shadow {country}",
             "type": 'line',
@@ -136,13 +135,13 @@ def generate_grid_option(df_7mean, category_name):
             "lineStyle": {
                 "opacity": 0  # Invisible line
             },
-            "areaStyle": {   # This creates the shaded region between Max and Min
+            "areaStyle": {
                 "color": "grey"
             },
             "stack": "shadow"
         })
         
-        # The Min line is your lower bound
+        # Min Line - Visible lower bound
         option["series"].append({
             "name": f"Min {country}",
             "type": 'line',
@@ -154,6 +153,7 @@ def generate_grid_option(df_7mean, category_name):
                 "opacity": 1  # Visible line
             }
         })
+
 
 
 
