@@ -118,34 +118,32 @@ def generate_grid_option(df_7mean, category_name):
         # Get min and max values for shadow area
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
-        # Add the area shadow using max data series and the fill between min and max
+        # Add the min series
         option["series"].append({
-            "name": f"Shadow {country}",
+            "name": f"Min {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": [{"value": [formatted_dates[i], date_max_values[i], date_min_values[i]]} for i in range(len(formatted_dates))],
+            "data": date_min_values,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0.5,
-                "color": "grey"
+                "opacity": 0,  # Set opacity to 0 to hide the line
             },
-            "areaStyle": {
-                "color": {
-                    "type": 'linear',
-                    "x": 0,
-                    "y": 0,
-                    "x2": 0,
-                    "y2": 1,
-                    "colorStops": [{
-                        "offset": 0,
-                        "color": 'rgba(150, 150, 150, 0.2)'  # color at max
-                    }, {
-                        "offset": 1,
-                        "color": 'rgba(255, 255, 255, 0)'  # color at min, transparent
-                    }]
-                }
-            }
+            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'}
+        })
+
+        # Add the max series
+        option["series"].append({
+            "name": f"Max {country}",
+            "type": 'line',
+            "xAxisIndex": idx,
+            "yAxisIndex": idx,
+            "data": date_max_values,
+            "showSymbol": False,
+            "lineStyle": {
+                "opacity": 0.5,  # Set opacity to 0.5 for a more visible line
+            },
+            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'}
         })
 
 
