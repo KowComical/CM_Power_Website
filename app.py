@@ -28,6 +28,19 @@ def main():
     st.markdown(table_scorecard, unsafe_allow_html=True)
 
 
+    # 使用 Streamlit 的下载按钮进行一键下载
+    if selected_energy == 'total':
+        csv_data = df[df['type'] != 'total'].to_csv(index=False)
+    else:
+        csv_data = df[df['type'] == selected_energy].to_csv(index=False)
+    st.sidebar.download_button(
+        label=f"Download {selected_energy} Data as CSV",
+        data=csv_data,
+        file_name=f"{selected_energy}_data.csv",
+        mime="text/csv"
+    )
+
+
 def current_year_sum(group):
     latest_date_for_country = group['date'].max()
     current_year_data = group[group['date'].dt.year == latest_date_for_country.year]
