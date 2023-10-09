@@ -53,7 +53,10 @@ def main():
         file_name=f"{selected_energy}_data.csv",
         mime="text/csv"
     )
+    
 
+def set_css(css):
+    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
 def current_year_sum(group):
