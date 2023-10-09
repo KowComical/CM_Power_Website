@@ -34,6 +34,9 @@ def main():
 
     # Load the data
     df = pd.read_csv('./data/data_for_download.csv')
+
+    # 复制一版给下载
+    df_download = df.copy()
     
     # Identify unique energy types and let users select one
     selected_energy = st.sidebar.selectbox(
@@ -50,7 +53,6 @@ def main():
 
     # 使用 Streamlit 的下载按钮进行一键下载
     if selected_energy == 'total':
-        df_download = pd.read_csv('./data/data_for_download.csv')
         csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
     else:
         csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
