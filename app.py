@@ -45,11 +45,11 @@ def main():
     )
 
 def get_date_ranges(df, category_name):
+    """Get min and max values for each date excluding the latest year."""
     latest_year = df['year'].max()
-    df_excl_latest = df[(df['year'] != latest_year) & (df['type'] == category_name)]
-    df_excl_latest['month_day'] = df_excl_latest['date'].dt.strftime('%m-%d')
-    date_ranges = df_excl_latest.groupby('month_day').agg(['min', 'max'])['value'].reset_index()
-    return date_ranges['min'].tolist(), date_ranges['max'].tolist()
+    df_excluding_latest = df[df['year'] != latest_year]
+    grouped = df_excluding_latest[df_excluding_latest['type'] == category_name].groupby('date')
+    return grouped['value'].min().tolist(), grouped['value'].max().tolist()
 
 def generate_grid_option(df_7mean, category_name):
     countries = df_7mean['country'].unique().tolist()
@@ -111,21 +111,45 @@ def generate_grid_option(df_7mean, category_name):
             }
         })
 
-        unique_years = country_data['year'].unique()
-        for year in unique_years:
-            year_data = country_data[country_data['year'] == year]
-            option["series"].append({
-                "name": f"{country} {year}",
-                "type": "line",
-                "xAxisIndex": idx,
-                "yAxisIndex": idx,
-                "data": year_data[year_data['type'] == category_name]['value'].tolist(),
-                "itemStyle": {
-                    "color": colors_for_years[year]
-                }
-            })
+        # Add shadow range for all years excluding the latest
+        date_min_values, date_max_values = get_date_ranges(country_data, category_name)
+        option["series"].append({
+            "name": f"Shadow {country}",
+            "type": 'line',
+            "xAxisIndex": idx,
+            "yAxisIndex": idx,
+            "data": list(zip(formatted_dates, date_min_values)),
+            "areaStyle": {'color': 'rgba(150, 150, 150, 0.2)'},
+            "showSymbol": False,
+            "lineStyle": {"opacity": 0},
+        })
+
+        option["series"].append({
+            "name": f"Shadow {country}",
+            "type": 'line',
+            "xAxisIndex": idx,
+            "yAxisIndex": idx,
+            "data": list(zip(formatted_dates, date_max_values)),
+            "areaStyle": {'color': 'rgba(150, 150, 150, 0.2)'},
+            "showSymbol": False,
+            "lineStyle": {"opacity": 0},
+        })
+
+        # Add the line for the latest year
+        latest_year_data = country_data[country_data['year'] == country_data['year'].max()]
+        option["series"].append({
+            "name": f"{country} {latest_year_data['year'].iloc[0]}",
+            "type": 'line',
+            "xAxisIndex": idx,
+            "yAxisIndex": idx,
+            "data": latest_year_data['value'].tolist(),
+            "itemStyle": {
+                "color": colors_for_years[latest_year_data['year'].iloc[0]]
+            },
+        })
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
+
 
 
 @st.cache
