@@ -1,0 +1,21 @@
+{
+    "China": ["中国电力企业联合会", "https://cec.org.cn/menu/index.html?170"],
+    "India": ["POSOCO", "https://posoco.in/reports/daily-reports/"],
+    "Japan": ["OCCTO", "https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login#"],
+    "Turkey": ["YTBS", "https://ytbsbilgi.teias.gov.tr/ytbsbilgi/frm_istatistikler.jsf"],
+    "South Africa": ["Eskom", "https://www.eskom.co.za/dataportal/supply-side/station-build-up-for-the-last-7-days/"],
+    "EU27&UK": ["Entsoe", "https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show"],
+    "Germany": ["Entsoe", "https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show"],
+    "France": ["Entsoe", "https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show"],
+    "Italy": ["Entsoe", "https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show"],
+    "Spain": ["Entsoe", "https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show"],
+    "United Kingdom": ["BMRS", "https://www.bmreports.com/bmrs"],
+    # "United Kingdom": ["Sheffield Solar", "https://www.solar.sheffield.ac.uk/"], # UK has multiple sources
+    "Russia": ["EMRES", "https://emres.cn"],
+    "United States": ["EIA", "https://www.eia.gov/electricity/"],
+    "Mexico": ["Gobierno de Mexico", "https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx"],
+    "Brazil": ["ONS", "http://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao"],
+    "Chile": ["Coordinador Eléctrico Nacional", "https://www.coordinador.cl/operacion/graficos/operacion-real/generacion-real/"],
+    "Australia": ["Opennem", "https://opennem.org.au/energy/nem/?range=7d&interval=30m"],
+    "New Zealand": ["EMI", "https://www.emi.ea.govt.nz/Wholesale/Datasets/Generation/Generation_MD"],  
+}
