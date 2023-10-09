@@ -123,36 +123,41 @@ def generate_grid_option(df_7mean, category_name):
         # Add shadow range for all years excluding the latest
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
-        # The area chart data format for ECharts
-        area_data = [{"value": [formatted_dates[i], date_min_values[i], date_max_values[i]]}
-                     for i in range(len(formatted_dates))]
+        min_data = [{"value": [formatted_dates[i], date_min_values[i]]} for i in range(len(formatted_dates))]
+        max_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
         
+        # Add the minimum data series
         option["series"].append({
-            "name": f"Shadow {country}",
-            "type": 'custom',
+            "name": f"Shadow Min {country}",
+            "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": area_data,
-            "renderItem": """
-                function(params, api) {
-                    var coords = [
-                        api.coord([api.value(0, params.dataIndex), api.value(1, params.dataIndex)]),
-                        api.coord([api.value(0, params.dataIndex), api.value(2, params.dataIndex)])
-                    ];
-                    return {
-                        type: 'polygon',
-                        shape: {
-                            points: coords.concat([
-                                [coords[1][0], coords[0][1]]
-                            ])
-                        },
-                        style: {
-                            fill: 'rgba(150, 150, 150, 0.2)',
-                        },
-                    };
-                }
-            """
+            "data": min_data,
+            "showSymbol": False,
+            "lineStyle": {
+                "opacity": 0,   # Setting this to 0 to hide the line, as we only want to show the area
+            },
+            "areaStyle": {
+                "color": 'rgba(150, 150, 150, 0.2)',   # This will create the shadow effect
+            },
+            "stack": "shadow"
         })
+        
+        # Add the maximum data series
+        option["series"].append({
+            "name": f"Shadow Max {country}",
+            "type": 'line',
+            "xAxisIndex": idx,
+            "yAxisIndex": idx,
+            "data": max_data,
+            "showSymbol": False,
+            "lineStyle": {
+                "opacity": 0.5,   # Adjust this to your liking. 0.5 means 50% opacity.
+                "color": "grey"   # This is the color of the line.
+            },
+            "stack": "shadow"
+        })
+
 
 
         # # Add the line for the latest year
