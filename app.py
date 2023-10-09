@@ -141,8 +141,18 @@ def generate_grid_option(df_7mean, category_name):
                 "yAxisIndex": idx,
                 "data": year_data[year_data['type'] == category_name]['value'].tolist(),
                 "itemStyle": {
-                    "color": colors_for_years[year]
-                }
+                    "color": colors_for_years[year],
+                    "opacity": 0.2  # default opacity for all lines
+                },
+                "emphasis": {  # Add this block for emphasis styling
+                    "lineStyle": {
+                        "width": 4
+                    },
+                    "itemStyle": {
+                        "opacity": 1
+                    }
+                },
+                "selectedMode": "single",  # Add this line to allow single line selection
             })
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
