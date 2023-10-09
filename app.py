@@ -122,7 +122,7 @@ def generate_grid_option(df_7mean, category_name):
         # Get min and max values for shadow area
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
-        # Add the min series
+        # Add the min series with transparent areaStyle
         option["series"].append({
             "name": f"Min {country}",
             "type": 'line',
@@ -130,7 +130,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_min_values,
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(255,255,255)', "opacity": 1},
+            "areaStyle": {"color": 'rgba(255,255,255,0)'},  # Fully transparent
             "z": 100  # Higher value will be on top
         })
         
