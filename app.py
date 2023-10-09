@@ -142,7 +142,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_max_values,
             "showSymbol": False,
-             "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 1}
+             "areaStyle": {"color": 'rgba(150, 150, 150, 1)'}
         })
 
         # # Add the line for the latest year
