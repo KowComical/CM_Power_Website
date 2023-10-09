@@ -137,7 +137,7 @@ def generate_grid_option(df_7mean, category_name):
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": [date_max_values[i] - date_min_values[i] for i in range(len(date_max_values))],  # Difference between max and min
+            "data": date_max_values,
             "showSymbol": False,
             "lineStyle": {
                 "opacity": 0.5,  # Adjust for visibility
