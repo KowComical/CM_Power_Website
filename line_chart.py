@@ -39,19 +39,6 @@ def main():
         st.sidebar.markdown(f"<span style='color: {color};'>■</span> {year}", unsafe_allow_html=True)
 
 
-    # 使用 Streamlit 的下载按钮进行一键下载
-    if category_name == 'total':
-        csv_data = df[df['type'] != 'total'].to_csv(index=False)
-    else:
-        csv_data = df[df['type'] == category_name].to_csv(index=False)
-    st.sidebar.download_button(
-        label=f"Download {category_name} Data as CSV",
-        data=csv_data,
-        file_name=f"{category_name}_data.csv",
-        mime="text/csv"
-    )
-
-
 # 生成 ECharts 配置的函数
 def generate_grid_option(df_7mean, category_name):
     # 获取所有国家
