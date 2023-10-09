@@ -53,8 +53,6 @@ def get_date_ranges(df, category_name):
     df_excluding_latest['month_day'] = df_excluding_latest['date'].dt.strftime('%m-%d')
     grouped = df_excluding_latest[df_excluding_latest['type'] == category_name].groupby('month_day')
 
-    st.write(grouped)
-
     # Get the min and max for each month-day
     min_vals = grouped['value'].min().tolist()
     max_vals = grouped['value'].max().tolist()
