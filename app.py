@@ -108,7 +108,8 @@ def generate_grid_option(df_7mean, category_name):
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
         max_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
-        min_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
+        min_data = [{"value": [formatted_dates[i], date_min_values[i]]} for i in range(len(formatted_dates))]
+        
         # Assuming max_data and min_data are the top and bottom bounds of the shaded region
         shadow_data = [{"value": [formatted_dates[i], date_max_values[i] - date_min_values[i]]} for i in range(len(formatted_dates))]
         
