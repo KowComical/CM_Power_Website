@@ -111,7 +111,7 @@ def generate_grid_option(df_7mean, category_name):
             "nameTextStyle": {
                 "fontSize": 14,  # 根据需要进行调整
                 "fontWeight": "bold",
-                "padding": [0, 0, 0, 200]  # 如果需要，添加一些填充。[上，右，下，左]
+                "padding": [0, 0, 0, 150]  # 如果需要，添加一些填充。[上，右，下，左]
             }
         })
 
