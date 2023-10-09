@@ -110,53 +110,51 @@ def generate_grid_option(df_7mean, category_name):
         max_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
         min_data = [{"value": [formatted_dates[i], date_min_values[i]]} for i in range(len(formatted_dates))]
         
-        # Assuming max_data and min_data are the top and bottom bounds of the shaded region
-        shadow_data = [{"value": [formatted_dates[i], date_max_values[i] - date_min_values[i]]} for i in range(len(formatted_dates))]
-        
-        # Add the maximum data series
+        # The Max line is your upper bound
         option["series"].append({
-            "name": f"Shadow Max {country}",
+            "name": f"Max {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
             "data": max_data,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0,
+                "opacity": 0  # Invisible line
             },
             "stack": "shadow"
         })
         
-        # Add the shadow range
+        # The shadow or difference line fills the area between Max and Min
+        shadow_data = [{"value": [formatted_dates[i], date_min_values[i] - date_max_values[i]]} for i in range(len(formatted_dates))]
         option["series"].append({
-            "name": f"Shadow Range {country}",
+            "name": f"Shadow {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
             "data": shadow_data,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0,  # Make the line invisible
+                "opacity": 0  # Invisible line
             },
-            "areaStyle": {   # This creates the shaded region
+            "areaStyle": {   # This creates the shaded region between Max and Min
                 "color": "grey"
             },
             "stack": "shadow"
         })
         
-        # Add the minimum data series
+        # The Min line is your lower bound
         option["series"].append({
-            "name": f"Shadow Min {country}",
+            "name": f"Min {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
             "data": min_data,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0,
-            },
-            "stack": "shadow"
+                "opacity": 1  # Visible line
+            }
         })
+
 
 
         # # Add the line for the latest year
