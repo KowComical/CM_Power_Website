@@ -97,6 +97,8 @@ def generate_grid_option(df_7mean, category_name):
         })
 
         country_data = df_7mean[df_7mean['country'] == country]
+        min_val = float(round(country_data[country_data['type'] == category_name]['value'].min() * 0.95))
+        max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
 
         option["xAxis"].append({
             "gridIndex": idx,
