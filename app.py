@@ -109,7 +109,7 @@ def generate_grid_option(df_7mean, category_name):
         
         max_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
         min_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
-        difference_data = [{"value": [formatted_dates[i], date_max_values[i] - date_min_values[i]]} for i in range(len(formatted_dates))]
+        difference_data = [{"value": [formatted_dates[i], date_min_values[i] - date_max_values[i]]} for i in range(len(formatted_dates))]
 
         # Add the maxium data series
 
