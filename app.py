@@ -23,7 +23,7 @@ def main():
 
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
 
-    st_echarts(options=option, height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+    # st_echarts(options=option, height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
     unique_years_all = df_7mean['year'].unique()
     colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
@@ -47,13 +47,13 @@ def main():
 def get_date_ranges(df, category_name):
     """Get min and max values for each date (month-day) excluding the latest year."""
     latest_year = df['year'].max()
-    df_excluding_latest = df[df['year'] != latest_year]
+    df_excluding_latest = df[df['year'] != latest_year].reset_index(drop=True)
 
     # Create a month-day column to group by
     df_excluding_latest['month_day'] = df_excluding_latest['date'].dt.strftime('%m-%d')
     grouped = df_excluding_latest[df_excluding_latest['type'] == category_name].groupby('month_day')
 
-    print(grouped)
+    st.write(grouped)
 
     # Get the min and max for each month-day
     min_vals = grouped['value'].min().tolist()
