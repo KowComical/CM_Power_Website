@@ -8,7 +8,7 @@ import json
 st.set_page_config(layout="wide")
 
 # Reading the dictionary from the text file
-with open('colors.txt', 'r') as file:
+with open('./data/colors.txt', 'r') as file:
     COLORS = json.load(file)
 
 
