@@ -76,6 +76,5 @@ def git_push(repo_path, commit_message="Automated commit"):
         print(f"Error: {e}")
 
 
-
 if __name__ == "__main__":
     main()
