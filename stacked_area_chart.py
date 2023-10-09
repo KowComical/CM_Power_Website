@@ -85,7 +85,7 @@ def generate_grid_area_option(df_7mean):
             "nameTextStyle": {
                 "fontSize": 14,
                 "fontWeight": "bold",
-                "padding": [0, 0, 0, 200]
+                "padding": [0, 0, 0, 100]
             }
         })
 
