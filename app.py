@@ -62,10 +62,9 @@ def get_date_ranges(df, category_name):
 
 def generate_grid_option(df_7mean, category_name):
     countries = df_7mean['country'].unique().tolist()
-    num_countries = len(countries)
-
+    
     COLS = 4
-    ROWS = int(math.ceil(num_countries / COLS))
+    ROWS = int(math.ceil(len(countries) / COLS))
     WIDTH = 100 / COLS
     HEIGHT = 100 / ROWS
     ROWS_PER_GRID = math.ceil(len(countries) / COLS)
@@ -98,8 +97,6 @@ def generate_grid_option(df_7mean, category_name):
         })
 
         country_data = df_7mean[df_7mean['country'] == country]
-        min_val = float(round(country_data[country_data['type'] == category_name]['value'].min() * 0.95))
-        max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
 
         option["xAxis"].append({
             "gridIndex": idx,
@@ -110,8 +107,6 @@ def generate_grid_option(df_7mean, category_name):
         option["yAxis"].append({
             "gridIndex": idx,
             "type": "value",
-            # "min": min_val,
-            # "max": max_val,
             "name": country,
             "nameTextStyle": {
                 "fontSize": 14,
@@ -120,13 +115,13 @@ def generate_grid_option(df_7mean, category_name):
             }
         })
 
-        # Add shadow range for all years excluding the latest
+        # Get min and max values for shadow area
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
         min_data = [{"value": [formatted_dates[i], date_min_values[i]]} for i in range(len(formatted_dates))]
-        max_data = [{"value": [formatted_dates[i], date_max_values[i]]} for i in range(len(formatted_dates))]
-        
-        # Add the minimum data series
+        difference_data = [{"value": [formatted_dates[i], date_max_values[i] - date_min_values[i]]} for i in range(len(formatted_dates))]
+
+        # Add the minimum data series for the shadow
         option["series"].append({
             "name": f"Shadow Min {country}",
             "type": 'line',
@@ -135,25 +130,25 @@ def generate_grid_option(df_7mean, category_name):
             "data": min_data,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0,   # Setting this to 0 to hide the line, as we only want to show the area
+                "opacity": 0,
             },
             "areaStyle": {
-                "color": 'rgba(150, 150, 150, 0.2)',   # This will create the shadow effect
+                "color": 'rgba(150, 150, 150, 0.2)',
             },
             "stack": "shadow"
         })
-        
-        # Add the maximum data series
+
+        # Add the difference data series for the shadow
         option["series"].append({
             "name": f"Shadow Max {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": max_data,
+            "data": difference_data,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0.5,   # Adjust this to your liking. 0.5 means 50% opacity.
-                "color": "grey"   # This is the color of the line.
+                "opacity": 0.5,
+                "color": "grey"
             },
             "stack": "shadow"
         })
