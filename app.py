@@ -118,7 +118,7 @@ def generate_grid_option(df_7mean, category_name):
         # Get min and max values for shadow area
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
-        # Add the min series
+        # Add the min series (invisible)
         option["series"].append({
             "name": f"Min {country}",
             "type": 'line',
@@ -127,11 +127,11 @@ def generate_grid_option(df_7mean, category_name):
             "data": date_min_values,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0,  # Set opacity to 0 to hide the line
+                "opacity": 0
             }
         })
         
-        # Add the max series (difference)
+        # Add the max series
         option["series"].append({
             "name": f"Max {country}",
             "type": 'line',
@@ -139,11 +139,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_max_values,
             "showSymbol": False,
-            "lineStyle": {
-                "opacity": 0.5,  # Adjust for visibility
-            },
-            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
-            "stack": "combined"  # This will stack the difference on top of the min values
+            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'}
         })
         
 
