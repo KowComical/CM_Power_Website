@@ -1,5 +1,10 @@
 [[pages]]
 path = "app.py"
+name = "Data Descrption"
+icon = "📋"
+
+[[pages]]
+path = "line_chart.py"
 name = "Line chart"
 icon = "📈"
 
@@ -7,6 +12,5 @@ icon = "📈"
 path = "stacked_area_chart.py"
 name = "Stacked Area Chart"
 icon = "🏳️‍🌈"
-
 
 
