@@ -130,7 +130,7 @@ def generate_grid_option(df_7mean, category_name):
             "data": [value - 1 for value in date_min_values],  # This should be below your min data
             "showSymbol": False,
             "areaStyle": {"color": 'rgba(255, 255, 255,1)'},
-            "z": 97  # Below the Min series
+            "z": 98  # Below the Min series
         })
         
         # Add the min series with white areaStyle to cover the dummy series
@@ -154,7 +154,7 @@ def generate_grid_option(df_7mean, category_name):
             "data": date_max_values,
             "showSymbol": False,
             "areaStyle": {"color": 'rgba(150,150,150,1)'},
-            "z": 98  # Below both Min and Dummy series
+            "z": 97  # Below both Min and Dummy series
         })
 
 
