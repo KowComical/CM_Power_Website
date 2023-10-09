@@ -128,7 +128,7 @@ def generate_grid_option(df_7mean, category_name):
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": [0] * len(date_min_values),  # Assuming 0 is below all your min values
+            "data": date_min_values,  # Assuming 0 is below all your min values
             "stack": "combined",
             "showSymbol": False,
             "areaStyle": {},
