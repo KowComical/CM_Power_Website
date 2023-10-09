@@ -130,7 +130,8 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_min_values,
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 0}
+            "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 0},
+            "z": 100  # Higher value will be on top
         })
         
         # Add the max series and fill the area between the min and max lines
@@ -141,7 +142,7 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_max_values,
             "showSymbol": False,
-             "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 0}
+             "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 1}
         })
 
         # # Add the line for the latest year
