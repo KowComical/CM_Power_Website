@@ -66,10 +66,15 @@ def git_push(repo_path, commit_message="Automated commit"):
 
         subprocess.run(['git', 'add', '--all'])
         subprocess.run(['git', 'commit', '-m', commit_message])
-        subprocess.run(['git', 'push'])
+
+        # Get the current branch name
+        current_branch = subprocess.getoutput('git rev-parse --abbrev-ref HEAD')
+        subprocess.run(['git', 'push', 'origin', current_branch])
+
         print("Changes pulled and pushed successfully.")
     except Exception as e:
         print(f"Error: {e}")
+
 
 
 if __name__ == "__main__":
