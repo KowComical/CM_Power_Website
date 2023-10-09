@@ -130,7 +130,8 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_min_values,
             "showSymbol": False,
-            "z": 99  # Ensure it's below the Max series
+            "areaStyle": {"color": 'rgba(255, 255, 255, 0)'},  # Desired shadow color
+            "z": 100  # Ensure it's below the Max series
         })
         
         # Add the max series and fill the area between the min and max lines
@@ -142,7 +143,7 @@ def generate_grid_option(df_7mean, category_name):
             "data": date_max_values,
             "showSymbol": False,
             "areaStyle": {"color": 'rgba(150, 150, 150, 1)'},  # Desired shadow color
-            "z": 100  # On top of the Min series
+            "z": 99  # On top of the Min series
         })
 
 
