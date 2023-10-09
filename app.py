@@ -131,7 +131,7 @@ def generate_grid_option(df_7mean, category_name):
             "data": date_min_values,
             "showSymbol": False,
             "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 1},
-            "z": -1  # Higher value will be on top
+            "z": 100  # Higher value will be on top
         })
         
         # Add the max series and fill the area between the min and max lines
