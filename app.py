@@ -11,9 +11,24 @@ def main():
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
     local_css("./data/style.css")
+    
+    # Custom CSS for the Streamlit button
+    custom_css = """
+    .stButton>button {
+        background-color: #4CAF50;  # Change this to your preferred color
+        color: white;  # Change text color
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+    """
+    set_css(custom_css)
 
     # Load the data
     df = pd.read_csv('./data/data_for_download.csv')
+    
     # Identify unique energy types and let users select one
     selected_energy = st.sidebar.selectbox(
         'Select Energy Type',
@@ -27,7 +42,6 @@ def main():
     table_scorecard = get_scorecard(df)
     st.markdown(table_scorecard, unsafe_allow_html=True)
 
-
     # 使用 Streamlit 的下载按钮进行一键下载
     if selected_energy == 'total':
         csv_data = df[df['type'] != 'total'].to_csv(index=False)
@@ -39,6 +53,7 @@ def main():
         file_name=f"{selected_energy}_data.csv",
         mime="text/csv"
     )
+
 
 
 def current_year_sum(group):
