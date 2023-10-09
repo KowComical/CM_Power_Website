@@ -122,18 +122,20 @@ def generate_grid_option(df_7mean, category_name):
         # Get min and max values for shadow area
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
 
+        # Add the Dummy series (with transparent line and not shown in tooltip)
         option["series"].append({
             "name": f"Dummy {country}",
             "type": 'line',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": [value - 1 for value in date_min_values],  # This should be below your min data
-            "showSymbol": False,
-            "areaStyle": {"color": 'rgba(255, 255, 255,1)'},
+            "data": [value - 1 for value in date_min_values],
+            "showSymbol": False,  # Exclude from tooltip
+            "lineStyle": {"color": 'rgba(0, 0, 0, 0)'},  # Transparent line
+            "areaStyle": {"color": 'rgba(255, 255, 255, 1)'},
             "z": 98  # Below the Min series
         })
         
-        # Add the min series with white areaStyle to cover the dummy series
+        # Add the Min series (with transparent line)
         option["series"].append({
             "name": f"Min {country}",
             "type": 'line',
@@ -141,11 +143,12 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_min_values,
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(255,255,255,1)'},  # White color
+            "lineStyle": {"color": 'rgba(0, 0, 0, 0)'},  # Transparent line
+            "areaStyle": {"color": 'rgba(255, 255, 255, 1)'},
             "z": 99  # On top
         })
         
-        # Add the max series without any fill
+        # Add the Max series (with transparent line and area)
         option["series"].append({
             "name": f"Max {country}",
             "type": 'line',
@@ -153,9 +156,11 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": date_max_values,
             "showSymbol": False,
-            "areaStyle": {"color": 'rgba(150,150,150,1)'},
+            "lineStyle": {"color": 'rgba(0, 0, 0, 0)'},  # Transparent line
+            "areaStyle": {"color": 'rgba(150, 150, 150, 1)'},
             "z": 97  # Below both Min and Dummy series
         })
+
 
 
 
