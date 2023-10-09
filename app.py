@@ -141,7 +141,7 @@ def generate_grid_option(df_7mean, category_name):
             "data": date_max_values,
             "showSymbol": False,
             "lineStyle": {
-                "opacity": 0.5,  # Set opacity to 0.5 for a more visible line
+                "opacity": 0,  # Set opacity to 0.5 for a more visible line
             },
             "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'}
         })
