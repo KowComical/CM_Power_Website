@@ -122,29 +122,37 @@ def generate_grid_option(df_7mean, category_name):
         # Get min and max values for shadow area
         date_min_values, date_max_values = get_date_ranges(country_data, category_name)
         
-        # Add the min series (invisible)
         option["series"].append({
-            "name": f"Min {country}",
-            "type": 'line',
+            "name": f"Area {country}",
+            "type": 'custom',
             "xAxisIndex": idx,
             "yAxisIndex": idx,
-            "data": date_min_values,
+            "data": list(zip(formatted_dates, date_min_values, date_max_values)),
             "showSymbol": False,
-            "lineStyle": {
-                "opacity": 0
+            "renderItem": (params, api) => {
+                const xValue = api.value(0);
+                const yMinValue = api.value(1);
+                const yMaxValue = api.value(2);
+                const startPoint = api.coord([xValue, yMinValue]);
+                const endPoint = api.coord([xValue, yMaxValue]);
+                
+                return {
+                    type: 'polygon',
+                    shape: {
+                        points: [
+                            [startPoint[0], startPoint[1]],
+                            [endPoint[0], endPoint[1]],
+                            [endPoint[0], endPoint[1] + (startPoint[1] - endPoint[1])],  // Bottom right corner
+                            [startPoint[0], startPoint[1] + (startPoint[1] - endPoint[1])]  // Bottom left corner
+                        ]
+                    },
+                    style: {
+                        fill: 'rgba(150, 150, 150, 0.2)'
+                    }
+                };
             }
-        })
-        
-        # Add the max series
-        option["series"].append({
-            "name": f"Max {country}",
-            "type": 'line',
-            "xAxisIndex": idx,
-            "yAxisIndex": idx,
-            "data": date_max_values,
-            "showSymbol": False,
-            "areaStyle": {"color": 'rgba(150, 150, 150, 0)', "opacity": 0}
-        })
+        });
+
 
 
 
