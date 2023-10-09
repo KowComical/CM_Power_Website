@@ -140,17 +140,17 @@ def generate_grid_option(df_7mean, category_name):
             "stack": "shadow"
         })
 
-        # Add the line for the latest year
-        latest_year_data = country_data[country_data['year'] == country_data['year'].max()]
-        option["series"].append({
-            "name": f"{country} {latest_year_data['year'].iloc[0]}",
-            "type": 'line',
-            "xAxisIndex": idx,
-            "yAxisIndex": idx,
-            "data": latest_year_data['value'].tolist(),
-            "itemStyle": {"color": colors_for_years[latest_year_data['year'].iloc[0]]},
-            "smooth": True
-        })
+        # # Add the line for the latest year
+        # latest_year_data = country_data[country_data['year'] == country_data['year'].max()]
+        # option["series"].append({
+        #     "name": f"{country} {latest_year_data['year'].iloc[0]}",
+        #     "type": 'line',
+        #     "xAxisIndex": idx,
+        #     "yAxisIndex": idx,
+        #     "data": latest_year_data['value'].tolist(),
+        #     "itemStyle": {"color": colors_for_years[latest_year_data['year'].iloc[0]]},
+        #     "smooth": True
+        # })
 
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
