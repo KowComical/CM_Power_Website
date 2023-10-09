@@ -110,8 +110,8 @@ def generate_grid_option(df_7mean, category_name):
         option["yAxis"].append({
             "gridIndex": idx,
             "type": "value",
-            "min": min_val,
-            "max": max_val,
+            # "min": min_val,
+            # "max": max_val,
             "name": country,
             "nameTextStyle": {
                 "fontSize": 14,
@@ -136,9 +136,14 @@ def generate_grid_option(df_7mean, category_name):
             "yAxisIndex": idx,
             "data": area_data,
             "showSymbol": False,
-            "lineStyle": {"opacity": 1},
+            "lineStyle": {
+                "opacity": 0.5,   # Adjust this to your liking. 0.5 means 50% opacity.
+                "color": "grey"   # This is the color of the line.
+            },
+            "areaStyle": {"color": 'rgba(150, 150, 150, 0.2)'},
             "stack": "shadow"
         })
+
 
         # # Add the line for the latest year
         # latest_year_data = country_data[country_data['year'] == country_data['year'].max()]
