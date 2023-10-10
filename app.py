@@ -79,7 +79,7 @@ def main():
       else:
           csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
       st.sidebar.download_button(
-          label=f"🗃️ Download {selected_energy} Data as CSV",
+          label=f"🗃️ Download {selected_energy.title()} Data as CSV",
           data=csv_data,
           file_name=f"{selected_energy}_data.csv",
           mime="text/csv",
