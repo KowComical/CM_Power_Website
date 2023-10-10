@@ -106,7 +106,7 @@ def generate_grid_option(df_7mean, category_name):
             "data": df_7mean['year'].unique().tolist(),
             "left": 'center',
             "orient": "horizontal",
-            "top": "90%",  # Increased top value to move the legend down
+            "top": 50,  # Increased top value to move the legend down
             "textStyle": {
                 "fontSize": 16  # Adjust the legend font size as needed
             }
