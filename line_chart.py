@@ -174,6 +174,15 @@ def generate_grid_option(df_7mean, category_name):
                 "selectedMode": "single",  # Add this line to allow single line selection
             })
 
+    # Set legend AFTER the loop
+    unique_years = df_7mean['year'].unique().tolist()
+    option["legend"] = {
+        "data": unique_years,
+        "orient": "vertical",
+        "right": "5%",
+        "top": "middle"
+    }
+
     return option, ROWS_PER_GRID, PLOT_HEIGHT
 
 
