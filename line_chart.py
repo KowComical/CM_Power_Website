@@ -49,7 +49,6 @@ with open('./data/colors.txt', 'r') as file:
 
 # 主程序
 def main():
-    st.sidebar.title('Power Generation Visualization')
 
     category_name = st.sidebar.selectbox(
         'Select Energy Type',
