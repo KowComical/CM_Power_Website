@@ -63,15 +63,6 @@ def main():
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
-    # 获取颜色信息
-    unique_years_all = df_7mean['year'].unique()
-    colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
-
-    # 在侧边栏上显示图例
-    st.sidebar.subheader("Legend: Year Colors")
-    for year, color in colors_for_years.items():
-        st.sidebar.markdown(f"<span style='color: {color};'>■</span> {year}", unsafe_allow_html=True)
-
 
 # 生成 ECharts 配置的函数
 def generate_grid_option(df_7mean, category_name):
@@ -178,7 +169,7 @@ def generate_grid_option(df_7mean, category_name):
         "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in unique_years_all],
         "left": 'center',
         "orient": "horizontal",
-        "top": 25,  # Increased top value to move the legend down
+        "top": 10,  # Increased top value to move the legend down
         "textStyle": {
             "fontSize": 16  # Adjust the legend font size as needed
         }
