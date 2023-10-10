@@ -59,15 +59,6 @@ def main():
     df_download = df.copy()
 
     with st.container():
-
-      st.markdown("""
-        <style>
-            div[data-testid="stSelectbox"] > div > div > select {
-                text-align: center;
-                text-align-last: center;
-            }
-        </style>
-        """, unsafe_allow_html=True)
         
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
