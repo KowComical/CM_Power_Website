@@ -6,7 +6,3 @@ runOnSave=true
 
 #[browser]
 #layout="wide"
-
-[client]
-displayEnabled = false
-
