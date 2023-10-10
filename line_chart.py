@@ -107,7 +107,7 @@ def generate_grid_option(df_7mean, category_name):
             "orient": "horizontal",
             "left": 'center',
             "orient": "horizontal",
-            "top": 65,  # Increased top value to move the legend down
+            "top": 265,  # Increased top value to move the legend down
             "textStyle": {
                 "fontSize": 16  # Adjust the legend font size as needed
             }
