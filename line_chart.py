@@ -102,6 +102,14 @@ def generate_grid_option(df_7mean, category_name):
         "tooltip": {
             "trigger": "axis"
         },
+        "legend": {
+            "data": [str(year) for year in unique_years_all],
+            "type": "scroll",
+            "top": "2%",
+            "orient": "horizontal",
+            "itemWidth": 25,
+            "itemHeight": 10,
+        },
         "xAxis": [],
         "yAxis": [],
         "grid": [],
