@@ -7,6 +7,16 @@ import json
 
 st.set_page_config(layout="wide")
 
+# Custom CSS
+st.markdown("""
+<style>
+    /* Modify the Streamlit spinner color */
+    .stSpinner > div > div {
+        border-top-color: #0f0;  /* green color */
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Reading the dictionary from the text file
 with open('./data/colors.txt', 'r') as file:
     COLORS = json.load(file)
