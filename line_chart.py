@@ -106,19 +106,13 @@ def generate_grid_option(df_7mean, category_name):
     # 创建图表的网格
     for idx, country in enumerate(countries):
 
-      VERTICAL_OFFSET = 5
-
-      if idx // COLS == ROWS - 1:  # Checking if it's a bottom-most grid
-          grid_height = HEIGHT - (2 * HEIGHT_ADJUSTMENT) - VERTICAL_OFFSET  # Subtract the VERTICAL_OFFSET for the bottom-most grids
-      else:
-          grid_height = HEIGHT - (2 * HEIGHT_ADJUSTMENT)
-
+  
         # 创建网格并进行间距调整
         option["grid"].append({
-            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + VERTICAL_OFFSET}%",
+            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
             "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
-            "height": f"{grid_height}%",
+            "height": f"{WIDTH - 2 * HEIGHT_ADJUSTMENT}%",
             "containLabel": True
         })
 
