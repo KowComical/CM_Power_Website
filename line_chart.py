@@ -104,7 +104,6 @@ def generate_grid_option(df_7mean, category_name):
         },
         "legend": {
             "data": df_7mean['year'].unique().tolist(),
-            "orient": "horizontal",
             "left": 'center',
             "orient": "horizontal",
             "top": 265,  # Increased top value to move the legend down
