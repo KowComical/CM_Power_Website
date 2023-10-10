@@ -8,6 +8,7 @@ show_pages_from_config()
 # Set Streamlit Configuration
 st.set_page_config(layout="wide")
 
+# 隐藏所有东西
 hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {
