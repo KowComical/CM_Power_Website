@@ -2,6 +2,8 @@ import subprocess
 import os
 import pandas as pd
 import os
+import ast
+
 
 global_path = '/data/xuanrenSong/CM_Power_Website'
 file_path = os.path.join(global_path, 'data')
@@ -55,6 +57,51 @@ def process_data():
     df_7mean['percentage'] = (df_7mean['value'] / df_7mean['total']) * 100
 
     df_7mean.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart.csv'), index=False, encoding='utf_8_sig')
+
+    # 再计算一版散点图用的
+    df = load_power_data(df)
+    df_iea = load_iea_data()
+    df_filtered = prepare_comparison_data(df, df_iea)
+
+    df_filtered.to_csv(os.path.join(file_path, 'data_for_scatter_plot.csv'), index=False, encoding='utf_8_sig')
+
+
+def load_power_data(df):
+    df['date'] = pd.to_datetime(df['date'])
+    df['month'] = df['date'].dt.month
+    return df.drop(columns=['date']).groupby(['year', 'month', 'country', 'type']).sum().reset_index()
+
+
+def load_iea_data():
+    df_iea = pd.read_csv('/data/xuanrenSong/CM_Power_Database/data/#global_rf/iea/iea_cleaned.csv')
+    country_replacements = {
+        'Republic of Turkiye': 'Turkey',
+        'Slovak Republic': 'Slovakia',
+        "People's Republic of China": 'China'
+    }
+    df_iea['country'] = df_iea['country'].replace(country_replacements)
+
+    with open(os.path.join(file_path, 'eu_countries.txt'), 'r') as file:
+        eu_countries = ast.literal_eval(file.read())
+
+    df_iea_eu = df_iea[df_iea['country'].isin(eu_countries)].reset_index(drop=True)
+    df_iea_eu['country'] = 'EU27&UK'
+    df_iea_eu = df_iea_eu.groupby(['country', 'year', 'month']).sum().reset_index()
+
+    df_iea = pd.concat([df_iea, df_iea_eu]).reset_index(drop=True)
+
+    df_iea['total'] = df_iea[['coal', 'gas', 'oil', 'nuclear', 'hydro', 'solar', 'wind', 'other']].sum(axis=1)
+    df_iea['fossil'] = df_iea[['coal', 'gas', 'oil']].sum(axis=1)
+    df_iea['renewables'] = df_iea[['nuclear', 'hydro', 'solar', 'wind', 'other']].sum(axis=1)
+
+    return df_iea.melt(id_vars=['country', 'year', 'month'], var_name='type', value_name='iea')
+
+
+def prepare_comparison_data(df, df_iea):
+    df_compare = pd.merge(df, df_iea)
+    df_compare['value'] = round(df_compare['value'] / 1000, 2)
+    df_compare['iea'] = round(df_compare['iea'] / 1000, 2)
+    return df_compare
 
 
 def git_push(repo_path, commit_message="Automated commit"):
