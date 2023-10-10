@@ -57,31 +57,33 @@ def main():
 
     # 复制一版给下载
     df_download = df.copy()
+
+    with st.container():
     
-    # Identify unique energy types and let users select one
-    selected_energy = st.sidebar.selectbox(
-        'Select Energy Type',
-        ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'], index=0)
-
-    # Filter the DataFrame based on the selected energy type
-    df = df[df['type'] == selected_energy].reset_index(drop=True)
-
-    df = transform_data(df, selected_energy)
-
-    table_scorecard = get_scorecard(df)
-    st.markdown(table_scorecard, unsafe_allow_html=True)
-
-    # 使用 Streamlit 的下载按钮进行一键下载
-    if selected_energy == 'total':
-        csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
-    else:
-        csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
-    st.sidebar.download_button(
-        label=f"Download {selected_energy} Data as CSV",
-        data=csv_data,
-        file_name=f"{selected_energy}_data.csv",
-        mime="text/csv"
-    )
+      # Identify unique energy types and let users select one
+      selected_energy = st.sidebar.selectbox(
+          'Select Energy Type',
+          ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'], index=0)
+  
+      # Filter the DataFrame based on the selected energy type
+      df = df[df['type'] == selected_energy].reset_index(drop=True)
+  
+      df = transform_data(df, selected_energy)
+  
+      table_scorecard = get_scorecard(df)
+      st.markdown(table_scorecard, unsafe_allow_html=True)
+  
+      # 使用 Streamlit 的下载按钮进行一键下载
+      if selected_energy == 'total':
+          csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
+      else:
+          csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
+      st.sidebar.download_button(
+          label=f"Download {selected_energy} Data as CSV",
+          data=csv_data,
+          file_name=f"{selected_energy}_data.csv",
+          mime="text/csv"
+      )
 
 
 def current_year_sum(group):
