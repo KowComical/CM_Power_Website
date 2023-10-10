@@ -51,20 +51,6 @@ def main():
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
     local_css("./data/style.css")
-    
-    # Custom CSS for the Streamlit button
-    custom_css = """
-    .stButton>button {
-        background-color: #4CAF50;  # Change this to your preferred color
-        color: white;  # Change text color
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-    }
-    """
-    set_css(custom_css)
 
     # Load the data
     df = pd.read_csv('./data/data_for_download.csv')
@@ -96,10 +82,6 @@ def main():
         file_name=f"{selected_energy}_data.csv",
         mime="text/csv"
     )
-    
-
-def set_css(css):
-    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
 def current_year_sum(group):
