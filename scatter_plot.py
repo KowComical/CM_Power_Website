@@ -7,7 +7,7 @@ st.set_page_config(layout="wide")
 
 
 def main():
-    df_compare = pd.read_csv('.data/data_for_scatter_plot.csv')
+    df_compare = pd.read_csv('./data/data_for_scatter_plot.csv')
     create_echart(df_compare)
 
 
