@@ -162,7 +162,7 @@ def generate_grid_option(df_7mean, category_name):
         for year in unique_years:
             year_data = country_data[country_data['year'] == year]
             option["series"].append({
-                "name": f"{year}", 
+                "name": f"{country} {year}", 
                 "type": "line",
                 "xAxisIndex": idx,
                 "yAxisIndex": idx,
