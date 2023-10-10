@@ -174,6 +174,16 @@ def generate_grid_option(df_7mean, category_name):
                 "selectedMode": "single",  # Add this line to allow single line selection
             })
 
+    option["legend"] = {
+        "data": df_7mean['year'].unique().tolist(),
+        "left": 'center',
+        "orient": "horizontal",
+        "top": 25,  # Increased top value to move the legend down
+        "textStyle": {
+            "fontSize": 16  # Adjust the legend font size as needed
+        }
+    }
+
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
 
