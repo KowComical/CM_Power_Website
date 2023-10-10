@@ -82,7 +82,8 @@ def main():
           label=f"Download {selected_energy} Data as CSV",
           data=csv_data,
           file_name=f"{selected_energy}_data.csv",
-          mime="text/csv"
+          mime="text/csv",
+          use_container_width=True,
       )
 
 
