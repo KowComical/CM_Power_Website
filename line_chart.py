@@ -102,15 +102,6 @@ def generate_grid_option(df_7mean, category_name):
         "tooltip": {
             "trigger": "axis"
         },
-        "legend": {
-           "data": df_7mean['year'].unique().tolist(),
-            "left": 'center',
-            "orient": "horizontal",
-            "top": 25,  # Increased top value to move the legend down
-            "textStyle": {
-                "fontSize": 16  # Adjust the legend font size as needed
-            }
-        },
         "xAxis": [],
         "yAxis": [],
         "grid": [],
