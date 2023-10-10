@@ -190,4 +190,5 @@ def get_scorecard(df):
 
 
 if __name__ == '__main__':
-    main()
+    with st.spinner('Loading page...'):
+        main()
