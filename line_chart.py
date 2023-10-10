@@ -175,7 +175,7 @@ def generate_grid_option(df_7mean, category_name):
             })
 
     option["legend"] = {
-        "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[unique_years_all.index(year)]}} for year in unique_years_all],
+        "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in unique_years_all],
         "left": 'center',
         "orient": "horizontal",
         "top": 25,  # Increased top value to move the legend down
