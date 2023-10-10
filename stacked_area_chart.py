@@ -14,9 +14,8 @@ def main():
 
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean)
     
-    with st.spinner('Loading chart...'):
-        st_echarts(options=option,
-                   height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+    st_echarts(options=option,
+               height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
     
     st.sidebar.subheader("Legend: Energy Types")
     for energy_type, color in COLORS.items():
@@ -112,4 +111,5 @@ def generate_grid_area_option(df_7mean):
 
 
 if __name__ == '__main__':
-    main()
+    with st.spinner('Loading page...'):
+        main()
