@@ -112,7 +112,7 @@ def generate_grid_option(df_7mean, category_name):
             "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 5}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
             "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
-            "height": f"{HEIGHT + 5 * HEIGHT_ADJUSTMENT}%",
+            "height": f"{HEIGHT + 1 * HEIGHT_ADJUSTMENT}%",
             "containLabel": True
         })
 
