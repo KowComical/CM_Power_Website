@@ -103,7 +103,7 @@ def generate_grid_option(df_7mean, category_name):
             "trigger": "axis"
         },
         "legend": {
-            "data": [{"name": year, "icon": "line", "textStyle": {"color": colors_for_years[year]}} for year in df_7mean['year'].unique().tolist()],
+            "data": df_7mean['year'].unique().tolist(),
             "left": 'center',
             "orient": "horizontal",
             "top": 25,  # Increased top value to move the legend down
@@ -163,7 +163,7 @@ def generate_grid_option(df_7mean, category_name):
         for year in unique_years:
             year_data = country_data[country_data['year'] == year]
             option["series"].append({
-                "name": f"{year}", 
+                "name": str(year), 
                 "type": "line",
                 "xAxisIndex": idx,
                 "yAxisIndex": idx,
