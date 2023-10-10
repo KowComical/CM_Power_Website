@@ -151,7 +151,7 @@ def create_echart(df_filtered):
         col_idx = idx % 4
         row_idx = idx // 4
         subplot_title = {
-            "text": name,
+            "text": name.title(),
             "textAlign": 'center',
             "left": f"{col_idx * 25 + 3}% ",
             "top": f"{row_idx * 25 + 8}%",
