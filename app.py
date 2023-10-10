@@ -5,6 +5,9 @@ import json
 
 show_pages_from_config()
 
+# Set Streamlit Configuration
+st.set_page_config(layout="wide")
+
 hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {
@@ -37,9 +40,6 @@ hide_streamlit_style = """
                 </style>
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
-# Set Streamlit Configuration
-st.set_page_config(layout="wide")
 
 # Reading the dictionary from the text file
 with open('./data/colors.txt', 'r') as file:
