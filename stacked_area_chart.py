@@ -113,9 +113,8 @@ def generate_grid_area_option(df_7mean):
 def custom_css_for_spinner():
     st.markdown("""
         <style>
-            .stApp .st-eYmHfZ.dpjCQj { /* This targets the spinner */
-                width: 100px; /* Adjust width as needed */
-                height: 100px; /* Adjust height as needed */
+            body {
+                background-color: yellow;
             }
         </style>
     """, unsafe_allow_html=True)
