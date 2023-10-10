@@ -149,6 +149,15 @@ def generate_grid_option(df_7mean, category_name):
             }
         })
 
+        unique_years = df_7mean['year'].unique().tolist()
+        option["legend"] = {
+            "data": unique_years,
+            "orient": "vertical",
+            "right": "5%",  # Positioning on the right side
+            "top": "middle"
+        }
+
+
         # 为每年生成系列数据
         unique_years = country_data['year'].unique()
         for year in unique_years:
