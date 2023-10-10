@@ -103,7 +103,7 @@ def generate_grid_option(df_7mean, category_name):
             "trigger": "axis"
         },
         "legend": {
-            "data": [str(year) for year in unique_years_all],
+            "data": df_7mean['year'].unique().tolist(),
             "type": "scroll",
             "top": "2%",
             "orient": "horizontal",
