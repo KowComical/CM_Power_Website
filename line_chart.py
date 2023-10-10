@@ -184,4 +184,5 @@ def get_line_colors(num_years, category_name):
 
 
 if __name__ == '__main__':
-    main()
+    with st.spinner('Loading page...'):
+        main()
