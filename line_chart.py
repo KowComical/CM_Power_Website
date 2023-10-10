@@ -103,10 +103,10 @@ def generate_grid_option(df_7mean, category_name):
             "trigger": "axis"
         },
         "legend": {
-            "data": df_7mean['year'].unique().tolist(),
+            "data": [{"name": year, "icon": "line", "textStyle": {"color": colors_for_years[year]}} for year in df_7mean['year'].unique().tolist()]
             "left": 'center',
             "orient": "horizontal",
-            "top": 50,  # Increased top value to move the legend down
+            "top": 25,  # Increased top value to move the legend down
             "textStyle": {
                 "fontSize": 16  # Adjust the legend font size as needed
             }
