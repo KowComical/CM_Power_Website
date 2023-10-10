@@ -110,16 +110,6 @@ def generate_grid_area_option(df_7mean):
     return option, ROWS_PER_GRID, PLOT_HEIGHT
 
 
-def custom_css_for_spinner():
-    st.markdown("""
-<style>.stSpinner > div > div {
-    border-top-color: #0f0;
-}</style>
-""", unsafe_allow_html=True)
-
-
-
 if __name__ == '__main__':
-    custom_css_for_spinner()
     with st.spinner('Loading page...'):
         main()
