@@ -145,7 +145,7 @@ def create_echart(df_filtered):
             "data": sorted_countries,  # List of unique countries
             "orient": "horizontal",
             "left": 'center',
-            "top": 65,
+            "top": 50,
             "icon": "circle",  # This will give a filled circle symbol
             "itemWidth": 12,  # Controls the width of the circle
             "itemHeight": 12,  # Controls the height of the circle
