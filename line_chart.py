@@ -200,23 +200,67 @@ def get_csv_download_link(df, filename="data.csv"):
     return href
 
 
-# 获取线条颜色的辅助函数
+def rgb_to_hsl(r, g, b):
+    r /= 255.0
+    g /= 255.0
+    b /= 255.0
+    max_val = max(r, g, b)
+    min_val = min(r, g, b)
+    h, s, l = (max_val + min_val) / 2.0, 0.0, (max_val + min_val) / 2.0
+
+    if max_val == min_val:
+        h, s = 0.0, 0.0
+    else:
+        d = max_val - min_val
+        s = d / (2.0 - max_val - min_val) if l > 0.5 else d / (max_val + min_val)
+        if max_val == r:
+            h = (g - b) / d + (6 if g < b else 0)
+        elif max_val == g:
+            h = (b - r) / d + 2
+        elif max_val == b:
+            h = (r - g) / d + 4
+        h /= 6.0
+
+    return h, s, l
+
 def get_line_colors(num_years, category_name):
-    base_grey = 200  # Starting from RGB(200, 200, 200), which is light grey
-    decrement = 15  # Decrease to darken the color, decrementing by 15 each year
+    base_rgb = COLORS.get(category_name, (220, 20, 60))
+    base_h, base_s, base_l = rgb_to_hsl(*base_rgb)
+
+    lightness_decrement = 0.05  # Decrement by 5% each year
 
     colors = []
 
     # Create a color palette for each year prior to the latest year
     for _ in range(num_years - 1):
-        rgb_color = f'rgb({base_grey},{base_grey},{base_grey})'
-        colors.append(rgb_color)
-        base_grey = max(50, base_grey - decrement)  # Don't go too dark, stop at RGB(50, 50, 50)
+        current_l = base_l - lightness_decrement * _
+        hsl_color = f'hsl({base_h * 360:.2f}, {base_s * 100:.2f}%, {current_l * 100:.2f}%)'
+        colors.append(hsl_color)
 
     # Add color for the latest year
-    colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))  # Use color from COLORS dict or fallback to deep red
+    colors.append(f'rgb{base_rgb}')  # Use the base RGB color for the latest year
 
     return colors
+
+
+
+# # 获取线条颜色的辅助函数
+# def get_line_colors(num_years, category_name):
+#     base_grey = 200  # Starting from RGB(200, 200, 200), which is light grey
+#     decrement = 15  # Decrease to darken the color, decrementing by 15 each year
+
+#     colors = []
+
+#     # Create a color palette for each year prior to the latest year
+#     for _ in range(num_years - 1):
+#         rgb_color = f'rgb({base_grey},{base_grey},{base_grey})'
+#         colors.append(rgb_color)
+#         base_grey = max(50, base_grey - decrement)  # Don't go too dark, stop at RGB(50, 50, 50)
+
+#     # Add color for the latest year
+#     colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))  # Use color from COLORS dict or fallback to deep red
+
+#     return colors
 
 
 
