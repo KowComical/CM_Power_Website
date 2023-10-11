@@ -76,7 +76,7 @@ def generate_grid_area_option(df_7mean):
     HEIGHT = 100 / ROWS
 
     ROWS_PER_GRID = math.ceil(len(countries) / COLS)
-    PLOT_HEIGHT = 250  # 根据需要进行调整
+    PLOT_HEIGHT = 200  # 根据需要进行调整
 
     WIDTH_ADJUSTMENT = 0.8
     HEIGHT_ADJUSTMENT = 1.5
