@@ -115,7 +115,7 @@ def create_echart(df_filtered):
             "max": max_val,
             "name": "CM_Power",
             "nameLocation": "center",
-            "nameGap": 25，
+            "nameGap": 25
         })
 
         yAxis.append({
@@ -124,7 +124,7 @@ def create_echart(df_filtered):
             "max": max_val,
             "name": "IEA",
             "nameLocation": "center",
-            "nameGap": 25，
+            "nameGap": 25
         })
 
     option = {
