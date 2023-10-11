@@ -178,11 +178,21 @@ def generate_grid_option(df_7mean, category_name):
         "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in unique_years_all],
         "left": 'center',
         "orient": "horizontal",
-        "top": 60,  # Increased top value to move the legend down
+        "top": 60,
+        "icon": "circle",  # This will give a filled circle symbol
+        "itemWidth": 12,  # Controls the width of the circle
+        "itemHeight": 12,  # Controls the height of the circle
+        "borderColor": "#333",  # Border color, here it's a dark gray
+        "borderWidth": 1,  # Width of the border
+        "borderRadius": 4,  # Rounded corners, adjust for desired roundness
+        "padding": 10,  # Padding around the legend items
+        "backgroundColor": "#f4f4f4",  # Light gray background for the legend
         "textStyle": {
-            "fontSize": 16  # Adjust the legend font size as needed
+            "fontSize": 16,
+            "color": "#333"  # Font color matching the border color
         }
     }
+    
 
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
