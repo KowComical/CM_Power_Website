@@ -94,7 +94,7 @@ def generate_grid_area_option(df_7mean):
           "data": energy_types,
           "orient": "horizontal",
           "left": 'center',
-          "top": 65,
+          "top": 55,
           "icon": "circle",  # This will give a filled circle symbol
           "itemWidth": 12,  # Controls the width of the circle
           "itemHeight": 12,  # Controls the height of the circle
@@ -121,7 +121,7 @@ def generate_grid_area_option(df_7mean):
         country_dates = country_data['date'].dt.strftime('%Y-%m-%d').drop_duplicates().tolist()
 
         option["grid"].append({
-            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 12}%",
+            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
             "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
             "height": f"{HEIGHT - 4 * HEIGHT_ADJUSTMENT}%",
