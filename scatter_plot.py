@@ -124,7 +124,7 @@ def create_echart(df_filtered):
             "max": max_val,
             "name": "IEA",
             "nameLocation": "center",
-            "nameGap": 25
+            "nameGap": 30
         })
 
     option = {
