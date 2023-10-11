@@ -256,7 +256,7 @@ def get_line_colors(years_list, category_name=None):
         elif year == current_year:  # Latest year
             colors.append(black_color)
         else:
-            factor = (current_year - year) * 0.5  # Lighten by 20% for each year away from the current year
+            factor = (current_year - year) * 0.4  # Lighten by 20% for each year away from the current year
             # factor = clamp(factor, min_factor, max_factor)  # Ensure within range
             adjusted_orange = adjust_lightness(orange_rgb, factor)
             colors.append(f'rgb{adjusted_orange}')
