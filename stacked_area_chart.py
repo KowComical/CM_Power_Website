@@ -94,7 +94,7 @@ def generate_grid_area_option(df_7mean):
           "data": energy_types,
           "orient": "horizontal",
           "left": 'center',
-          "top": 55,
+          "top": 50,
           "icon": "circle",  # This will give a filled circle symbol
           "itemWidth": 12,  # Controls the width of the circle
           "itemHeight": 12,  # Controls the height of the circle
