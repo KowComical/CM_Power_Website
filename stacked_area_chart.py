@@ -82,6 +82,11 @@ def generate_grid_area_option(df_7mean):
     HEIGHT_ADJUSTMENT = 2.5
 
     option = {
+      "title": [{
+            "text": "Power Generation Distribution by Source for Key Countries (TWh)",
+            "left": "center",
+            "top": "0%"
+        }],
         "tooltip": {
             "trigger": "axis"
         },
