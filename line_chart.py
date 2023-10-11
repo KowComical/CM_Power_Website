@@ -120,7 +120,7 @@ def generate_grid_option(df_7mean, category_name):
             "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 5}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
             "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
-            "height": f"{HEIGHT - 2 * HEIGHT_ADJUSTMENT}%",
+            "height": f"{HEIGHT - 2.5 * HEIGHT_ADJUSTMENT}%",
             "containLabel": True
         })
 
@@ -178,7 +178,7 @@ def generate_grid_option(df_7mean, category_name):
         "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in unique_years_all],
         "left": 'center',
         "orient": "horizontal",
-        "top": 65,  # Increased top value to move the legend down
+        "top": 60,  # Increased top value to move the legend down
         "textStyle": {
             "fontSize": 16  # Adjust the legend font size as needed
         }
