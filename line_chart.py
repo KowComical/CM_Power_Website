@@ -62,7 +62,7 @@ def main():
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
 
     st_echarts(options=option,
-               height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 2.0}px")
+               height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.5}px")
 
 
 # 生成 ECharts 配置的函数
@@ -85,7 +85,7 @@ def generate_grid_option(df_7mean, category_name):
 
     # 调整间距
     WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
-    HEIGHT_ADJUSTMENT = 1.0  # 增加或减少以调整垂直间距
+    HEIGHT_ADJUSTMENT = 0.5  # 增加或减少以调整垂直间距
 
     # 格式化日期以用于 x 轴
     formatted_dates = df_7mean['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
