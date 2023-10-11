@@ -78,7 +78,7 @@ def generate_grid_option(df_7mean, category_name):
     # 计算所需的行数以容纳所有国家，每行4列
     ROWS = int(math.ceil(num_countries / COLS))
     WIDTH = 100 / COLS
-    HEIGHT = 95 / ROWS
+    HEIGHT = 92 / ROWS
 
     ROWS_PER_GRID = math.ceil(len(countries) / COLS)
     PLOT_HEIGHT = 200  # 根据需要进行调整
