@@ -129,7 +129,7 @@ def create_echart(df_filtered):
 
     option = {
         "title": [{
-            "text": "CM_Power vs IEA by Energy Sector [Twh]",
+            "text": "Comparison of CM_Power and IEA by Energy Source for Key Countries (TWh)",
             "left": "center",
             "top": "0%"
         }],
