@@ -217,8 +217,8 @@ def adjust_lightness(rgb, factor):
 
 def get_line_colors(years_list, category_name=None):
     # Base colors
-    blue_rgb = (173, 216, 230)  # Macaron Blue
-    orange_rgb = (255, 192, 128)  # Macaron Orange
+    blue_rgb = (76, 164, 224)  # Macaron Blue
+    orange_rgb = (255, 165, 86)  # Macaron Orange
     black_color = 'rgb(0, 0, 0)'
 
     current_year = datetime.now().year  # Get the current year
