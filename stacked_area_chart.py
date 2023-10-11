@@ -90,15 +90,24 @@ def generate_grid_area_option(df_7mean):
         "tooltip": {
             "trigger": "axis"
         },
-        "legend": {
-            "data": energy_types,
-            "orient": "horizontal",
-            "left": 'center',
-            "top": 65,  # Adjust this to position the legend as needed
-            "textStyle": {
-                "fontSize": 16  # Adjust the font size as needed
-            }
-        },
+              "legend": {
+          "data": energy_types,
+          "orient": "horizontal",
+          "left": 'center',
+          "top": 65,
+          "icon": "circle",  # This will give a filled circle symbol
+          "itemWidth": 12,  # Controls the width of the circle
+          "itemHeight": 12,  # Controls the height of the circle
+          "borderColor": "#333",  # Border color, here it's a dark gray
+          "borderWidth": 1,  # Width of the border
+          "borderRadius": 4,  # Rounded corners, adjust for desired roundness
+          "padding": 10,  # Padding around the legend items
+          "backgroundColor": "#f4f4f4",  # Light gray background for the legend
+          "textStyle": {
+              "fontSize": 16,
+              "color": "#333"  # Font color matching the border color
+          }
+      },
         "xAxis": [],
         "yAxis": [],
         "grid": [],
