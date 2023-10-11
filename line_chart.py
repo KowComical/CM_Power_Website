@@ -92,7 +92,7 @@ def generate_grid_option(df_7mean, category_name):
 
     option = {
        "title": [{
-            "text": "CM_Power vs IEA by Energy Sector [Twh]",
+            "text": "Global Power Generation Trends: A Daily Analysis by Sector [TWh]",
             "left": "center",
             "top": "0%"
         }],
