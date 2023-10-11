@@ -7,3 +7,11 @@ Fast-forward
  requirements.txt |   1 +
  scatter_plot.py  |  38 ++++++++++++++++++--
  4 files changed, 141 insertions(+), 51 deletions(-)
+[master 275d67f] Automated commit
+ 7 files changed, 71623 insertions(+), 69334 deletions(-)
+ create mode 100644 log/daily_process/2023/10/nohup-2023-10-11.out
+remote: This repository moved. Please use the new location:[K
+remote:   git@github.com:KowComical/CM_Power_Website.git[K
+remote: To git@github.com:kowcomical/CM_Power_Website.git
+   1e53d2e..275d67f  master -> master
+Changes pulled and pushed successfully.

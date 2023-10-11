@@ -1,0 +1,9 @@
+From github.com:kowcomical/CM_Power_Website
+   275d67f..a53e6a2  master     -> origin/master
+Updating 275d67f..a53e6a2
+Fast-forward
+ .streamlit/pages.toml |  2 +-
+ line_chart.py         | 29 ++++++++++++++++++++++++-----
+ scatter_plot.py       | 28 ++++++++++++++++++++++------
+ stacked_area_chart.py | 38 +++++++++++++++++++++++++++++---------
+ 4 files changed, 76 insertions(+), 21 deletions(-)
