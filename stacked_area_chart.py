@@ -73,13 +73,13 @@ def generate_grid_area_option(df_7mean):
     COLS = 4
     ROWS = int(math.ceil(len(countries) / COLS))
     WIDTH = 100 / COLS
-    HEIGHT = 100 / ROWS
+    HEIGHT = 92 / ROWS
 
     ROWS_PER_GRID = math.ceil(len(countries) / COLS)
     PLOT_HEIGHT = 200  # 根据需要进行调整
 
     WIDTH_ADJUSTMENT = 0.8
-    HEIGHT_ADJUSTMENT = 1.5
+    HEIGHT_ADJUSTMENT = 1.0
 
     option = {
         "title": [{
@@ -112,10 +112,10 @@ def generate_grid_area_option(df_7mean):
         country_dates = country_data['date'].dt.strftime('%Y-%m-%d').drop_duplicates().tolist()
 
         option["grid"].append({
-            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 8}%",
+            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
             "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
-            "height": f"{HEIGHT - 3 * HEIGHT_ADJUSTMENT}%",
+            "height": f"{HEIGHT - 4 * HEIGHT_ADJUSTMENT}%",
             "containLabel": True
         })
 
