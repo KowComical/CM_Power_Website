@@ -250,13 +250,13 @@ def get_line_colors(years_list, category_name=None):
     for year in years_list:
         if year in [2019, 2020]:
             factor = (2020 - year) * 0.3  # Darken by 10% for each year away from 2020
-            factor = clamp(factor, min_factor, max_factor)  # Ensure within range
+            # factor = clamp(factor, min_factor, max_factor)  # Ensure within range
             adjusted_blue = adjust_lightness(blue_rgb, -factor)
             colors.append(f'rgb{adjusted_blue}')
         elif year == current_year:  # Latest year
             colors.append(black_color)
         else:
-            factor = (current_year - year) * 0.4  # Lighten by 20% for each year away from the current year
+            factor = (current_year - year) * 0.5  # Lighten by 20% for each year away from the current year
             # factor = clamp(factor, min_factor, max_factor)  # Ensure within range
             adjusted_orange = adjust_lightness(orange_rgb, factor)
             colors.append(f'rgb{adjusted_orange}')
