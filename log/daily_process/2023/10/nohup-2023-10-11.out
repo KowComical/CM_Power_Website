@@ -1,0 +1,9 @@
+From github.com:kowcomical/CM_Power_Website
+   4204ecb..1e53d2e  master     -> origin/master
+Updating 4204ecb..1e53d2e
+Fast-forward
+ app.py           |  47 +++++++++++++-----------
+ line_chart.py    | 106 ++++++++++++++++++++++++++++++++++++++++---------------
+ requirements.txt |   1 +
+ scatter_plot.py  |  38 ++++++++++++++++++--
+ 4 files changed, 141 insertions(+), 51 deletions(-)

@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import ast
 
+import seaborn as sns
 
 global_path = '/data/xuanrenSong/CM_Power_Website'
 file_path = os.path.join(global_path, 'data')
