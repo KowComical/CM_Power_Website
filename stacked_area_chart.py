@@ -121,7 +121,7 @@ def generate_grid_area_option(df_7mean):
         country_dates = country_data['date'].dt.strftime('%Y-%m-%d').drop_duplicates().tolist()
 
         option["grid"].append({
-            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
+            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 12}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
             "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
             "height": f"{HEIGHT - 4 * HEIGHT_ADJUSTMENT}%",
