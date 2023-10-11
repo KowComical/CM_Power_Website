@@ -178,7 +178,7 @@ def generate_grid_option(df_7mean, category_name):
         "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in unique_years_all],
         "left": 'center',
         "orient": "horizontal",
-        "top": 60,
+        "top": 50,
         "icon": "circle",  # This will give a filled circle symbol
         "itemWidth": 12,  # Controls the width of the circle
         "itemHeight": 12,  # Controls the height of the circle
