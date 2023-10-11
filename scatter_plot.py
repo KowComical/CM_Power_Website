@@ -114,6 +114,7 @@ def create_echart(df_filtered):
             "min": min_val,
             "max": max_val,
             "name": "CM_Power",
+            "nameLocation": "center"
         })
 
         yAxis.append({
@@ -121,6 +122,7 @@ def create_echart(df_filtered):
             "min": min_val,
             "max": max_val,
             "name": "IEA",
+            "nameLocation": "center"
         })
 
     option = {
