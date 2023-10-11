@@ -82,7 +82,7 @@ def generate_grid_area_option(df_7mean):
     HEIGHT_ADJUSTMENT = 2.5
 
     option = {
-      "title": [{
+        "title": [{
             "text": "Power Generation Distribution by Source for Key Countries (TWh)",
             "left": "center",
             "top": "0%"
@@ -90,11 +90,21 @@ def generate_grid_area_option(df_7mean):
         "tooltip": {
             "trigger": "axis"
         },
+        "legend": {
+            "data": energy_types,
+            "orient": "horizontal",
+            "left": 'center',
+            "top": 65,  # Adjust this to position the legend as needed
+            "textStyle": {
+                "fontSize": 16  # Adjust the font size as needed
+            }
+        },
         "xAxis": [],
         "yAxis": [],
         "grid": [],
         "series": []
     }
+
 
     # Grid, xAxis, and yAxis configurations remain the same
     for idx, country in enumerate(countries):
