@@ -183,7 +183,7 @@ def get_scorecard(df):
     table_scorecard += """<br><br><br><div id="mydiv" class="ui centered cards">"""
 
     for index, row in df.iterrows():
-        table_scorecard += f"""
+    table_scorecard += f"""
     <div class="card">
         <div class="content" style="background-color: {header_bg(row['type'])};">
             <div class="header smallheader">{row['country']}</div>
@@ -194,7 +194,7 @@ def get_scorecard(df):
                 {round(row['year_to_date_sum'], 2)}<br>
                 <p class="kpi text">Year-to-Date (YTD)</p>
             </div>
-            <div class="column kpi number">
+            <div class="column kpi number" style="color: {color_percentage(row['percentage_change'])};">
                 {row['percentage_change']:.2f}%<br>
                 <p class="kpi text">YTD YoY Change</p>
             </div>
@@ -206,6 +206,13 @@ def get_scorecard(df):
     </div>"""
 
     return table_scorecard
+    
+
+def color_percentage(value):
+    if value < 0:
+        return "red"
+    else:
+        return "green"
 
 
 if __name__ == '__main__':
