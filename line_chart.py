@@ -4,6 +4,7 @@ import base64
 import math
 from streamlit_echarts import st_echarts, JsCode
 import json
+from datetime import datetime
 
 st.set_page_config(layout="wide")
 
@@ -200,23 +201,60 @@ def get_csv_download_link(df, filename="data.csv"):
     return href
 
 
-# 获取线条颜色的辅助函数
-def get_line_colors(num_years, category_name):
-    base_grey = 200  # Starting from RGB(200, 200, 200), which is light grey
-    decrement = 15  # Decrease to darken the color, decrementing by 15 each year
+def adjust_lightness(rgb, factor):
+    """
+    Adjusts the lightness of an RGB color.
+    Positive factor values lighten the color, while negative values darken it.
+    """
+    r, g, b = rgb
+    r = min(max(0, r + int(r * factor)), 255)
+    g = min(max(0, g + int(g * factor)), 255)
+    b = min(max(0, b + int(b * factor)), 255)
+    return (r, g, b)
 
+
+def get_line_colors(years_list, category_name=None):
+    # Base colors
+    blue_rgb = (0, 0, 255)
+    orange_rgb = (255, 165, 0)
+    black_color = 'rgb(0, 0, 0)'
+
+    current_year = datetime.now().year  # Get the current year
+    
     colors = []
-
-    # Create a color palette for each year prior to the latest year
-    for _ in range(num_years - 1):
-        rgb_color = f'rgb({base_grey},{base_grey},{base_grey})'
-        colors.append(rgb_color)
-        base_grey = max(50, base_grey - decrement)  # Don't go too dark, stop at RGB(50, 50, 50)
-
-    # Add color for the latest year
-    colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))  # Use color from COLORS dict or fallback to deep red
-
+    
+    for year in years_list:
+        if year in [2019, 2020]:
+            factor = (2020 - year) * 0.3  # Darken by 10% for each year away from 2020
+            adjusted_blue = adjust_lightness(blue_rgb, -factor)
+            colors.append(f'rgb{adjusted_blue}')
+        elif year == current_year:  # Latest year
+            colors.append(black_color)
+        else:
+            factor = (current_year - year) * 0.3  # Lighten by 10% for each year away from the current year
+            adjusted_orange = adjust_lightness(orange_rgb, factor)
+            colors.append(f'rgb{adjusted_orange}')
+            
     return colors
+
+
+# # 获取线条颜色的辅助函数
+# def get_line_colors(num_years, category_name):
+#     base_grey = 200  # Starting from RGB(200, 200, 200), which is light grey
+#     decrement = 15  # Decrease to darken the color, decrementing by 15 each year
+
+#     colors = []
+
+#     # Create a color palette for each year prior to the latest year
+#     for _ in range(num_years - 1):
+#         rgb_color = f'rgb({base_grey},{base_grey},{base_grey})'
+#         colors.append(rgb_color)
+#         base_grey = max(50, base_grey - decrement)  # Don't go too dark, stop at RGB(50, 50, 50)
+
+#     # Add color for the latest year
+#     colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))  # Use color from COLORS dict or fallback to deep red
+
+#     return colors
 
 
 
