@@ -227,7 +227,7 @@ def get_line_colors(num_years, category_name):
     base_rgb = COLORS.get(category_name, (220, 20, 60))
     base_h, base_s, base_l = rgb_to_hsl(*base_rgb)
 
-    lightness_decrement = 0.05  # Decrement by 5% each year
+    lightness_decrement = 0.15  # Decrement by 5% each year
 
     colors = []
 
