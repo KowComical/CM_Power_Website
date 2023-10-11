@@ -50,10 +50,6 @@ def main():
     
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
-    
-    st.sidebar.subheader("Legend: Energy Types")
-    for energy_type, color in COLORS.items():
-        st.sidebar.markdown(f"<span style='color: {color};'>■</span> {energy_type.capitalize()}", unsafe_allow_html=True)
 
 
 @st.cache_data
