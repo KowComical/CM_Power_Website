@@ -112,13 +112,15 @@ def create_echart(df_filtered):
         xAxis.append({
             "gridIndex": idx,
             "min": min_val,
-            "max": max_val
+            "max": max_val,
+            "name": "CM_Power",
         })
 
         yAxis.append({
             "gridIndex": idx,
             "min": min_val,
-            "max": max_val
+            "max": max_val,
+            "name": "IEA",
         })
 
     option = {
