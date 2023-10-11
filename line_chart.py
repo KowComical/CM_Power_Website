@@ -91,6 +91,11 @@ def generate_grid_option(df_7mean, category_name):
     formatted_dates = df_7mean['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
 
     option = {
+       "title": [{
+            "text": "CM_Power vs IEA by Energy Sector [Twh]",
+            "left": "center",
+            "top": "0%"
+        }],
         "tooltip": {
             "trigger": "axis"
         },
