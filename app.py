@@ -183,27 +183,27 @@ def get_scorecard(df):
     table_scorecard += """<br><br><br><div id="mydiv" class="ui centered cards">"""
 
     for index, row in df.iterrows():
-    table_scorecard += f"""
-    <div class="card">
-        <div class="content" style="background-color: {header_bg(row['type'])};">
-            <div class="header smallheader">{row['country']}</div>
-            <div class="meta smallheader">{row['continent']}</div>
-        </div>
-        <div class="content">
-            <div class="column kpi number">
-                {round(row['year_to_date_sum'], 2)}<br>
-                <p class="kpi text">Year-to-Date (YTD)</p>
-            </div>
-            <div class="column kpi number" style="color: {color_percentage(row['percentage_change'])};">
-                {row['percentage_change']:.2f}%<br>
-                <p class="kpi text">YTD YoY Change</p>
-            </div>
-        </div>
-        <div class="extra content">
-            <div class="meta"><i class="user icon"></i>Source: <a href="{row['source_url']}" target="_blank">{row['source']}</a> </div>
-            <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
-        </div>
-    </div>"""
+        table_scorecard += f"""
+            <div class="card">
+                <div class="content" style="background-color: {header_bg(row['type'])};">
+                    <div class="header smallheader">{row['country']}</div>
+                    <div class="meta smallheader">{row['continent']}</div>
+                </div>
+                <div class="content">
+                    <div class="column kpi number">
+                        {round(row['year_to_date_sum'], 2)}<br>
+                        <p class="kpi text">Year-to-Date (YTD)</p>
+                    </div>
+                    <div class="column kpi number" style="color: {color_percentage(row['percentage_change'])};">
+                        {row['percentage_change']:.2f}%<br>
+                        <p class="kpi text">YTD YoY Change</p>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="meta"><i class="user icon"></i>Source: <a href="{row['source_url']}" target="_blank">{row['source']}</a> </div>
+                    <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
+                </div>
+            </div>"""
 
     return table_scorecard
     
