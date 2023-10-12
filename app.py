@@ -12,7 +12,7 @@ st.set_page_config(layout="wide")
 hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {
-                visibility: hidden;
+                visibility: visible;
                 height: 0%;
                 position: fixed;
                 }
