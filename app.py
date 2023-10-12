@@ -13,7 +13,7 @@ hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {
                 visibility: visible;
-                height: 0%;
+                height: 1%;
                 position: fixed;
                 }
                 div[data-testid="stDecoration"] {
