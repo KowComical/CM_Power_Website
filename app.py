@@ -161,7 +161,7 @@ def get_scorecard(df):
             <div class="value">""" + str(len(df)) + """
             </div>
             <div class="grey label">
-              number of countries so far
+              number of key countries included so far
             </div>
           </div>
             <div class="grey statistic">
