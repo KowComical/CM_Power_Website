@@ -105,15 +105,14 @@ def add_logo(image_path):
             [data-testid="stSidebarNav"] {{
                 background-image: url(data:image/png;base64,{b64_string});
                 background-repeat: no-repeat;
-                background-size: 180px 280px;  /* Set the size of the image */
-                padding-top: 120px;
+                background-size: contain;  /* Preserve aspect ratio */
+                padding-top: 120px;  /* Adjust based on your image's height */
                 background-position: 20px 20px;
             }}
         </style>
         """,
         unsafe_allow_html=True,
     )
-
 
 def current_year_sum(group):
     latest_date_for_country = group['date'].max()
