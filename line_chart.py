@@ -5,6 +5,7 @@ import math
 from streamlit_echarts import st_echarts, JsCode
 import json
 from datetime import datetime
+import base64
 
 st.set_page_config(layout="wide")
 
@@ -50,6 +51,7 @@ with open('./data/colors.txt', 'r') as file:
 
 # 主程序
 def main():
+    add_logo("./data/logo_edited.png")
 
     category_name = st.sidebar.selectbox(
         'Select Energy Type',
@@ -66,6 +68,29 @@ def main():
 
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+
+
+def add_logo(image_path):
+    # Open the image file
+    with open(image_path, "rb") as img_file:
+        # Encode the image as Base64
+        b64_string = base64.b64encode(img_file.read()).decode()
+    
+    # Insert the Base64 string into the CSS
+    st.markdown(
+        f"""
+        <style>
+            [data-testid="stSidebarNav"] {{
+                background-image: url(data:image/png;base64,{b64_string});
+                background-repeat: no-repeat;
+                background-size: 80% auto;  /* Set width to 80% of the sidebar, height scales automatically */
+                padding-top: 40px;  /* Adjust based on your image's height */
+                background-position: 20px 20px;
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def get_countries_sorted_by_value(df, category_name):
