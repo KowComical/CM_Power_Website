@@ -152,6 +152,7 @@ def remote_css(url):
 
 # def header_bg(table_type):
 #     return COLORS.get(table_type, "#BAD2DE")  # A soft warm default color
+
 def header_bg(continent):
     return CONTINENT_COLORS.get(continent, "#BAD2DE")  # A soft warm default color
 
@@ -228,6 +229,7 @@ def get_scorecard(df):
     for index, row in df.iterrows():
         table_scorecard += f"""
             <div class="card">
+                # <div class="content" style="background-color: {header_bg(row['type'])};">
                 <div class="content" style="background-color: {header_bg(row['continent'])};">
                     <div class="header smallheader">{row['country']}</div>
                     <div class="meta smallheader">{row['continent']}</div>
