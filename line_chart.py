@@ -59,10 +59,14 @@ def main():
 
     df, df_7mean = data_read()
 
-    option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
+    st.dataframe(df_7mean)
 
-    st_echarts(options=option,
-               height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+    
+
+    # option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
+
+    # st_echarts(options=option,
+    #            height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
 
 # 生成 ECharts 配置的函数
