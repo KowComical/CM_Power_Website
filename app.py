@@ -49,6 +49,7 @@ with open('./data/colors.txt', 'r') as file:
 
 
 def main():
+    add_logo("./data/logo.png")
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
     local_css("./data/style.css")
@@ -60,7 +61,7 @@ def main():
     df_download = df.copy()
 
     with st.container():
-      add_logo("./data/logo.png")
+      
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
           'Select Energy Type',
@@ -104,6 +105,7 @@ def add_logo(image_path):
             [data-testid="stSidebarNav"] {{
                 background-image: url(data:image/png;base64,{b64_string});
                 background-repeat: no-repeat;
+                background-size: 80px 80px;  /* Set the size of the image */
                 padding-top: 120px;
                 background-position: 20px 20px;
             }}
