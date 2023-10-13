@@ -9,39 +9,39 @@ show_pages_from_config()
 # Set Streamlit Configuration
 st.set_page_config(layout="wide")
 
-# # 隐藏所有东西
-# hide_streamlit_style = """
-#                 <style>
-#                 div[data-testid="stToolbar"] {
-#                 visibility: visible;
-#                 height: 1%;
-#                 position: fixed;
-#                 }
-#                 div[data-testid="stDecoration"] {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 position: fixed;
-#                 }
-#                 div[data-testid="stStatusWidget"] {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 position: fixed;
-#                 }
-#                 #MainMenu {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 }
-#                 header {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 }
-#                 footer {
-#                 visibility: hidden;
-#                 height: 0%;
-#                 }
-#                 </style>
-#                 """
-# st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+# 隐藏所有东西
+hide_streamlit_style = """
+                <style>
+                div[data-testid="stToolbar"] {
+                visibility: visible;
+                height: 1%;
+                position: fixed;
+                }
+                div[data-testid="stDecoration"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stStatusWidget"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                #MainMenu {
+                visibility: hidden;
+                height: 0%;
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                footer {
+                visibility: hidden;
+                height: 0%;
+                }
+                </style>
+                """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Reading the dictionary from the text file
 with open('./data/colors.txt', 'r') as file:
@@ -61,7 +61,7 @@ def main():
 
     with st.container():
       
-      st.image("./data/Logo Display_page-0001.jpg", width=150)
+      # st.image("./data/Logo Display_page-0001.jpg", width=150)
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
           'Select Energy Type',
