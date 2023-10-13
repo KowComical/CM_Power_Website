@@ -59,20 +59,28 @@ def main():
 
     df, df_7mean = data_read()
 
-    st.dataframe(df_7mean)
+    # Get the sorted list of countries based on the selected category_name
+    countries = get_countries_sorted_by_value(df_7mean, category_name)
 
+    option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name, countries)
+
+    st_echarts(options=option,
+               height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+
+
+def get_countries_sorted_by_value(df, category_name):
+    # Grouping by country and summing the values for the specific type
+    type_sum = df[df['type'] == category_name].groupby('country')['value'].sum()
     
+    # Sorting the values in descending order and getting the country names
+    sorted_countries = type_sum.sort_values(ascending=False).index.tolist()
+    
+    return sorted_countries
 
-    # option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_option(df_7mean, category_name)
-
-    # st_echarts(options=option,
-    #            height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
 
 # 生成 ECharts 配置的函数
-def generate_grid_option(df_7mean, category_name):
-    # 获取所有国家
-    countries = df_7mean['country'].unique().tolist()
+def generate_grid_option(df_7mean, category_name, countries):
     num_countries = len(countries)
 
     # 定义全局设置
@@ -111,7 +119,6 @@ def generate_grid_option(df_7mean, category_name):
 
     # 创建存储每年颜色的字典
     unique_years_all = df_7mean['year'].unique()
-    # colors_for_years = dict(zip(unique_years_all, get_line_colors(len(unique_years_all), category_name)))
     colors_for_years = dict(zip(unique_years_all, get_line_colors(unique_years_all, category_name)))
 
 
@@ -266,26 +273,6 @@ def get_line_colors(years_list, category_name=None):
             colors.append(f'rgb{adjusted_orange}')
             
     return colors
-
-
-# # 获取线条颜色的辅助函数
-# def get_line_colors(num_years, category_name):
-#     base_grey = 200  # Starting from RGB(200, 200, 200), which is light grey
-#     decrement = 15  # Decrease to darken the color, decrementing by 15 each year
-
-#     colors = []
-
-#     # Create a color palette for each year prior to the latest year
-#     for _ in range(num_years - 1):
-#         rgb_color = f'rgb({base_grey},{base_grey},{base_grey})'
-#         colors.append(rgb_color)
-#         base_grey = max(50, base_grey - decrement)  # Don't go too dark, stop at RGB(50, 50, 50)
-
-#     # Add color for the latest year
-#     colors.append(COLORS.get(category_name, 'rgb(220,20,60)'))  # Use color from COLORS dict or fallback to deep red
-
-#     return colors
-
 
 
 if __name__ == '__main__':
