@@ -60,8 +60,8 @@ def main():
     df_download = df.copy()
 
     with st.container():
-      with st.sidebar:
-        st.image("./data/Logo Display_page-0001.jpg", width=150)
+      
+      st.image("./data/Logo Display_page-0001.jpg", width=150)
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
           'Select Energy Type',
