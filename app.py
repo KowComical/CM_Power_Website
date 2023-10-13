@@ -4,9 +4,11 @@ from st_pages import show_pages_from_config
 import json
 from streamlit_extras.app_logo import add_logo
 
+st.sidebar.image("./data/logo.png")
+
+
 show_pages_from_config()
 
-st.sidebar.image("./data/logo.png")
 
 # Set Streamlit Configuration
 st.set_page_config(layout="wide")
