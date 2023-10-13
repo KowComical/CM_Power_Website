@@ -3,6 +3,7 @@ import pandas as pd
 from st_pages import show_pages_from_config
 import json
 import base64
+import datetime
 
 show_pages_from_config()
 
@@ -54,7 +55,7 @@ CONTINENT_COLORS = {
     'Europe/Asia': '#B0C4DE',   # Light steel blue (retained from your original colors)
 }
 
-
+current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
 # Reading the dictionary from the text file
 with open('./data/colors.txt', 'r') as file:
@@ -99,7 +100,7 @@ def main():
       st.sidebar.download_button(
           label=f"🗃️ Download :red[{selected_energy.title()}] Data as CSV",
           data=csv_data,
-          file_name=f"{selected_energy}_data.csv",
+          file_name=f"{selected_energy}_data_{current_date}.csv",
           mime="text/csv",
           use_container_width=True,
       )
