@@ -1,5 +1,5 @@
 [theme]
-base="black"
+base="dark"
 
 [server]
 runOnSave=true
