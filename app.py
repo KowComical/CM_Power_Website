@@ -62,7 +62,7 @@ def main():
     with st.container():
 
       # add kitten logo
-      add_logo("https://placekitten.com/100/100")
+      add_logo("./data/Logo Display_page-0001.jpg")
         
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
