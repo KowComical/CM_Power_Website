@@ -226,10 +226,11 @@ def get_scorecard(df):
 
     table_scorecard += """<br><br><br><div id="mydiv" class="ui centered cards">"""
 
+    # <div class="content" style="background-color: {header_bg(row['type'])};">
+
     for index, row in df.iterrows():
         table_scorecard += f"""
             <div class="card">
-                # <div class="content" style="background-color: {header_bg(row['type'])};">
                 <div class="content" style="background-color: {header_bg(row['continent'])};">
                     <div class="header smallheader">{row['country']}</div>
                     <div class="meta smallheader">{row['continent']}</div>
