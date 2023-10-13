@@ -49,7 +49,7 @@ with open('./data/colors.txt', 'r') as file:
 
 
 def main():
-    st.sidebar.image("./data/logo.png")
+    add_logo("./data/logo.png")
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
     local_css("./data/style.css")
