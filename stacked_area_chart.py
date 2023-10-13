@@ -79,7 +79,7 @@ def generate_grid_area_option(df_7mean):
 
     option = {
         "title": [{
-            "text": "Power Generation Distribution by Source for Key Countries (TWh)",
+            "text": "Power Generation Distribution by Source for Key Countries (%)",
             "left": "center",
             "top": "0%"
         }],
