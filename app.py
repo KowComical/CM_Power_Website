@@ -45,14 +45,15 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
 CONTINENT_COLORS = {
-    'Asia': '#FFD700',
-    'Africa': '#228B22',
-    'Europe': '#4B0082',
-    'North America': '#DC143C',
-    'South America': '#FF8C00',
-    'Australia/Oceania': '#1E90FF',
-    'Europe/Asia': '#B0C4DE',
+    'Asia': '#FFE5B4',          # Peach
+    'Africa': '#FFD1DC',        # Light pink
+    'Europe': '#E6E6FA',        # Lavender
+    'North America': '#FFFACD', # Pastel yellow
+    'South America': '#98FF98', # Mint
+    'Australia/Oceania': '#B4EEB4', # Light green
+    'Europe/Asia': '#B0C4DE',   # Light steel blue (retained from your original colors)
 }
+
 
 
 # Reading the dictionary from the text file
