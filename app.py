@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from st_pages import show_pages_from_config
 import json
-from streamlit_extras.app_logo import add_logo
+import base64
 
 show_pages_from_config()
 
@@ -49,7 +49,7 @@ with open('./data/colors.txt', 'r') as file:
 
 
 def main():
-    add_logo("./data/logo.png", height=100)
+    add_logo("./data/logo.png")
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
     local_css("./data/style.css")
@@ -89,6 +89,36 @@ def main():
           mime="text/csv",
           use_container_width=True,
       )
+
+
+def add_logo(image_path):
+    # Open the image file
+    with open(image_path, "rb") as img_file:
+        # Encode the image as Base64
+        b64_string = base64.b64encode(img_file.read()).decode()
+    
+    # Insert the Base64 string into the CSS
+    st.markdown(
+        f"""
+        <style>
+            [data-testid="stSidebarNav"] {{
+                background-image: url(data:image/png;base64,{b64_string});
+                background-repeat: no-repeat;
+                padding-top: 120px;
+                background-position: 20px 20px;
+            }}
+            [data-testid="stSidebarNav"]::before {{
+                content: "My Company Name";
+                margin-left: 20px;
+                margin-top: 20px;
+                font-size: 30px;
+                position: relative;
+                top: 100px;
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def current_year_sum(group):
