@@ -4,8 +4,6 @@ from st_pages import show_pages_from_config
 import json
 from streamlit_extras.app_logo import add_logo
 
-st.sidebar.image("./data/logo.png")
-
 show_pages_from_config()
 
 # Set Streamlit Configuration
@@ -51,6 +49,7 @@ with open('./data/colors.txt', 'r') as file:
 
 
 def main():
+    st.sidebar.image("./data/logo.png")
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
     local_css("./data/style.css")
