@@ -43,6 +43,18 @@ hide_streamlit_style = """
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+
+CONTINENT_COLORS = {
+    'Asia': '#FFD700',
+    'Africa': '#228B22',
+    'Europe': '#4B0082',
+    'North America': '#DC143C',
+    'South America': '#FF8C00',
+    'Australia/Oceania': '#1E90FF',
+    'Europe/Asia': '#B0C4DE',
+}
+
+
 # Reading the dictionary from the text file
 with open('./data/colors.txt', 'r') as file:
     COLORS = json.load(file)
@@ -136,8 +148,10 @@ def remote_css(url):
     st.markdown(f'<link href="{url}" rel="stylesheet">', unsafe_allow_html=True)
 
 
-def header_bg(table_type):
-    return COLORS.get(table_type, "#BAD2DE")  # A soft warm default color
+# def header_bg(table_type):
+#     return COLORS.get(table_type, "#BAD2DE")  # A soft warm default color
+def header_bg(continent):
+    return CONTINENT_COLORS.get(continent, "#BAD2DE")  # A soft warm default color
 
 
 def read_data_sources_from_file(filename):
@@ -212,7 +226,7 @@ def get_scorecard(df):
     for index, row in df.iterrows():
         table_scorecard += f"""
             <div class="card">
-                <div class="content" style="background-color: {header_bg(row['type'])};">
+                <div class="content" style="background-color: {header_bg(row['continent'])};">
                     <div class="header smallheader">{row['country']}</div>
                     <div class="meta smallheader">{row['continent']}</div>
                 </div>
