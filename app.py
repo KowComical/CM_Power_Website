@@ -61,7 +61,7 @@ def main():
 
     with st.container():
       
-      st.image("./data/logo.jpg", width=150)
+      add_logo("./data/logo.jpg")
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
           'Select Energy Type',
