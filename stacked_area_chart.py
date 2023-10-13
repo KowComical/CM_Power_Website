@@ -3,6 +3,7 @@ import pandas as pd
 import math
 from streamlit_echarts import st_echarts
 import json
+import base64
 
 # 隐藏所有东西
 hide_streamlit_style = """
@@ -44,12 +45,36 @@ with open('./data/colors.txt', 'r') as file:
 
 
 def main():
+    add_logo("./data/logo_edited.png")
     df_7mean = data_read()
 
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean)
     
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
+
+
+def add_logo(image_path):
+    # Open the image file
+    with open(image_path, "rb") as img_file:
+        # Encode the image as Base64
+        b64_string = base64.b64encode(img_file.read()).decode()
+    
+    # Insert the Base64 string into the CSS
+    st.markdown(
+        f"""
+        <style>
+            [data-testid="stSidebarNav"] {{
+                background-image: url(data:image/png;base64,{b64_string});
+                background-repeat: no-repeat;
+                background-size: 80% auto;  /* Set width to 80% of the sidebar, height scales automatically */
+                padding-top: 40px;  /* Adjust based on your image's height */
+                background-position: 20px 20px;
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 @st.cache_data
