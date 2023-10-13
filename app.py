@@ -106,7 +106,7 @@ def add_logo(image_path):
                 background-image: url(data:image/png;base64,{b64_string});
                 background-repeat: no-repeat;
                 background-size: 80% auto;  /* Set width to 80% of the sidebar, height scales automatically */
-                padding-top: 120px;  /* Adjust based on your image's height */
+                padding-top: 20px;  /* Adjust based on your image's height */
                 background-position: 20px 20px;
             }}
         </style>
