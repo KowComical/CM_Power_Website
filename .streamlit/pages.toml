@@ -13,9 +13,9 @@ path = "stacked_area_chart.py"
 name = "Stacked Area Chart"
 icon = "🏳️‍🌈"
 
-[[pages]]
-path = "scatter_plot.py"
-name = "Scatter Plot"
-icon = "☃️"
+# [[pages]]
+# path = "scatter_plot.py"
+# name = "Scatter Plot"
+# icon = "☃️"
 
 
