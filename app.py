@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from st_pages import show_pages_from_config
 import json
+from streamlit_extras.app_logo import add_logo
 
 show_pages_from_config()
 
@@ -59,6 +60,9 @@ def main():
     df_download = df.copy()
 
     with st.container():
+
+      # add kitten logo
+      add_logo("https://placekitten.com/100/100")
         
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
