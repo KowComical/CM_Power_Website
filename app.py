@@ -69,23 +69,25 @@ def main():
       df = df[df['type'] == selected_energy].reset_index(drop=True)
   
       df = transform_data(df, selected_energy)
-      st.write(df)
+
+      # 按照值的大小排序
+      df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
   
-      # table_scorecard = get_scorecard(df)
-      # st.markdown(table_scorecard, unsafe_allow_html=True)
+      table_scorecard = get_scorecard(df)
+      st.markdown(table_scorecard, unsafe_allow_html=True)
   
-      # # 使用 Streamlit 的下载按钮进行一键下载
-      # if selected_energy == 'total':
-      #     csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
-      # else:
-      #     csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
-      # st.sidebar.download_button(
-      #     label=f"🗃️ Download :red[{selected_energy.title()}] Data as CSV",
-      #     data=csv_data,
-      #     file_name=f"{selected_energy}_data.csv",
-      #     mime="text/csv",
-      #     use_container_width=True,
-      # )
+      # 使用 Streamlit 的下载按钮进行一键下载
+      if selected_energy == 'total':
+          csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
+      else:
+          csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
+      st.sidebar.download_button(
+          label=f"🗃️ Download :red[{selected_energy.title()}] Data as CSV",
+          data=csv_data,
+          file_name=f"{selected_energy}_data.csv",
+          mime="text/csv",
+          use_container_width=True,
+      )
 
 
 def current_year_sum(group):
