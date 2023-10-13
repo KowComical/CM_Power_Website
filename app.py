@@ -49,7 +49,7 @@ CONTINENT_COLORS = {
     'Africa': '#FFD1DC',        # Light pink
     'Europe': '#E6E6FA',        # Lavender
     'North America': '#FFFACD', # Pastel yellow
-    'South America': '#98FF98', # Mint
+    'South America': '#D8BFD8', # Mint
     'Australia/Oceania': '#B4EEB4', # Light green
     'Europe/Asia': '#B0C4DE',   # Light steel blue (retained from your original colors)
 }
