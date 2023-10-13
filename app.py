@@ -105,17 +105,9 @@ def add_logo(image_path):
             [data-testid="stSidebarNav"] {{
                 background-image: url(data:image/png;base64,{b64_string});
                 background-repeat: no-repeat;
-                background-size: 80px 80px;  /* Set the size of the image */
+                background-size: 180px 280px;  /* Set the size of the image */
                 padding-top: 120px;
                 background-position: 20px 20px;
-            }}
-            [data-testid="stSidebarNav"]::before {{
-                content: "My Company Name";
-                margin-left: 20px;
-                margin-top: 20px;
-                font-size: 30px;
-                position: relative;
-                top: 100px;
             }}
         </style>
         """,
