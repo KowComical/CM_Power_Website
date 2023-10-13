@@ -6,6 +6,8 @@ from streamlit_extras.app_logo import add_logo
 
 show_pages_from_config()
 
+st.sidebar.image("./data/logo.png")
+
 # Set Streamlit Configuration
 st.set_page_config(layout="wide")
 
@@ -60,8 +62,6 @@ def main():
     df_download = df.copy()
 
     with st.container():
-      
-      st.sidebar.image("./data/logo.png")
       # Identify unique energy types and let users select one
       selected_energy = st.sidebar.selectbox(
           'Select Energy Type',
