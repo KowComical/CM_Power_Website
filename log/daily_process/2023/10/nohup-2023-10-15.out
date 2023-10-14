@@ -1,0 +1,18 @@
+From github.com:kowcomical/CM_Power_Website
+   14b7f33..61b17c4  master     -> origin/master
+Updating 14b7f33..61b17c4
+Fast-forward
+ .streamlit/pages.toml     |   8 +++---
+ app.py                    |  56 +++++++++++++++++++++++++++++++++++----
+ data/logo.jpg             | Bin 0 -> 245783 bytes
+ data/logo.png             | Bin 0 -> 219363 bytes
+ data/logo_edited.png      | Bin 0 -> 228685 bytes
+ data/logo_transparent.png | Bin 0 -> 237252 bytes
+ line_chart.py             |  66 ++++++++++++++++++++++++++++------------------
+ requirements.txt          |   1 +
+ stacked_area_chart.py     |  27 ++++++++++++++++++-
+ 9 files changed, 123 insertions(+), 35 deletions(-)
+ create mode 100644 data/logo.jpg
+ create mode 100644 data/logo.png
+ create mode 100644 data/logo_edited.png
+ create mode 100644 data/logo_transparent.png
