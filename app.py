@@ -1,9 +1,11 @@
-import streamlit as st
 import pandas as pd
-from st_pages import show_pages_from_config
 import json
 import base64
 import datetime
+
+import streamlit as st
+from streamlit_toggle import st_toggle_switch
+from st_pages import show_pages_from_config
 
 show_pages_from_config()
 
@@ -88,12 +90,8 @@ def main():
       # 按照值的大小排序
       df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
 
-      cb_view_details = st.sidebar.checkbox('View Details')
-
-      if cb_view_details:
-          view_details=""
-      else:
-          view_details="""style="display: none;" """
+      # cb_view_details = st.sidebar.checkbox('View Details')
+      view_details = display_switch_button()
   
       table_scorecard = get_scorecard(df, view_details)
       st.markdown(table_scorecard, unsafe_allow_html=True)
@@ -288,6 +286,30 @@ def color_percentage(value):
         return "red"
     else:
         return "green"
+
+def display_switch_button():
+
+    # Initialize state if it doesn't exist
+    if 'toggle_switch' not in st.session_state:
+        st.session_state['toggle_switch'] = False
+
+    # Use session_state for default_value
+    st.session_state['toggle_switch'] = st_toggle_switch(
+        label="Show More Details",
+        key="switch",
+        default_value=st.session_state['toggle_switch'],
+        label_after=False,
+        inactive_color="#D3D3D3",  # optional
+        active_color="#11567f",  # optional
+        track_color="#29B5E8",  # optional
+    )
+
+    if st.session_state['toggle_switch']:
+        view_details=""
+    else:
+        view_details="""style="display: none;" """
+        
+    return view_details
 
 
 if __name__ == '__main__':
