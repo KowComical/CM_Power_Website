@@ -77,15 +77,29 @@ def main():
 
     with st.container():
       
-      # Identify unique energy types and let users select one
+      # 筛选能源类型
       selected_energy = st.sidebar.selectbox(
           'Select Energy Type',
           ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'], index=0)
   
-      # Filter the DataFrame based on the selected energy type
       df = df[df['type'] == selected_energy].reset_index(drop=True)
-  
-      df = transform_data(df, selected_energy)
+
+      # 筛选大洲
+      continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+      all_continents = ['All Continents'] + continents
+
+      selected_continent = st.multiselect(
+          'Which continents do you want to select?',
+          all_continents,
+          default=['All Continents'])  # Setting the default value to "All Continents"
+      
+      if 'All Continents' in selected_options:
+          selected_continents = continents
+      else:
+          selected_continents = selected_continent
+
+      # 处理数据
+      df = transform_data(df, selected_energy, selected_continents)
 
       # 按照值的大小排序
       df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
@@ -169,7 +183,7 @@ def read_data_sources_from_file(filename):
         return eval(data)
 
 
-def transform_data(df, selected_energy):
+def transform_data(df, selected_energy, selected_continents):
     df['value'] = df['value'] / 1000 # Gwh to Twh
     df['date'] = pd.to_datetime(df['date'])
 
@@ -196,10 +210,8 @@ def transform_data(df, selected_energy):
 
     df = pd.merge(df, data_description)
 
-    # # data_sources = read_data_sources_from_file('./data/data_source.txt')
-    # df['source'] = df['country'].map(lambda x: data_sources.get(x, [None])[0])
-    # df['source_url'] = df['country'].map(lambda x: data_sources.get(x, [None, None])[1])
-    # df['continent'] = df['country'].map(lambda x: data_sources.get(x, [None, None])[2])
+    # 筛选大洲
+    df = df[df['continent'].isin(selected_continents)].reset_index(drop=True)
 
     return df
 
