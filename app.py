@@ -95,13 +95,13 @@ def main():
           all_continents,
           default=prev_selection)
       
-      # If "All Continents" is newly selected alongside other continents, reset to only "All Continents"
-      if 'All Continents' in selected_continent and 'All Continents' not in prev_selection:
-          selected_continent = ['All Continents']
-      
       # If another continent is selected when "All Continents" is already selected, keep only the newly selected continent
-      elif 'All Continents' in prev_selection and len(selected_continent) > 1:
-          selected_continent.remove('All Continents')
+      if 'All Continents' in prev_selection and len(selected_continent) > 1:
+          selected_continent = [continent for continent in selected_continent if continent != 'All Continents']
+      
+      # If "All Continents" is newly selected alongside other continents, reset to only "All Continents"
+      elif 'All Continents' in selected_continent and 'All Continents' not in prev_selection:
+          selected_continent = ['All Continents']
       
       # Save current selection to session_state for next time
       st.session_state.prev_selection = selected_continent
@@ -111,7 +111,7 @@ def main():
           selected_continents = continents
       else:
           selected_continents = selected_continent
-        
+    
       # 处理数据
       df = transform_data(df, selected_energy, selected_continents)
 
