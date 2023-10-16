@@ -88,7 +88,7 @@ def main():
       continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
       all_continents = ['All Continents'] + continents
 
-      selected_continent = st.multiselect(
+      selected_continent = st.sidebar.multiselect(
           'Which continents do you want to select?',
           all_continents,
           default=['All Continents'])  # Setting the default value to "All Continents"
