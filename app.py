@@ -216,7 +216,8 @@ def transform_data(df, selected_energy, selected_continents):
     df = pd.merge(df, data_description)
 
     # 筛选大洲
-    df = df[df['continent'].isin(selected_continents)].reset_index(drop=True)
+    if selected_continents is not None:
+      df = df[df['continent'].isin(selected_continents)].reset_index(drop=True)
 
     return df
 
