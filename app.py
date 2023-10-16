@@ -88,20 +88,30 @@ def main():
       continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
       all_continents = ['All Continents'] + continents
       
+      # Load previous selection from session_state or use default
+      prev_selection = st.session_state.get('prev_selection', ['All Continents'])
       selected_continent = st.sidebar.multiselect(
           'Which continents do you want to select?',
           all_continents,
-          default=['All Continents'])  # Setting the default value to "All Continents"
+          default=prev_selection)
       
-      # If "All Continents" and any other continent are selected simultaneously, deselect "All Continents".
-      if 'All Continents' in selected_continent and len(selected_continent) > 1:
+      # If "All Continents" is newly selected, reset to only "All Continents"
+      if 'All Continents' in selected_continent and 'All Continents' not in prev_selection:
+          selected_continent = ['All Continents']
+      
+      # If another continent is selected when "All Continents" is already selected, deselect "All Continents"
+      elif 'All Continents' in selected_continent:
           selected_continent.remove('All Continents')
+      
+      # Save current selection to session_state for next time
+      st.session_state.prev_selection = selected_continent
       
       # Determine the output based on the selection
       if 'All Continents' in selected_continent:
           selected_continents = continents
       else:
           selected_continents = selected_continent
+
         
       # 处理数据
       df = transform_data(df, selected_energy, selected_continents)
