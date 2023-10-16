@@ -209,8 +209,20 @@ def get_scorecard(df, view_details):
     table_scorecard = """
     <style>
         .ui.statistics .statistic .label {
-            margin-top: 10px !important; /* The use of !important ensures the style is applied */
+            margin-top: 10px !important; 
         }
+
+        .extra.content .meta {
+            font-size: 1.2rem;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            padding-top: 10px;
+            background-color: #f7f7f7;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
     </style>
 
     <div class="ui three small statistics">
