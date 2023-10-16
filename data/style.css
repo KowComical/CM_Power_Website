@@ -50,15 +50,3 @@ height: 100vh;
 width: 100%;
 }
 
-.extra.content .meta {
-    font-size: 1.2rem;
-    text-align: center;
-    color: #333;
-    font-weight: bold;
-    padding-top: 10px;
-    background-color: #f7f7f7;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-
