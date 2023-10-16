@@ -87,8 +87,15 @@ def main():
 
       # 按照值的大小排序
       df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+
+      cb_view_details = st.sidebar.checkbox('View Details')
+
+      if cb_view_details:
+          view_details=""
+      else:
+          view_details="""style="display: none;" """
   
-      table_scorecard = get_scorecard(df)
+      table_scorecard = get_scorecard(df, view_details)
       st.markdown(table_scorecard, unsafe_allow_html=True)
   
       # 使用 Streamlit 的下载按钮进行一键下载
@@ -104,12 +111,6 @@ def main():
           use_container_width=True,
       )
 
-      cb_view_details = st.sidebar.checkbox('View Details')
-
-      if cb_view_details:
-          view_details=""
-      else:
-          view_details="""style="display: none;" """
 
 
 def add_logo(image_path):
@@ -204,7 +205,7 @@ def transform_data(df, selected_energy):
     return df
 
 
-def get_scorecard(df):
+def get_scorecard(df, view_details):
     table_scorecard = """
     <style>
         .ui.statistics .statistic .label {
