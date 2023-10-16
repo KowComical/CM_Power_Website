@@ -93,23 +93,23 @@ def main():
           all_continents,
           default=['All Continents'])  # Setting the default value to "All Continents"
       
-      # If "All Continents" is selected along with any other continent, deselect all other continents
+      # If "All Continents" is selected along with other continents, 
+      # reset the selection to only "All Continents"
       if 'All Continents' in selected_continent and len(selected_continent) > 1:
           selected_continent = ['All Continents']
       
-      # If any individual continent is selected when only "All Continents" was previously selected, deselect "All Continents"
-      if len(selected_continent) > 0 and selected_continent[0] == 'All Continents' and len(selected_continent) > 1:
-          selected_continent.remove('All Continents')
-      
-      # If no continent is selected, revert back to the default selection of "All Continents"
-      if not selected_continent:
-          selected_continent = ['All Continents']
-      
-      # If "All Continents" is selected, the output will be all the continents.
+      # If "All Continents" is selected, the output will be all continents.
       if 'All Continents' in selected_continent:
           selected_continents = continents
       else:
           selected_continents = selected_continent
+      
+      # This is necessary to set the state of the multiselect box after making changes
+      st.sidebar.multiselect(
+          'Which continents do you want to select?',
+          all_continents,
+          default=selected_continent)
+
 
       # 处理数据
       df = transform_data(df, selected_energy, selected_continents)
