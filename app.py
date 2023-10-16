@@ -215,6 +215,9 @@ def get_scorecard(df, view_details):
             text-align: left;
             color: #333;
             font-weight: bold;
+            white-space: nowrap;         /* Prevent the text from breaking into the next line */
+            overflow: hidden;           /* Hide any text that doesn't fit */
+            text-overflow: ellipsis;    /* Add "..." to any text that is cut off */
             padding: 5px;
         }
 
