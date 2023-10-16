@@ -205,67 +205,50 @@ def transform_data(df, selected_energy):
 
 
 def get_scorecard(df, view_details):
-    num_countries = len(df)
-    latest_date = min(df['max_date'].dt.strftime('%Y-%B'))
-    selected_energy = df['type'].tolist()[0]
+    table_scorecard = """
+      <style>
+          .ui.statistics .statistic .label {
+          margin-top: 10px !important; 
+          }
+  
+          .extra.content .meta {
+              font-size: 1.2rem;
+              text-align: left;
+              color: #333;
+              font-weight: bold;
+              white-space: nowrap;         /* Prevent the text from breaking into the next line */
+              overflow: hidden;           /* Hide any text that doesn't fit */
+              text-overflow: ellipsis;    /* Add "..." to any text that is cut off */
+              padding: 5px;
+          }
+  
+      </style>
+  
+      <div class="ui three small statistics">
+            <div class="grey statistic">
+              <div class="value">""" + str(len(df)) + """
+              </div>
+              <div class="grey label">
+                number of key countries included so far
+              </div>
+            </div>
+              <div class="grey statistic">
+                  <div class="value">""" + str(min(df['max_date'].dt.strftime('%Y-%B'))) + """
+                  </div>
+                  <div class="label">
+                  latest date for all countries
+                  </div>
+              </div>
+              <div class="grey statistic">
+                  <div class="value">Twh
+                  </div>
+                  <div class="label">
+                  Unit
+                  </div>
+              </div>
+          </div>"""
 
-
-    table_scorecard = f"""
-        <style>
-            .ui.statistics .statistic .label {{
-                margin-top: 10px !important;
-            }}
-    
-            .extra.content .meta {{
-                font-size: 1.2rem;
-                text-align: left;
-                color: #333;
-                font-weight: bold;
-                white-space: nowrap;         /* Prevent the text from breaking into the next line */
-                overflow: hidden;           /* Hide any text that doesn't fit */
-                text-overflow: ellipsis;    /* Add "..." to any text that is cut off */
-                padding: 5px;
-            }}
-        </style>
-    
-        <div class="ui three small statistics">
-            <div class="grey statistic">
-                <div class="value">
-                    {num_countries}
-                </div>
-                <div class="grey label">
-                    number of key countries included so far
-                </div>
-            </div>
-            <div class="grey statistic">
-                <div class="value">
-                    {latest_date}
-                </div>
-                <div class="label">
-                    latest date for all countries
-                </div>
-            </div>
-            <div class="grey statistic">
-                <div class="value">
-                    Twh
-                </div>
-                <div class="label">
-                    Unit
-                </div>
-            </div>
-            <div class="grey statistic"> <!-- New statistic block -->
-                <div class="value">
-                    {selected_energy}
-                </div>
-                <div class="label">
-                    Energy Type
-                </div>
-            </div>
-        </div>
-    
-        <br><br><br>
-        <div id="mydiv" class="ui centered cards">
-    """
+    table_scorecard += """<br><br><br><div id="mydiv" class="ui centered cards">"""
 
     # <div class="content" style="background-color: {header_bg(row['type'])};">
 
