@@ -185,7 +185,7 @@ def transform_data(df, selected_energy):
     # 读取国家信息
     data_description = pd.read_csv('./data/data_description.csv')
     
-    data_description['Duration'] = pd.to_datetime(data_description['Duration']).dt.strftime('%Y-%b')
+    data_description['duration'] = pd.to_datetime(data_description['duration']).dt.strftime('%Y-%b')
 
     df = pd.merge(df, data_description)
 
