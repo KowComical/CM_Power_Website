@@ -46,13 +46,13 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
 CONTINENT_COLORS = {
-    'Asia': '#FFE5B4',          # Peach
-    'Africa': '#FFD1DC',        # Light pink
-    'Europe': '#B0C4DE',        # Lavender
-    'North America': '#FFFACD', # Pastel yellow
-    'South America': '#D8BFD8', # Mint
-    'Australia/Oceania': '#B4EEB4', # Light green
-    'Europe/Asia': '#B0C4DE',   # Light steel blue (retained from your original colors)
+    'Asia': '#FFE5B4',          
+    'Africa': '#FFD1DC',        
+    'Europe': '#B0C4DE',        
+    'North America': '#FAD02E', 
+    'South America': '#D8BFD8', 
+    'Australia/Oceania': '#B4EEB4', 
+    'Europe/Asia': '#B0C4DE',
 }
 
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
