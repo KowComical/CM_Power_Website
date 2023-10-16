@@ -53,7 +53,7 @@ CONTINENT_COLORS = {
     'Europe': '#B0C4DE',        
     'North America': '#BA9192', 
     'South America': '#D8BFD8', 
-    'Oceania': '#B4EEB4', 
+    'Oceania': '#CBE2DA', 
 }
 
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
