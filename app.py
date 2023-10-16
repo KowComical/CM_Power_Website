@@ -93,7 +93,7 @@ def main():
           all_continents,
           default=['All Continents'])  # Setting the default value to "All Continents"
       
-      if 'All Continents' in selected_options:
+      if 'All Continents' in selected_continent:
           selected_continents = continents
       else:
           selected_continents = selected_continent
