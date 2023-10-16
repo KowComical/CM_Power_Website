@@ -1,0 +1,19 @@
+﻿Country,Organization,URL,Continent,Resolution,Update_Frequency,Duration,Region_data
+China,中国电力企业联合会,https://cec.org.cn/menu/index.html?170,Asia,Monthly,Monthly,2016-01-01,Not Available
+India,POSOCO,https://posoco.in/reports/daily-reports/,Asia,Daily,Daily,2015-01-01,Available
+Japan,OCCTO,https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login#,Asia,Hourly,Monthly,2016-01-01,Not Available
+Turkey,YTBS,https://ytbsbilgi.teias.gov.tr/ytbsbilgi/frm_istatistikler.jsf,Asia,Hourly,Daily,2018-01-01,Not Available
+South Africa,Eskom,https://www.eskom.co.za/dataportal/supply-side/station-build-up-for-the-last-7-days/,Africa,Hourly,Hourly,2018-04-01,Not Available
+EU27&UK,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-01-01,Not Available
+Germany,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-01-01,Not Available
+France,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-01-01,Not Available
+Italy,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-01-01,Not Available
+Spain,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-01-01,Not Available
+United Kingdom,BMRS,https://www.bmreports.com/bmrs,Europe,Hourly,Hourly,2018-01-01,Not Available
+Russia,EMRES,https://emres.cn,Europe/Asia,Hourly,Hourly,2015-01-01,Not Available
+United States,EIA,https://www.eia.gov/electricity/,North America,Hourly,Hourly,2018-01-01,Available
+Mexico,Gobierno de Mexico,https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx,North America,Hourly,Monthly,2016-04-01,Not Available
+Brazil,ONS,http://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao,South America,Hourly,Hourly,2016-01-01,Not Available
+Chile,Coordinador Eléctrico Nacional,https://www.coordinador.cl/operacion/graficos/operacion-real/generacion-real/,South America,Hourly,Daily,2012-01-01,Not Available
+Australia,Opennem,https://opennem.org.au/energy/nem/?range=7d&interval=30m,Australia/Oceania,Hourly,Hourly,1999-01-01,Available
+New Zealand,EMI,https://www.emi.ea.govt.nz/Wholesale/Datasets/Generation/Generation_MD,Australia/Oceania,Hourly,Hourly,1997-08-01,Not Available
