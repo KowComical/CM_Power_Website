@@ -18,23 +18,13 @@ text-align: center;
 color: rgb(90, 90, 90);
 }
 
-/* .kpi.text{
+.kpi.text{
 font-size: 1rem;
 text-align: center;
 color: rgb(90, 90, 90);
 padding-top: 10px;
-} */
-
-.kpi.text{
-    font-size: 1.2rem;  /* Increase the font size */
-    text-align: center;
-    color: #333;  /* Darker shade for better visibility */
-    font-weight: bold;  /* Make the text bold */
-    padding-top: 10px;
-    background-color: #f7f7f7;  /* Light grey background for emphasis */
-    border-radius: 5px;  /* Optional: Rounded corners for aesthetic */
-    padding: 5px;  /* Some padding to space out the background */
 }
+
 
 .tablebackground{
 background-color: #BAD2DE !important;
@@ -59,3 +49,15 @@ background-color: #E5F0EC !important;
 height: 100vh;
 width: 100%;
 }
+
+.meta{
+    font-size: 1.2rem;  /* Increase the font size */
+    text-align: center;
+    color: #333;  /* Darker shade for better visibility */
+    font-weight: bold;  /* Make the text bold */
+    padding-top: 10px;
+    background-color: #f7f7f7;  /* Light grey background for emphasis */
+    border-radius: 5px;  /* Optional: Rounded corners for aesthetic */
+    padding: 5px;  /* Some padding to space out the background */
+}
+
