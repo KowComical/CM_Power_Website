@@ -103,31 +103,33 @@ def main():
       else:
           selected_continents = selected_continent
 
-      # 处理数据
-      df = transform_data(df, selected_energy, selected_continents)
+      st.write(selected_continents)
 
-      # 按照值的大小排序
-      df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+      # # 处理数据
+      # df = transform_data(df, selected_energy, selected_continents)
 
-      # cb_view_details = st.sidebar.checkbox('View Details')
-      view_details = display_switch_button()
+      # # 按照值的大小排序
+      # df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+
+      # # cb_view_details = st.sidebar.checkbox('View Details')
+      # view_details = display_switch_button()
   
-      table_scorecard = get_scorecard(df, view_details)
-      st.markdown(table_scorecard, unsafe_allow_html=True)
+      # table_scorecard = get_scorecard(df, view_details)
+      # st.markdown(table_scorecard, unsafe_allow_html=True)
   
-      # 使用 Streamlit 的下载按钮进行一键下载
-      if selected_energy == 'total':
-          csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
-      else:
-          csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
+      # # 使用 Streamlit 的下载按钮进行一键下载
+      # if selected_energy == 'total':
+      #     csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
+      # else:
+      #     csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
         
-      st.sidebar.download_button(
-          label=f"🗃️ Download :red[{selected_energy.title()}] Data as CSV",
-          data=csv_data,
-          file_name=f"{selected_energy}_data_{current_date}.csv",
-          mime="text/csv",
-          use_container_width=True,
-      )
+      # st.sidebar.download_button(
+      #     label=f"🗃️ Download :red[{selected_energy.title()}] Data as CSV",
+      #     data=csv_data,
+      #     file_name=f"{selected_energy}_data_{current_date}.csv",
+      #     mime="text/csv",
+      #     use_container_width=True,
+      # )
 
 
 
