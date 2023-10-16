@@ -186,7 +186,8 @@ def transform_data(df, selected_energy):
     data_description = pd.read_csv('./data/data_description.csv')
     
     data_description['Duration'] = pd.to_datetime(data_description['Duration']).dt.strftime('%Y-%b')
-    data_description_dict = {row['Country']: [row[col] for col in data_description.columns if col != 'Country'] for _, row in data_description.iterrows()}
+
+    df = pd.merge(df, data_description)
 
     st.write(df)
 
