@@ -264,7 +264,7 @@ def get_scorecard(df, view_details):
                 </div>
                 <div class="extra content" {view_details}> 
                     <div class="meta"><i class="history icon"></i> Time Resolution: {row['resolution']}</div>
-                    <div class="meta"><i class="edit icon"></i> Duration: {row['duration'] + 'to present'}</div>
+                    <div class="meta"><i class="edit icon"></i> Data Starts: {row['duration']}</div>
                     <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {row['update_frequency']}</div>
                     <div class="meta"><i class="th icon"></i> Region Data Aviability: {row['region_data']}</div>
                 </div>
