@@ -48,7 +48,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 CONTINENT_COLORS = {
     'Asia': '#FFE5B4',          # Peach
     'Africa': '#FFD1DC',        # Light pink
-    'Europe': '#E6E6FA',        # Lavender
+    'Europe': '#B0C4DE',        # Lavender
     'North America': '#FFFACD', # Pastel yellow
     'South America': '#D8BFD8', # Mint
     'Australia/Oceania': '#B4EEB4', # Light green
