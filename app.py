@@ -205,50 +205,66 @@ def transform_data(df, selected_energy):
 
 
 def get_scorecard(df, view_details):
-    table_scorecard = """
-      <style>
-          .ui.statistics .statistic .label {
-          margin-top: 10px !important; 
-          }
+    n_countries = len(df)
+    latest_date = min(df['max_date'].dt.strftime('%Y-%B'))
+    # Example additional statistic
+    selected_energy = df['type'].tolist()[0]
   
-          .extra.content .meta {
-              font-size: 1.2rem;
-              text-align: left;
-              color: #333;
-              font-weight: bold;
-              white-space: nowrap;         /* Prevent the text from breaking into the next line */
-              overflow: hidden;           /* Hide any text that doesn't fit */
-              text-overflow: ellipsis;    /* Add "..." to any text that is cut off */
-              padding: 5px;
-          }
-  
-      </style>
-  
-      <div class="ui three small statistics">
-            <div class="grey statistic">
-              <div class="value">""" + str(len(df)) + """
-              </div>
-              <div class="grey label">
-                number of key countries included so far
-              </div>
-            </div>
-              <div class="grey statistic">
-                  <div class="value">""" + str(min(df['max_date'].dt.strftime('%Y-%B'))) + """
-                  </div>
-                  <div class="label">
-                  latest date for all countries
-                  </div>
-              </div>
-              <div class="grey statistic">
-                  <div class="value">Twh
-                  </div>
-                  <div class="label">
-                  Unit
-                  </div>
-              </div>
-          </div>"""
+    table_scorecard = f"""
+    <style>
+        .ui.statistics .statistic .label {{
+            margin-top: 10px !important; 
+        }}
 
-    table_scorecard += """<br><br><br><div id="mydiv" class="ui centered cards">"""
+        .extra.content .meta {{
+            font-size: 1.2rem;
+            text-align: left;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 5px;
+        }}
+    </style>
+
+    <div class="ui four small statistics">
+        <div class="grey statistic">
+            <div class="value">
+                {selected_energy}
+            </div>
+            <div class="label">
+                energy type
+            </div>
+        </div>
+        <div class="grey statistic">
+            <div class="value">
+                {n_countries}
+            </div>
+            <div class="label">
+                number of key countries included so far
+            </div>
+        </div>
+        <div class="grey statistic">
+            <div class="value">
+                {latest_date}
+            </div>
+            <div class="label">
+                latest date for all countries
+            </div>
+        </div>
+        <div class="grey statistic">
+            <div class="value">
+                Twh
+            </div>
+            <div class="label">
+                Unit
+            </div>
+        </div>
+    </div>
+    """
+
+    table_scorecard += "<br><br><br><div id='mydiv' class='ui centered cards'>"
 
     # <div class="content" style="background-color: {header_bg(row['type'])};">
 
