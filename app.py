@@ -86,29 +86,22 @@ def main():
 
       # 筛选大洲
       continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-      all_continents = ['All Continents'] + continents
+      all_continents = ['World'] + continents
       
       selected_continent = st.sidebar.multiselect(
-          'Which continents do you want to select?',
+          'Select Continents',
           all_continents,
-          default=['All Continents'])  # Setting the default value to "All Continents"
+          default=['World'])  # Setting the default value to "All Continents"
       
-      # If "All Continents" is selected along with other continents, 
-      # reset the selection to only "All Continents"
-      if 'All Continents' in selected_continent and len(selected_continent) > 1:
-          selected_continent = ['All Continents']
+      # If "All Continents" is deselected, revert back to the default selection
+      if 'World' not in selected_continent:
+          selected_continent = ['World']
       
-      # If "All Continents" is selected, the output will be all continents.
-      if 'All Continents' in selected_continent:
+      # If "All Continents" is selected, the output will be all the continents.
+      if 'World' in selected_continent:
           selected_continents = continents
       else:
           selected_continents = selected_continent
-      
-      # This is necessary to set the state of the multiselect box after making changes
-      st.sidebar.multiselect(
-          'Which continents do you want to select?',
-          all_continents,
-          default=selected_continent)
 
 
       # 处理数据
