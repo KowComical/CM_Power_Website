@@ -104,6 +104,13 @@ def main():
           use_container_width=True,
       )
 
+      cb_view_details = st.sidebar.checkbox('View Details')
+
+      if cb_view_details:
+          view_details=""
+      else:
+          view_details="""style="display: none;" """
+
 
 def add_logo(image_path):
     # Open the image file
@@ -253,6 +260,12 @@ def get_scorecard(df):
                 <div class="extra content">
                     <div class="meta"><i class="user icon"></i>Source: <a href="{row['source_url']}" target="_blank">{row['source']}</a></div>
                     <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
+                </div>
+                <div class="extra content" {view_details}> 
+                    <div class="meta"><i class="history icon"></i> Time Resolution: {row['resolution']}</div>
+                    <div class="meta"><i class="edit icon"></i> Duration: {row['duration'] + 'to present'}</div>
+                    <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {row['update_frequency']}</div>
+                    <div class="meta"><i class="th icon"></i> Region Data Aviability: {row['region_data']}</div>
                 </div>
             </div>"""
 
