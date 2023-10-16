@@ -93,10 +93,6 @@ def main():
           all_continents,
           default=['World'])  # Setting the default value to "All Continents"
       
-      # If "All Continents" is deselected, revert back to the default selection
-      if 'World' not in selected_continent:
-          selected_continent = ['World']
-      
       # If "All Continents" is selected, the output will be all the continents.
       if 'World' in selected_continent:
           selected_continents = continents
