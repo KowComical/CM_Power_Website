@@ -189,8 +189,6 @@ def transform_data(df, selected_energy):
 
     df = pd.merge(df, data_description)
 
-    st.write(df)
-
     # # data_sources = read_data_sources_from_file('./data/data_source.txt')
     # df['source'] = df['country'].map(lambda x: data_sources.get(x, [None])[0])
     # df['source_url'] = df['country'].map(lambda x: data_sources.get(x, [None, None])[1])
