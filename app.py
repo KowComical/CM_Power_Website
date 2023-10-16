@@ -47,9 +47,9 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 CONTINENT_COLORS = {
     'Asia': '#FFE5B4',          
-    'Africa': '#8B4513',        
+    'Africa': '#654321',        
     'Europe': '#B0C4DE',        
-    'North America': '#FFA500', 
+    'North America': '#B22222', 
     'South America': '#D8BFD8', 
     'Australia/Oceania': '#B4EEB4', 
     'Europe/Asia': '#B0C4DE',
