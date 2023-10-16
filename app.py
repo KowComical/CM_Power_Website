@@ -57,10 +57,9 @@ CONTINENT_COLORS = {
 
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
-# Reading the dictionary from the text file
+# 读取颜色
 with open('./data/colors.txt', 'r') as file:
     COLORS = json.load(file)
-
 
 def main():
     add_logo("./data/logo_edited.png")
@@ -183,11 +182,18 @@ def transform_data(df, selected_energy):
     df['test_country'] = df['country']
     df['type'] = selected_energy
 
-    # Adding data sources (assuming you have the function read_data_sources_from_file)
-    data_sources = read_data_sources_from_file('./data/data_source.txt')
-    df['source'] = df['country'].map(lambda x: data_sources.get(x, [None])[0])
-    df['source_url'] = df['country'].map(lambda x: data_sources.get(x, [None, None])[1])
-    df['continent'] = df['country'].map(lambda x: data_sources.get(x, [None, None])[2])
+    # 读取国家信息
+    data_description = pd.read_csv('./data/data_description.csv')
+    
+    data_description['Duration'] = pd.to_datetime(data_description['Duration']).dt.strftime('%Y-%b')
+    data_description_dict = {row['Country']: [row[col] for col in data_description.columns if col != 'Country'] for _, row in data_description.iterrows()}
+
+    st.write(df)
+
+    # # data_sources = read_data_sources_from_file('./data/data_source.txt')
+    # df['source'] = df['country'].map(lambda x: data_sources.get(x, [None])[0])
+    # df['source_url'] = df['country'].map(lambda x: data_sources.get(x, [None, None])[1])
+    # df['continent'] = df['country'].map(lambda x: data_sources.get(x, [None, None])[2])
 
     return df
 
