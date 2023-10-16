@@ -246,7 +246,7 @@ def get_scorecard(df):
                     </div>
                 </div>
                 <div class="extra content">
-                    <div class="meta"><i class="user icon"></i>Source: <a href="{row['source_url']}" target="_blank">{row['source']}</a> </div>
+                    <div class="meta"><i class="user icon"></i>Source: <a href="{row['source_url']}" target="_blank">{row['source']}</div>
                     <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
                 </div>
             </div>"""
