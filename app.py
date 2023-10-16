@@ -208,10 +208,6 @@ def get_scorecard(df, view_details):
     <style>
         .ui.statistics .statistic .label {
         margin-top: 10px !important; 
-        white-space: nowrap;         /* This will prevent the text from breaking into the next line */
-        overflow: hidden;           /* This will hide any text that doesn't fit */
-        text-overflow: ellipsis;    /* This will add "..." to any text that is cut off */
-        max-width: 150px;           /* Set this to the maximum width you want for your source text */
         }
 
         .extra.content .meta {
@@ -219,7 +215,6 @@ def get_scorecard(df, view_details):
             text-align: left;
             color: #333;
             font-weight: bold;
-            padding-top: 10px;
             padding: 5px;
         }
 
