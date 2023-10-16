@@ -49,7 +49,7 @@ CONTINENT_COLORS = {
     'Asia': '#FFE5B4',          
     'Africa': '#654321',        
     'Europe': '#B0C4DE',        
-    'North America': '#B22222', 
+    'North America': '#FF9898', 
     'South America': '#D8BFD8', 
     'Australia/Oceania': '#B4EEB4', 
     'Europe/Asia': '#B0C4DE',
