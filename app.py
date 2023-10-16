@@ -214,12 +214,10 @@ def get_scorecard(df, view_details):
 
         .extra.content .meta {
             font-size: 1.2rem;
-            text-align: center;
+            text-align: left;
             color: #333;
             font-weight: bold;
             padding-top: 10px;
-            background-color: #f7f7f7;
-            border-radius: 5px;
             padding: 5px;
         }
 
