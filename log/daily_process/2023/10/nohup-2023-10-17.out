@@ -7,3 +7,11 @@ Fast-forward
  data/style.css            |   2 +
  3 files changed, 151 insertions(+), 46 deletions(-)
  create mode 100644 data/data_description.csv
+[master eba47cc] Automated commit
+ 6 files changed, 21638 insertions(+), 21055 deletions(-)
+ create mode 100644 log/daily_process/2023/10/nohup-2023-10-17.out
+remote: This repository moved. Please use the new location:        
+remote:   git@github.com:KowComical/CM_Power_Website.git        
+remote: To git@github.com:kowcomical/CM_Power_Website.git
+   ca339b3..eba47cc  master -> master
+Changes pulled and pushed successfully.
