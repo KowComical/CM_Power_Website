@@ -76,7 +76,7 @@ def add_logo(image_path):
         unsafe_allow_html=True,
     )
 
-
+@st.cache(ttl=86400)
 def data_read():
     df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
     df_7mean['percentage'] = round(df_7mean['percentage'], 2)
