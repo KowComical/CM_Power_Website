@@ -230,6 +230,7 @@ def generate_grid_option(df_7mean, category_name, countries):
 
 
 # 数据处理函数
+@st.cache(ttl=86400)
 def data_read():
     df = pd.read_csv('./data/data_for_download.csv')
     df_7mean = pd.read_csv('./data/data_for_line_chart.csv')
