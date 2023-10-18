@@ -229,8 +229,7 @@ def generate_grid_option(df_7mean, category_name, countries):
     return option, ROWS_PER_GRID, PLOT_HEIGHT
 
 
-# 数据处理函数，通过 st.cache_data 进行缓存
-@st.cache_data
+# 数据处理函数
 def data_read():
     df = pd.read_csv('./data/data_for_download.csv')
     df_7mean = pd.read_csv('./data/data_for_line_chart.csv')
