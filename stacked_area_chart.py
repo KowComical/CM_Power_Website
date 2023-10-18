@@ -49,7 +49,7 @@ def main():
     df_7mean = data_read()
 
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean)
-    
+
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
@@ -59,7 +59,7 @@ def add_logo(image_path):
     with open(image_path, "rb") as img_file:
         # Encode the image as Base64
         b64_string = base64.b64encode(img_file.read()).decode()
-    
+
     # Insert the Base64 string into the CSS
     st.markdown(
         f"""
@@ -80,7 +80,7 @@ def add_logo(image_path):
 @st.cache_data
 def data_read():
     df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
-    df_7mean['percentage'] = round(df_7mean['percentage'],2)
+    df_7mean['percentage'] = round(df_7mean['percentage'], 2)
 
     df_7mean['date'] = pd.to_datetime(df_7mean['date'])
 
@@ -111,30 +111,29 @@ def generate_grid_area_option(df_7mean):
         "tooltip": {
             "trigger": "axis"
         },
-              "legend": {
-          "data": energy_types,
-          "orient": "horizontal",
-          "left": 'center',
-          "top": 50,
-          "icon": "circle",  # This will give a filled circle symbol
-          "itemWidth": 12,  # Controls the width of the circle
-          "itemHeight": 12,  # Controls the height of the circle
-          "borderColor": "#333",  # Border color, here it's a dark gray
-          "borderWidth": 1,  # Width of the border
-          "borderRadius": 4,  # Rounded corners, adjust for desired roundness
-          "padding": 10,  # Padding around the legend items
-          "backgroundColor": "#f4f4f4",  # Light gray background for the legend
-          "textStyle": {
-              "fontSize": 16,
-              "color": "#333"  # Font color matching the border color
-          }
-      },
+        "legend": {
+            "data": energy_types,
+            "orient": "horizontal",
+            "left": 'center',
+            "top": 50,
+            "icon": "circle",  # This will give a filled circle symbol
+            "itemWidth": 12,  # Controls the width of the circle
+            "itemHeight": 12,  # Controls the height of the circle
+            "borderColor": "#333",  # Border color, here it's a dark gray
+            "borderWidth": 1,  # Width of the border
+            "borderRadius": 4,  # Rounded corners, adjust for desired roundness
+            "padding": 10,  # Padding around the legend items
+            "backgroundColor": "#f4f4f4",  # Light gray background for the legend
+            "textStyle": {
+                "fontSize": 16,
+                "color": "#333"  # Font color matching the border color
+            }
+        },
         "xAxis": [],
         "yAxis": [],
         "grid": [],
         "series": []
     }
-
 
     # Grid, xAxis, and yAxis configurations remain the same
     for idx, country in enumerate(countries):

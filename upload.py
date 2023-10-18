@@ -13,7 +13,7 @@ country_list = ['Australia', 'Brazil', 'Chile', 'China',
                 'EU27&UK', 'France', 'Germany',
                 'India', 'Italy', 'Japan', 'Mexico', 'New Zealand',
                 'Russia', 'South Africa', 'Spain',
-                'Turkey', 'United Kingdom', 'United States']
+                'Turkey', 'United Kingdom', 'United States', 'Bolivia', 'Bangladesh']
 
 
 def main():
@@ -74,7 +74,7 @@ def load_power_data(df):
 
 
 def load_iea_data():
-    df_iea = pd.read_csv('/data/xuanrenSong/CM_Power_Database/data/#global_rf/iea/iea_cleaned.csv')
+    df_iea = pd.read_csv('/data/xuanrenSong/CM_Power_Database/data/other_database/iea/iea_cleaned.csv')
     country_replacements = {
         'Republic of Turkiye': 'Turkey',
         'Slovak Republic': 'Slovakia',

@@ -46,14 +46,13 @@ hide_streamlit_style = """
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
 CONTINENT_COLORS = {
-    'Asia': '#FFE5B4',          
-    'Africa': '#FF9898',    
-    'Europe': '#B0C4DE',        
-    'North America': '#BA9192', 
-    'South America': '#D8BFD8', 
-    'Oceania': '#CBE2DA', 
+    'Asia': '#FFE5B4',
+    'Africa': '#FF9898',
+    'Europe': '#B0C4DE',
+    'North America': '#BA9192',
+    'South America': '#D8BFD8',
+    'Oceania': '#CBE2DA',
 }
 
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -61,6 +60,7 @@ current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 # 读取颜色
 with open('./data/colors.txt', 'r') as file:
     COLORS = json.load(file)
+
 
 def main():
     add_logo("./data/logo_edited.png")
@@ -75,56 +75,55 @@ def main():
     df_download = df.copy()
 
     with st.container():
-      
-      # 筛选能源类型
-      selected_energy = st.sidebar.selectbox(
-          'Select Energy Type',
-          ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'], index=0)
-  
-      df = df[df['type'] == selected_energy].reset_index(drop=True)
 
-      # 筛选大洲
-      continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-      all_continents = ['World'] + continents
-      
-      selected_continent = st.sidebar.multiselect(
-          'Select Continents',
-          all_continents,
-          default=['World'])  # Setting the default value to "All Continents"
-      
-      # If "All Continents" is selected, the output will be all the continents.
-      if 'World' in selected_continent:
-          selected_continents = continents
-      else:
-          selected_continents = selected_continent
+        # 筛选能源类型
+        selected_energy = st.sidebar.selectbox(
+            'Select Energy Type',
+            ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'],
+            index=0)
 
+        df = df[df['type'] == selected_energy].reset_index(drop=True)
 
-      # 处理数据
-      df = transform_data(df, selected_energy, selected_continents)
+        # 筛选大洲
+        continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+        all_continents = ['World'] + continents
 
-      # 按照值的大小排序
-      df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+        selected_continent = st.sidebar.multiselect(
+            'Select Continents',
+            all_continents,
+            default=['World'])  # Setting the default value to "All Continents"
 
-      # cb_view_details = st.sidebar.checkbox('View Details')
-      view_details = display_switch_button()
-  
-      table_scorecard = get_scorecard(df, view_details)
-      st.markdown(table_scorecard, unsafe_allow_html=True)
-  
-      # 使用 Streamlit 的下载按钮进行一键下载
-      if selected_energy == 'total':
-          csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
-      else:
-          csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
-        
-      st.sidebar.download_button(
-          label=f"🗃️ Download :red[{selected_energy.title()}] Data as CSV",
-          data=csv_data,
-          file_name=f"{selected_energy}_data_{current_date}.csv",
-          mime="text/csv",
-          use_container_width=True,
-      )
+        # If "All Continents" is selected, the output will be all the continents.
+        if 'World' in selected_continent:
+            selected_continents = continents
+        else:
+            selected_continents = selected_continent
 
+        # 处理数据
+        df = transform_data(df, selected_energy, selected_continents)
+
+        # 按照值的大小排序
+        df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+
+        # cb_view_details = st.sidebar.checkbox('View Details')
+        view_details = display_switch_button()
+
+        table_scorecard = get_scorecard(df, view_details)
+        st.markdown(table_scorecard, unsafe_allow_html=True)
+
+        # 使用 Streamlit 的下载按钮进行一键下载
+        if selected_energy == 'total':
+            csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
+        else:
+            csv_data = df_download[df_download['type'] == selected_energy].to_csv(index=False)
+
+        st.sidebar.download_button(
+            label=f"🗃️ Download :red[{selected_energy.title()}] Data as CSV",
+            data=csv_data,
+            file_name=f"{selected_energy}_data_{current_date}.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
 
 
 def add_logo(image_path):
@@ -132,7 +131,7 @@ def add_logo(image_path):
     with open(image_path, "rb") as img_file:
         # Encode the image as Base64
         b64_string = base64.b64encode(img_file.read()).decode()
-    
+
     # Insert the Base64 string into the CSS
     st.markdown(
         f"""
@@ -148,6 +147,7 @@ def add_logo(image_path):
         """,
         unsafe_allow_html=True,
     )
+
 
 def current_year_sum(group):
     latest_date_for_country = group['date'].max()
@@ -185,7 +185,7 @@ def read_data_sources_from_file(filename):
 
 
 def transform_data(df, selected_energy, selected_continents):
-    df['value'] = df['value'] / 1000 # Gwh to Twh
+    df['value'] = df['value'] / 1000  # Gwh to Twh
     df['date'] = pd.to_datetime(df['date'])
 
     ytd_sum_res = df.groupby('country').apply(current_year_sum)
@@ -206,14 +206,14 @@ def transform_data(df, selected_energy, selected_continents):
 
     # 读取国家信息
     data_description = pd.read_csv('./data/data_description.csv')
-    
+
     data_description['duration'] = pd.to_datetime(data_description['duration']).dt.strftime('%Y-%b')
 
     df = pd.merge(df, data_description)
 
     # 筛选大洲
     if selected_continents:
-      df = df[df['continent'].isin(selected_continents)].reset_index(drop=True)
+        df = df[df['continent'].isin(selected_continents)].reset_index(drop=True)
 
     return df
 
@@ -223,7 +223,7 @@ def get_scorecard(df, view_details):
     latest_date = min(df['max_date'].dt.strftime('%Y-%B'))
     # Example additional statistic
     selected_energy = df['type'].tolist()[0]
-  
+
     table_scorecard = f"""
     <style>
         .ui.statistics .statistic .label {{
@@ -312,7 +312,7 @@ def get_scorecard(df, view_details):
             </div>"""
 
     return table_scorecard
-    
+
 
 def color_percentage(value):
     if value < 0:
@@ -320,8 +320,8 @@ def color_percentage(value):
     else:
         return "green"
 
-def display_switch_button():
 
+def display_switch_button():
     # Initialize state if it doesn't exist
     if 'toggle_switch' not in st.session_state:
         st.session_state['toggle_switch'] = False
@@ -338,10 +338,10 @@ def display_switch_button():
     )
 
     if st.session_state['toggle_switch']:
-        view_details=""
+        view_details = ""
     else:
-        view_details="""style="display: none;" """
-        
+        view_details = """style="display: none;" """
+
     return view_details
 
 

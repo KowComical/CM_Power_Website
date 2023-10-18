@@ -43,7 +43,6 @@ hide_streamlit_style = """
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
 # Reading the dictionary from the text file
 with open('./data/colors.txt', 'r') as file:
     COLORS = json.load(file)
@@ -75,7 +74,7 @@ def add_logo(image_path):
     with open(image_path, "rb") as img_file:
         # Encode the image as Base64
         b64_string = base64.b64encode(img_file.read()).decode()
-    
+
     # Insert the Base64 string into the CSS
     st.markdown(
         f"""
@@ -96,12 +95,11 @@ def add_logo(image_path):
 def get_countries_sorted_by_value(df, category_name):
     # Grouping by country and summing the values for the specific type
     type_sum = df[df['type'] == category_name].groupby('country')['value'].sum()
-    
+
     # Sorting the values in descending order and getting the country names
     sorted_countries = type_sum.sort_values(ascending=False).index.tolist()
-    
-    return sorted_countries
 
+    return sorted_countries
 
 
 # 生成 ECharts 配置的函数
@@ -128,7 +126,7 @@ def generate_grid_option(df_7mean, category_name, countries):
     formatted_dates = df_7mean['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
 
     option = {
-       "title": [{
+        "title": [{
             "text": "Global Power Generation Trends by Source for Key Countries (TWh)",
             "left": "center",
             "top": "0%"
@@ -144,13 +142,11 @@ def generate_grid_option(df_7mean, category_name, countries):
 
     # 创建存储每年颜色的字典
     unique_years_all = df_7mean['year'].unique()
-    colors_for_years = dict(zip(unique_years_all, get_line_colors(unique_years_all, category_name)))
-
+    colors_for_years = dict(zip(unique_years_all, get_line_colors(unique_years_all)))
 
     # 创建图表的网格
     for idx, country in enumerate(countries):
 
-  
         # 创建网格并进行间距调整
         option["grid"].append({
             "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
@@ -190,7 +186,7 @@ def generate_grid_option(df_7mean, category_name, countries):
         for year in unique_years:
             year_data = country_data[country_data['year'] == year]
             option["series"].append({
-                "name": str(year), 
+                "name": str(year),
                 "type": "line",
                 "xAxisIndex": idx,
                 "yAxisIndex": idx,
@@ -211,7 +207,8 @@ def generate_grid_option(df_7mean, category_name, countries):
             })
 
     option["legend"] = {
-        "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in unique_years_all],
+        "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in
+                 unique_years_all],
         "left": 'center',
         "orient": "horizontal",
         "top": 50,
@@ -228,8 +225,6 @@ def generate_grid_option(df_7mean, category_name, countries):
             "color": "#333"  # Font color matching the border color
         }
     }
-    
-
 
     return option, ROWS_PER_GRID, PLOT_HEIGHT
 
@@ -263,26 +258,24 @@ def adjust_lightness(rgb, factor):
     r = min(max(0, r + int(r * factor)), 255)
     g = min(max(0, g + int(g * factor)), 255)
     b = min(max(0, b + int(b * factor)), 255)
-    return (r, g, b)
+    return r, g, b
+
 
 def clamp(value, min_value, max_value):
     """Ensure the value stays within the given range."""
     return max(min_value, min(value, max_value))
 
-def get_line_colors(years_list, category_name=None):
+
+def get_line_colors(years_list):
     # Base colors
     blue_rgb = (76, 164, 224)  # Macaron Blue
     orange_rgb = (186, 97, 93)  # Macaron Orange
     black_color = 'rgb(0, 0, 0)'
 
     current_year = datetime.now().year  # Get the current year
-    
-    # Limits for the factor
-    min_factor = -0.3  # Don't allow to darken more than this
-    max_factor = 0.3   # Don't allow to lighten more than this
-    
+
     colors = []
-    
+
     for year in years_list:
         if year in [2019, 2020]:
             factor = (2020 - year) * 0.3  # Darken by 10% for each year away from 2020
@@ -293,10 +286,10 @@ def get_line_colors(years_list, category_name=None):
             colors.append(black_color)
         else:
             factor = (current_year - year) * 0.4  # Lighten by 20% for each year away from the current year
-            # factor = clamp(factor, min_factor, max_factor)  # Ensure within range
+
             adjusted_orange = adjust_lightness(orange_rgb, factor)
             colors.append(f'rgb{adjusted_orange}')
-            
+
     return colors
 
 
