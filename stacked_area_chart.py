@@ -56,7 +56,7 @@ def main():
     
 
     # 添加一个选择排序方式的功能
-    with container():
+    with st.container():
       categories = {
       'Fossil': ['coal', 'gas', 'oil'],
       'Nuclear': ['nuclear'],
