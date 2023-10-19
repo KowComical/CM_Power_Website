@@ -69,9 +69,9 @@ def main():
     captions=captions
     )
 
-    df_7mean = data_read()
+    df_7mean, sorted_data = data_read()
 
-    option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean, selected_category)
+    option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean, sorted_data, selected_category)
 
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
@@ -102,23 +102,16 @@ def add_logo(image_path):
 # @st.cache_data(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
 def data_read():
     df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
+    sorted_data = pd.read_csv('./data/data_for_stacked_area_chart_for_sort.csv')
 
     df_7mean['date'] = pd.to_datetime(df_7mean['date'])
 
-    return df_7mean
+    return df_7mean, sorted_data
 
 # @st.cache_data(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
-def generate_grid_area_option(df_7mean, selected_category):
+def generate_grid_area_option(df_7mean, sorted_data, selected_category):
 
-    # Filter the dataframe for the last year only
-    last_year = max(df_7mean['year'])
-
-    filtered_df = df_7mean[(df_7mean['year'] == last_year) & df_7mean['type'].isin(categories[selected_category])]
-
-    filtered_df = filtered_df.drop(columns = ['type']).groupby(['date', 'country', 'year']).sum().reset_index() # 先将所选的能源类型合并
-
-    filtered_df = filtered_df.groupby(['country', 'year']).mean().reset_index() # 求当年平均值
-
+    filtered_df = sorted_data[sorted_data['category'] == selected_category]
     # Sort the countries by the average percentage in descending order
     sorted_countries = filtered_df.sort_values(by='percentage', ascending=False)['country'].tolist()
 
