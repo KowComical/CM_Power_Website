@@ -107,7 +107,7 @@ def generate_grid_area_option(df_7mean, selected_category):
 
     filtered_df = df_7mean[df_7mean['type'].isin(categories[selected_category])]
     category_sum = filtered_df.groupby('country')['value'].sum()
-    countries = category_sum.sort_values(ascending=False)['country'].unique()
+    countries = category_sum.sort_values(ascending=False).index.tolist()
 
     
     energy_types = ['coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other']
