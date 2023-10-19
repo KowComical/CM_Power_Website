@@ -99,7 +99,7 @@ def add_logo(image_path):
         unsafe_allow_html=True,
     )
 
-# @st.cache_data(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
+@st.cache_data(ttl=60*60*24 + 10*60, show_spinner=False)  # 24 hours + 10 minutes
 def data_read():
     df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
     sorted_data = pd.read_csv('./data/data_for_stacked_area_chart_for_sort.csv')
@@ -108,7 +108,7 @@ def data_read():
 
     return df_7mean, sorted_data
 
-# @st.cache_data(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
+@st.cache_data(ttl=60*60*24 + 10*60, show_spinner=False)  # 24 hours + 10 minutes
 def generate_grid_area_option(df_7mean, sorted_data, selected_category):
 
     filtered_df = sorted_data[sorted_data['category'] == selected_category]
