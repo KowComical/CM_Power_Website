@@ -106,18 +106,21 @@ def data_read():
 def generate_grid_area_option(df_7mean, selected_category):
 
     filtered_df = df_7mean[df_7mean['type'].isin(categories[selected_category])]
-    category_sum = filtered_df.groupby('country')['value'].sum()
-    countries = category_sum.sort_values(ascending=False).index.tolist()
+    # Compute the average percentage for each country for the selected category
+    average_percentages = filtered_df.groupby('country')['percentage'].mean()
+    
+    # Sort the countries by the average percentage in descending order
+    sorted_countries = average_percentages.sort_values(ascending=False).index.tolist()
 
     
     energy_types = ['coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other']
 
     COLS = 4
-    ROWS = int(math.ceil(len(countries) / COLS))
+    ROWS = int(math.ceil(len(sorted_countries) / COLS))
     WIDTH = 100 / COLS
     HEIGHT = 92 / ROWS
 
-    ROWS_PER_GRID = math.ceil(len(countries) / COLS)
+    ROWS_PER_GRID = math.ceil(len(sorted_countries) / COLS)
     PLOT_HEIGHT = 200  # 根据需要进行调整
 
     WIDTH_ADJUSTMENT = 0.8
@@ -157,7 +160,7 @@ def generate_grid_area_option(df_7mean, selected_category):
     }
 
     # Grid, xAxis, and yAxis configurations remain the same
-    for idx, country in enumerate(countries):
+    for idx, country in enumerate(sorted_countries):
         country_data = df_7mean[df_7mean['country'] == country].reset_index(drop=True)
         country_dates = country_data['date'].dt.strftime('%Y-%m-%d').drop_duplicates().tolist()
 
@@ -195,7 +198,7 @@ def generate_grid_area_option(df_7mean, selected_category):
 
     # New nested structure for series creation
     for energy_type in energy_types:
-        for idx, country in enumerate(countries):
+        for idx, country in enumerate(sorted_countries):
             country_data = df_7mean[df_7mean['country'] == country].reset_index(drop=True)
             series_data = country_data[country_data['type'] == energy_type]['percentage'].tolist()
 
