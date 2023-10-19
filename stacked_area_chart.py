@@ -112,13 +112,14 @@ def generate_grid_area_option(df_7mean, selected_category):
 
     # Filter the dataframe for the last year only
     last_year = max(df_7mean['year'])
-    last_year_data = df_7mean[df_7mean['year'] == last_year]
 
     filtered_df = df_7mean[(df_7mean['year'] == last_year) & df_7mean['type'].isin(categories[selected_category])]
 
     filtered_df = filtered_df.groupby(['date', 'country', 'year']).sum().reset_index() # 先将所选的能源类型合并
 
     filtered_df = filtered_df.groupby(['country', 'year']).mean().reset_index() # 求当年平均值
+
+    st.write(filtered_df)
     
     # Sort the countries by the average percentage in descending order
     sorted_countries = filtered_df.sort_values(by='percentage', ascending=False)['country'].tolist()
