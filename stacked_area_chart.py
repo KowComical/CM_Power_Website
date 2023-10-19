@@ -4,7 +4,6 @@ import math
 from streamlit_echarts import st_echarts
 import json
 import base64
-from streamlit_extras.streaming_write import write as stream_write
 
 # 隐藏所有东西
 hide_streamlit_style = """
@@ -57,20 +56,21 @@ def main():
     
 
     # 添加一个选择排序方式的功能
-    categories = {
-    'Fossil': ['coal', 'gas', 'oil'],
-    'Nuclear': ['nuclear'],
-    'Renewables': ['solar', 'wind', 'other', 'hydro']}
-    
-    captions = [', '.join([item.title() for item in items]) for items in categories.values()]
-    
-    selected_category = st.sidebar.radio(
-    'Sort Countries by Energy Category:',
-    list(categories.keys()),
-    captions=captions
-    )
-
-    stream_write("Note: This sort logic and value shown is based the latest year's mean value for each country")
+    with container():
+      categories = {
+      'Fossil': ['coal', 'gas', 'oil'],
+      'Nuclear': ['nuclear'],
+      'Renewables': ['solar', 'wind', 'other', 'hydro']}
+      
+      captions = [', '.join([item.title() for item in items]) for items in categories.values()]
+      
+      selected_category = st.sidebar.radio(
+      'Sort Countries by Energy Category:',
+      list(categories.keys()),
+      captions=captions
+      )
+  
+      st.sidebar.warning("Note: This sort logic and value shown is based the latest year's mean value for each country")
 
     df_7mean, sorted_data = data_read()
 
