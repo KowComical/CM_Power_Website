@@ -4,10 +4,14 @@ import os
 import ast
 import math
 import json
+from datetime import datetime
 
 global_path = '/data/xuanrenSong/CM_Power_Website'
 file_path = os.path.join(global_path, 'data')
 tools_path = os.path.join(global_path, 'tools')
+# stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
+line_path = os.path.join(tools_path, 'line_chart')
+stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
 
 country_list = ['Australia', 'Brazil', 'Chile', 'China',
                 'EU27&UK', 'France', 'Germany',
@@ -20,6 +24,8 @@ categories = {
     'Nuclear': ['nuclear'],
     'Renewables': ['solar', 'wind', 'other', 'hydro']
 }
+
+sub_category = ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables']
 
 COLORS = {
     "coal": "#A3A090",
@@ -84,13 +90,151 @@ def process_data():
     df_filtered.to_csv(os.path.join(file_path, 'data_for_scatter_plot.csv'), index=False, encoding='utf_8_sig')
 
 
+def process_line_data(dataframe):
+    # Grouping by country and summing the values for the specific type
+    for category_name in sub_category:
+        type_sum = dataframe[dataframe['type'] == category_name].groupby('country')['value'].sum()
+
+        # Sorting the values in descending order and getting the country names
+        sorted_countries = type_sum.sort_values(ascending=False).index.tolist()
+
+        num_countries = len(sorted_countries)
+
+        # 定义全局设置
+        # 动态计算行数和列数
+        COLS = 4
+
+        # 计算所需的行数以容纳所有国家，每行4列
+        ROWS = int(math.ceil(num_countries / COLS))
+        WIDTH = 100 / COLS
+        HEIGHT = 92 / ROWS
+
+        ROWS_PER_GRID = math.ceil(len(sorted_countries) / COLS)
+        PLOT_HEIGHT = 200  # 根据需要进行调整
+
+        # 调整间距
+        WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
+        HEIGHT_ADJUSTMENT = 1.0  # 增加或减少以调整垂直间距
+
+        # 格式化日期以用于 x 轴
+        formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
+
+        option = {
+            "title": [{
+                "text": "Global Power Generation Trends by Source for Key Countries (TWh)",
+                "left": "center",
+                "top": "0%"
+            }],
+            "tooltip": {
+                "trigger": "axis"
+            },
+            "xAxis": [],
+            "yAxis": [],
+            "grid": [],
+            "series": []
+        }
+
+        # 创建存储每年颜色的字典
+        unique_years_all = dataframe['year'].unique()
+        colors_for_years = dict(zip(unique_years_all, get_line_colors(unique_years_all)))
+
+        # 创建图表的网格
+        for idx, country in enumerate(sorted_countries):
+
+            # 创建网格并进行间距调整
+            option["grid"].append({
+                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
+                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
+                "width": f"{WIDTH - 2.0 * WIDTH_ADJUSTMENT}%",
+                "height": f"{HEIGHT - 4.0 * HEIGHT_ADJUSTMENT}%",
+                "containLabel": True
+            })
+
+            # 过滤当前国家的数据
+            country_data = dataframe[dataframe['country'] == country]
+            min_val = float(round(country_data[country_data['type'] == category_name]['value'].min() * 0.95))
+            max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
+
+            # 为网格创建 x 和 y 轴
+            option["xAxis"].append({
+                "gridIndex": idx,
+                "type": "category",
+                "data": formatted_dates,
+            })
+
+            option["yAxis"].append({
+                "gridIndex": idx,
+                "type": "value",
+                "min": min_val,
+                "max": max_val,
+                "name": country,
+                "nameTextStyle": {
+                    "fontSize": 14,  # 根据需要进行调整
+                    "fontWeight": "bold",
+                    "padding": [0, 0, 0, 100]  # 如果需要，添加一些填充。[上，右，下，左]
+                }
+            })
+
+            # 为每年生成系列数据
+            unique_years = country_data['year'].unique()
+            for year in unique_years:
+                year_data = country_data[country_data['year'] == year]
+                option["series"].append({
+                    "name": str(year),
+                    "type": "line",
+                    "xAxisIndex": idx,
+                    "yAxisIndex": idx,
+                    "data": year_data[year_data['type'] == category_name]['value'].tolist(),
+                    "itemStyle": {
+                        "color": colors_for_years[year],
+                        "opacity": 0.2  # default opacity for all lines
+                    },
+                    "emphasis": {  # Add this block for emphasis styling
+                        "lineStyle": {
+                            "width": 4
+                        },
+                        "itemStyle": {
+                            "opacity": 1
+                        }
+                    },
+                    "selectedMode": "single",  # Add this line to allow single line selection
+                })
+
+        option["legend"] = {
+            "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in
+                     unique_years_all],
+            "left": 'center',
+            "orient": "horizontal",
+            "top": 50,
+            "icon": "circle",  # This will give a filled circle symbol
+            "itemWidth": 12,  # Controls the width of the circle
+            "itemHeight": 12,  # Controls the height of the circle
+            "borderColor": "#333",  # Border color, here it's a dark gray
+            "borderWidth": 1,  # Width of the border
+            "borderRadius": 4,  # Rounded corners, adjust for desired roundness
+            "padding": 10,  # Padding around the legend items
+            "backgroundColor": "#f4f4f4",  # Light gray background for the legend
+            "textStyle": {
+                "fontSize": 16,
+                "color": "#333"  # Font color matching the border color
+            }
+        }
+
+        # 输出json
+        with open(os.path.join(line_path, f'{category_name}.json'), 'w') as config_file:
+            json.dump({
+                "option": option,
+                "ROWS_PER_GRID": ROWS_PER_GRID,
+                "PLOT_HEIGHT": PLOT_HEIGHT
+            }, config_file)
+
+
 def process_stacked_area_data(dataframe):
     dataframe = dataframe[~dataframe['type'].isin(['fossil', 'renewables', 'total'])].reset_index(drop=True)
     dataframe['total'] = dataframe.groupby(['country', 'date'])['value'].transform('sum')
     dataframe['percentage'] = round((dataframe['value'] / dataframe['total']) * 100, 2)
 
     df_7mean = dataframe[['date', 'country', 'year', 'type', 'percentage']]
-    # df_7mean.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart.csv'), index=False, encoding='utf_8_sig')
 
     # 根据最后一年选择的能源类型占比来分类 - 平均值
     df_sort = df_7mean.copy()
@@ -103,9 +247,6 @@ def process_stacked_area_data(dataframe):
 
     filtered_df = filtered_df.groupby(['country', 'category']).mean(numeric_only=True).reset_index()
     filtered_df['percentage'] = round(filtered_df['percentage'], 2)
-
-    # filtered_df.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart_for_sort.csv'),
-    #                    index=False, encoding='utf_8_sig')
 
     # 再输出画图要用的json
     for selected_category, _ in categories.items():
@@ -232,7 +373,7 @@ def process_stacked_area_data(dataframe):
 
         # 输出json
         # Save the configuration as a JSON file with the subcategory name
-        with open(os.path.join(tools_path, f'{selected_category}.json'), 'w') as config_file:
+        with open(os.path.join(stacked_area_path, f'{selected_category}.json'), 'w') as config_file:
             json.dump({
                 "option": option,
                 "ROWS_PER_GRID": ROWS_PER_GRID,
@@ -302,6 +443,45 @@ def map_to_category(type_):
         if type_ in types:
             return category
     return None
+
+
+def get_line_colors(years_list):
+    # Base colors
+    blue_rgb = (76, 164, 224)  # Macaron Blue
+    orange_rgb = (186, 97, 93)  # Macaron Orange
+    black_color = 'rgb(0, 0, 0)'
+
+    current_year = datetime.now().year  # Get the current year
+
+    colors = []
+
+    for year in years_list:
+        if year in [2019, 2020]:
+            factor = (2020 - year) * 0.3  # Darken by 10% for each year away from 2020
+            # factor = clamp(factor, min_factor, max_factor)  # Ensure within range
+            adjusted_blue = adjust_lightness(blue_rgb, -factor)
+            colors.append(f'rgb{adjusted_blue}')
+        elif year == current_year:  # Latest year
+            colors.append(black_color)
+        else:
+            factor = (current_year - year) * 0.4  # Lighten by 20% for each year away from the current year
+
+            adjusted_orange = adjust_lightness(orange_rgb, factor)
+            colors.append(f'rgb{adjusted_orange}')
+
+    return colors
+
+
+def adjust_lightness(rgb, factor):
+    """
+    Adjusts the lightness of an RGB color.
+    Positive factor values lighten the color, while negative values darken it.
+    """
+    r, g, b = rgb
+    r = min(max(0, r + int(r * factor)), 255)
+    g = min(max(0, g + int(g * factor)), 255)
+    b = min(max(0, b + int(b * factor)), 255)
+    return r, g, b
 
 
 if __name__ == "__main__":

@@ -45,6 +45,7 @@ categories = {
 }
 
 tools_path = './tools'
+stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
 
 
 def main():
@@ -94,7 +95,7 @@ def add_logo(image_path):
 
 
 def get_configuration_for_category(category):
-    with open(os.path.join(tools_path, f"{category}.json"), "r") as file:
+    with open(os.path.join(stacked_area_path, f"{category}.json"), "r") as file:
         data = json.load(file)
     return data["option"], data["ROWS_PER_GRID"], data["PLOT_HEIGHT"]
 
