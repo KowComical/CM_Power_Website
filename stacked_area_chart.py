@@ -118,10 +118,7 @@ def generate_grid_area_option(df_7mean, selected_category):
     summed_df = last_year_data.groupby(['country', 'type'])['percentage'].sum().reset_index()
     
     # Filter for the last year and the selected category
-    filtered_df = summed_df[
-        (summed_df['type'].isin(categories[selected_category])) &
-        (summed_df['date'].dt.year == last_year)
-    ]
+    filtered_df = summed_df[summed_df['type'].isin(categories[selected_category])]
     
     # Now, group by country and compute the mean percentage
     average_percentages = filtered_df.groupby('country')['percentage'].mean()
