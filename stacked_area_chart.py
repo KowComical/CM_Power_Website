@@ -189,15 +189,13 @@ def generate_grid_area_option(df_7mean, selected_category):
             "min": 0,
             "max": 100,
             "name": f"{country} - {selected_category} {ratio_sum_str}",
-            "nameLocation": "middle",  # This positions the name in the middle
-            "nameGap": 35,  # This adjusts the distance between the yAxis and its name. You can adjust this value as needed.
             "nameTextStyle": {
                 "fontSize": 14,
                 "fontWeight": "bold",
                 "padding": [0, 0, 0, 100]
             }
         })
-
+      
     # New nested structure for series creation
     for energy_type in energy_types:
         for idx, country in enumerate(sorted_countries):
