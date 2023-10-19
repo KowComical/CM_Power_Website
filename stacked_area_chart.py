@@ -70,7 +70,7 @@ def main():
       captions=captions
       )
   
-      st.sidebar.warning("Note: This sort logic and value shown is based the latest year's mean value for each country")
+      st.sidebar.info("Note: The sorting logic and displayed values are based on the mean value for each country from the most recent year.")
 
     df_7mean, sorted_data = data_read()
 
