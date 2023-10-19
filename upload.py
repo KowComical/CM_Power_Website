@@ -494,7 +494,7 @@ def save_image_as_base64(image_name):
         b64_string = base64.b64encode(img_file.read()).decode()
 
     # Save the base64 string to the output file
-    with open(os.path.join(tools_path, f'{image_name}.txt'), "w") as f:
+    with open(os.path.join(tools_path, 'logo_base64.txt'), "w") as f:
         f.write(b64_string)
 
 

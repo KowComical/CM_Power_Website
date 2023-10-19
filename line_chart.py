@@ -2,7 +2,6 @@ import streamlit as st
 import os
 from streamlit_echarts import st_echarts
 import json
-import base64
 
 st.set_page_config(layout="wide")
 
@@ -46,7 +45,7 @@ line_path = os.path.join(tools_path, 'line_chart')
 
 # 主程序
 def main():
-    add_logo(os.path.join(tools_path, 'logo_edited.txt'))
+    add_logo(os.path.join(tools_path, 'logo_base64.txt'))
 
     category_name = st.sidebar.selectbox(
         'Select Energy Type',
@@ -80,7 +79,6 @@ def add_logo(base64_file):
         """,
         unsafe_allow_html=True,
     )
-
 
 
 def get_configuration_for_category(category):
