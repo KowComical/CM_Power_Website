@@ -61,7 +61,7 @@ def main():
     'Nuclear': ['nuclear'],
     'Renewables': ['solar', 'wind', 'other', 'hydro']}
     
-    captions = [', '.join(items.title()) for items in categories.values()]
+    captions = [', '.join([item.title() for item in items]) for items in categories.values()]
     
     selected_category = st.sidebar.radio(
         'Sort Countries by Energy Category:',
