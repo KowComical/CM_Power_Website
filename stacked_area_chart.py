@@ -1,9 +1,8 @@
 import streamlit as st
-import pandas as pd
-import math
 from streamlit_echarts import st_echarts
 import json
 import base64
+import os
 
 # 隐藏所有东西
 hide_streamlit_style = """
