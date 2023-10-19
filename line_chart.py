@@ -43,10 +43,6 @@ hide_streamlit_style = """
                 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-# Reading the dictionary from the text file
-with open('./data/colors.txt', 'r') as file:
-    COLORS = json.load(file)
-
 
 # 主程序
 def main():
