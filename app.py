@@ -57,12 +57,15 @@ CONTINENT_COLORS = {
 
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
+tools_path = './tools'
+
+
 def main():
-    add_logo("./data/logo_edited.png")
+    add_logo(os.path.join(tools_path, 'logo_base64.txt'))
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
     # local_css("./data/remote_style.css")
-    local_css("./data/style.css")
+    local_css(os.path.join(tools_path, 'style.css'))
 
     # Load the data
     df = pd.read_csv('./data/data_for_download.csv')
@@ -71,12 +74,10 @@ def main():
     df_download = df.copy()
 
     with st.container():
-
         # 筛选能源类型
         selected_energy = st.sidebar.selectbox(
             'Select Energy Type',
-            ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'],
-            index=0)
+            ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'], index=0)
 
         df = df[df['type'] == selected_energy].reset_index(drop=True)
 
@@ -122,11 +123,10 @@ def main():
         )
 
 
-def add_logo(image_path):
-    # Open the image file
-    with open(image_path, "rb") as img_file:
-        # Encode the image as Base64
-        b64_string = base64.b64encode(img_file.read()).decode()
+def add_logo(base64_file):
+    # Read the Base64 string from the file
+    with open(base64_file, "r") as f:
+        b64_string = f.read()
 
     # Insert the Base64 string into the CSS
     st.markdown(
@@ -135,8 +135,8 @@ def add_logo(image_path):
             [data-testid="stSidebarNav"] {{
                 background-image: url(data:image/png;base64,{b64_string});
                 background-repeat: no-repeat;
-                background-size: 80% auto;  /* Set width to 80% of the sidebar, height scales automatically */
-                padding-top: 40px;  /* Adjust based on your image's height */
+                background-size: 80% auto;
+                padding-top: 40px;
                 background-position: 20px 20px;
             }}
         </style>
@@ -166,9 +166,6 @@ def local_css(file_name):
 def remote_css(url):
     st.markdown(f'<link href="{url}" rel="stylesheet">', unsafe_allow_html=True)
 
-
-# def header_bg(table_type):
-#     return COLORS.get(table_type, "#BAD2DE")  # A soft warm default color
 
 def header_bg(continent):
     return CONTINENT_COLORS.get(continent, "#BAD2DE")  # A soft warm default color
