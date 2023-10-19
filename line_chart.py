@@ -103,7 +103,7 @@ def get_countries_sorted_by_value(df, category_name):
 
 
 # 生成 ECharts 配置的函数
-@st.cache_data(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
+@st.cache_data(ttl=60*60*24 + 10*60, show_spinner=False)  # 24 hours + 10 minutes
 def generate_grid_option(df_7mean, category_name, countries):
     num_countries = len(countries)
 
@@ -231,7 +231,7 @@ def generate_grid_option(df_7mean, category_name, countries):
 
 
 # 数据处理函数
-@st.cache_data(ttl=86400)
+@st.cache_data(ttl=60*60*24 + 10*60, show_spinner=False)  # 24 hours + 10 minutes
 def data_read():
     df = pd.read_csv('./data/data_for_download.csv')
     df_7mean = pd.read_csv('./data/data_for_line_chart.csv')
