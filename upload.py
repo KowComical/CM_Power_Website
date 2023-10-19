@@ -51,14 +51,17 @@ def process_data():
 
     # 输出阶段
     # 先输出一版给首页data description 用的
-
     df.to_csv(os.path.join(file_path, 'data_for_download.csv'), index=False, encoding='utf_8_sig')
+
+    # 再输出一版给line图用的
     df_7mean.to_csv(os.path.join(file_path, 'data_for_line_chart.csv'), index=False, encoding='utf_8_sig')
 
     # 再输出一版给stacked area用的
     df_7mean = df_7mean[~df_7mean['type'].isin(['fossil', 'renewables', 'total'])].reset_index(drop=True)
     df_7mean['total'] = df_7mean.groupby(['country', 'date'])['value'].transform('sum')
     df_7mean['percentage'] = round((df_7mean['value'] / df_7mean['total']) * 100, 2)
+
+    df_7mean = df_7mean[['date', 'country', 'year', 'type', 'percentage']]
 
     df_7mean.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart.csv'), index=False, encoding='utf_8_sig')
 
