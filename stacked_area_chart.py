@@ -44,11 +44,29 @@ with open('./data/colors.txt', 'r') as file:
     COLORS = json.load(file)
 
 
+categories = {
+        'Fossil': ['coal', 'gas', 'oil'],
+        'Nuclear': ['nuclear'],
+        'Renewables': ['solar', 'wind', 'other', 'hydro']
+    }
+
+
 def main():
     add_logo("./data/logo_edited.png")
+    
+
+    # 添加一个选择排序方式的功能
+    categories = {
+    'Fossil': ['coal', 'gas', 'oil'],
+    'Nuclear': ['nuclear'],
+    'Renewables': ['solar', 'wind', 'other', 'hydro']
+    }
+
+    selected_category = st.sidebar.radio('Sort Countries by Energy Category:', list(categories.keys()))
+
     df_7mean = data_read()
 
-    option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean)
+    option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean, selected_category)
 
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
@@ -79,15 +97,19 @@ def add_logo(image_path):
 @st.cache(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
 def data_read():
     df_7mean = pd.read_csv('./data/data_for_stacked_area_chart.csv')
-    df_7mean['percentage'] = round(df_7mean['percentage'], 2)
 
     df_7mean['date'] = pd.to_datetime(df_7mean['date'])
 
     return df_7mean
 
 @st.cache(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
-def generate_grid_area_option(df_7mean):
-    countries = df_7mean['country'].unique().tolist()
+def generate_grid_area_option(df_7mean, selected_category):
+
+    filtered_df = df_7mean[df_7mean['type'].isin(categories[selected_category])]
+    category_sum = filtered_df.groupby('country')['value'].sum()
+    countries = category_sum.sort_values(ascending=False)
+
+    
     energy_types = ['coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other']
 
     COLS = 4
@@ -139,6 +161,11 @@ def generate_grid_area_option(df_7mean):
         country_data = df_7mean[df_7mean['country'] == country].reset_index(drop=True)
         country_dates = country_data['date'].dt.strftime('%Y-%m-%d').drop_duplicates().tolist()
 
+        # Compute the ratio sum for the selected category for the country
+        category_data = country_data[country_data['type'].isin(categories[selected_category])]
+        ratio_sum = category_data['percentage'].sum()
+        ratio_sum_str = f"{ratio_sum:.2f}%"
+
         option["grid"].append({
             "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
@@ -158,7 +185,7 @@ def generate_grid_area_option(df_7mean):
             "type": "value",
             "min": 0,
             "max": 100,
-            "name": country,
+            "name": f"{country} - {selected_category} {ratio_sum_str}",
             "nameTextStyle": {
                 "fontSize": 14,
                 "fontWeight": "bold",
