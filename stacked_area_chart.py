@@ -63,12 +63,13 @@ def main():
     
     captions = [', '.join([item.title() for item in items]) for items in categories.values()]
     
-    selected_category = st.sidebar.radio(
-        'Sort Countries by Energy Category:',
-        list(categories.keys()),
-        captions=captions)
-    st.write(selected_category)
-
+    selected_key = st.sidebar.radio(
+    'Sort Countries by Energy Category:',
+    list(categories.keys()),
+    captions=captions
+    )
+    
+    selected_category = categories[selected_key]
 
     df_7mean = data_read()
 
