@@ -69,6 +69,8 @@ def main():
     captions=captions
     )
 
+    st.sidebar.write('kow')
+
     df_7mean, sorted_data = data_read()
 
     option, ROWS_PER_GRID, PLOT_HEIGHT = generate_grid_area_option(df_7mean, sorted_data, selected_category)
