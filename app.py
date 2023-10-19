@@ -57,11 +57,6 @@ CONTINENT_COLORS = {
 
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
-# 读取颜色
-with open('./data/colors.txt', 'r') as file:
-    COLORS = json.load(file)
-
-
 def main():
     add_logo("./data/logo_edited.png")
     # Styling and Layout
