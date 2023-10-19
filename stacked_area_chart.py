@@ -4,7 +4,7 @@ import math
 from streamlit_echarts import st_echarts
 import json
 import base64
-from streamlit_extras.streaming_write import write
+from streamlit_extras.streaming_write import write as stream_write
 
 # 隐藏所有东西
 hide_streamlit_style = """
@@ -70,7 +70,7 @@ def main():
     captions=captions
     )
 
-    st.sidebar.write('kow')
+    st.sidebar.stream_write('kow')
 
     df_7mean, sorted_data = data_read()
 
