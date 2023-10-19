@@ -63,13 +63,11 @@ def main():
     
     captions = [', '.join([item.title() for item in items]) for items in categories.values()]
     
-    selected_key = st.sidebar.radio(
+    selected_category = st.sidebar.radio(
     'Sort Countries by Energy Category:',
     list(categories.keys()),
     captions=captions
     )
-    
-    selected_category = categories[selected_key]
 
     df_7mean = data_read()
 
@@ -118,6 +116,8 @@ def generate_grid_area_option(df_7mean, selected_category):
     
     # Filter by the selected category
     filtered_df = last_year_data[last_year_data['type'].isin(categories[selected_category])]
+
+    st.write(filtered_df)
     
     # Compute the average percentage for each country for the selected category for the last year
     average_percentages = filtered_df.groupby('country')['percentage'].mean()
