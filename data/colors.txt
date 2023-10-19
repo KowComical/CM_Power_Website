@@ -1,10 +1,11 @@
 {
-    "coal": "#A3A090",      
-    "oil": "#D4A58F",      
-    "gas": "#B6A1D4",        
-    "hydro": "#89C5C8",      
-    "nuclear": "#98D4A1",   
-    "other": "#D1B4E0",      
-    "solar": "#FDEE9E",     
-    "wind": "#AED3DE"   
+    "coal": "#A3A090",
+    "oil": "#D4A58F",
+    "gas": "#B6A1D4",
+    "hydro": "#89C5C8",
+    "nuclear": "#98D4A1",
+    "other": "#E8ACBF",
+    "solar": "#FDDCA3",
+    "wind": "#AED3DE"
 }
+
