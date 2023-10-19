@@ -68,10 +68,7 @@ def main():
     local_css(os.path.join(tools_path, 'style.css'))
 
     # Load the data
-    df = pd.read_csv('./data/data_for_download.csv')
-
-    # 复制一版给下载
-    df_download = df.copy()
+    df_download = pd.read_csv('./data/data_for_download.csv')
 
     with st.container():
         # 筛选能源类型
