@@ -70,7 +70,7 @@ def main():
     captions=captions
     )
 
-    st.sidebar.stream_write('kow')
+    stream_write('kow')
 
     df_7mean, sorted_data = data_read()
 
