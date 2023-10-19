@@ -110,13 +110,18 @@ def data_read():
 @st.cache(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
 def generate_grid_area_option(df_7mean, selected_category):
 
-    filtered_df = df_7mean[df_7mean['type'].isin(categories[selected_category])]
-    # Compute the average percentage for each country for the selected category
+    # Filter the dataframe for the last year only
+    last_year = df_7mean['date'].max().year
+    last_year_data = df_7mean[df_7mean['date'].dt.year == last_year]
+    
+    # Filter by the selected category
+    filtered_df = last_year_data[last_year_data['type'].isin(categories[selected_category])]
+    
+    # Compute the average percentage for each country for the selected category for the last year
     average_percentages = filtered_df.groupby('country')['percentage'].mean()
     
     # Sort the countries by the average percentage in descending order
     sorted_countries = average_percentages.sort_values(ascending=False).index.tolist()
-
     
     energy_types = ['coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other']
 
