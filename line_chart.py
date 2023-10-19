@@ -103,6 +103,7 @@ def get_countries_sorted_by_value(df, category_name):
 
 
 # 生成 ECharts 配置的函数
+@st.cache(ttl=60*60*24 + 10*60)  # 24 hours + 10 minutes
 def generate_grid_option(df_7mean, category_name, countries):
     num_countries = len(countries)
 
