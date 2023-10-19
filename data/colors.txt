@@ -1,12 +1,10 @@
 {
-    "coal": "#836A58",
-    "oil": "#9B7E6D",
-    "gas": "#B19283",
-    "hydro": "#A8DADC",
-    "nuclear": "#F4B6BC",
-    "other": "#B5DFF7",
-    "solar": "#C3E2E8",
-    "wind": "#BFD9E6",
-    "fossil": "#A89E92",
-    "renewables": "#CBE2DA"
+    "coal": "#A3A090",       // Muted pastel brown
+    "oil": "#D4A58F",        // Soft pastel orange
+    "gas": "#B6A1D4",        // Muted pastel purple
+    "hydro": "#89C5C8",      // Muted pastel cyan
+    "nuclear": "#98D4A1",    // Muted pastel green
+    "other": "#D1B4E0",      // Muted pastel lavender
+    "solar": "#FDEE9E",      // Muted pastel yellow
+    "wind": "#AED3DE"        // Soft pastel blue
 }
