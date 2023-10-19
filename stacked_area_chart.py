@@ -111,22 +111,17 @@ def data_read():
 def generate_grid_area_option(df_7mean, selected_category):
 
     # Filter the dataframe for the last year only
-    last_year = df_7mean['date'].max().year
-    last_year_data = df_7mean[df_7mean['date'].dt.year == last_year]
+    last_year = max(df_7mean['year'])
+    last_year_data = df_7mean[df_7mean['year'] == last_year]
 
-    # Group by country and type, then sum the percentages
-    summed_df = last_year_data.groupby(['country', 'type'])['percentage'].sum().reset_index()
-    
-    # Filter for the last year and the selected category
-    filtered_df = summed_df[summed_df['type'].isin(categories[selected_category])]
+    filtered_df = df_7mean[(df_7mean['year'] == last_year) & df_7mean['type'].isin(categories[selected_category])]
 
-    st.write(filtered_df)
-    
-    # Now, group by country and compute the mean percentage
-    average_percentages = filtered_df.groupby('country')['percentage'].mean()
+    filtered_df = filtered_df.groupby(['date', 'country', 'year']).sum().reset_index() # 先将所选的能源类型合并
+
+    filtered_df = filtered_df.groupby(['country', 'year']).mean().reset_index() # 求当年平均值
     
     # Sort the countries by the average percentage in descending order
-    sorted_countries = average_percentages.sort_values(ascending=False).index.tolist()
+    sorted_countries = filtered_df.sort_values(by='percentage', ascending=False)['country'].tolist()
 
     # Store the summed percentages in a dictionary for easier retrieval
     percentage_dict = dict(filtered_df[['country', 'percentage']].values)
@@ -178,8 +173,6 @@ def generate_grid_area_option(df_7mean, selected_category):
         "graphic": [],
     }
 
-
-    
 
     # Grid, xAxis, and yAxis configurations remain the same
     for idx, country in enumerate(sorted_countries):
