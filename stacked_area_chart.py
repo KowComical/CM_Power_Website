@@ -115,7 +115,7 @@ def generate_grid_area_option(df_7mean, selected_category):
 
     filtered_df = df_7mean[(df_7mean['year'] == last_year) & df_7mean['type'].isin(categories[selected_category])]
 
-    filtered_df = filtered_df.groupby(['date', 'country', 'year']).sum(numerical_only=True).reset_index() # 先将所选的能源类型合并
+    filtered_df = filtered_df.drop(columns['type']).groupby(['date', 'country', 'year']).sum().reset_index() # 先将所选的能源类型合并
 
     # filtered_df = filtered_df.groupby(['country', 'year']).mean().reset_index() # 求当年平均值
 
