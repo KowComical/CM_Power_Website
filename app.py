@@ -65,7 +65,8 @@ with open('./data/colors.txt', 'r') as file:
 def main():
     add_logo("./data/logo_edited.png")
     # Styling and Layout
-    remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
+    # remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
+    remote_css("./data/remote_style.css")
     local_css("./data/style.css")
 
     # Load the data
