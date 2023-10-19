@@ -207,7 +207,7 @@ def generate_grid_area_option(df_7mean, selected_category):
             "type": "value",
             "min": 0,
             "max": 100,
-            "name": f"{country} - {selected_category} {ratio_sum_str}",
+            # "name": f"{country} - {selected_category} {ratio_sum_str}",
             "nameTextStyle": {
                 "fontSize": 14,
                 "fontWeight": "bold",
