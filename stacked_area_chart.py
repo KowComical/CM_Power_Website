@@ -70,7 +70,7 @@ def main():
     captions=captions
     )
 
-    stream_write('kow')
+    stream_write("Note: This sort logic and value shown is based the latest year's mean value for each country")
 
     df_7mean, sorted_data = data_read()
 
