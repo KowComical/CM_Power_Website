@@ -77,7 +77,7 @@ def process_data():
     df.to_csv(os.path.join(file_path, 'data_for_download.csv'), index=False, encoding='utf_8_sig')
 
     # 再输出一版给line图用的
-    df_7mean.to_csv(os.path.join(file_path, 'data_for_line_chart.csv'), index=False, encoding='utf_8_sig')
+    process_line_data(df_7mean)
 
     # 再输出一版给stacked area用的
     process_stacked_area_data(df_7mean)
