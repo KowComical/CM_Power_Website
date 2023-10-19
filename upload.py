@@ -1,13 +1,13 @@
 import subprocess
-import os
 import pandas as pd
 import os
 import ast
-
-import seaborn as sns
+import math
+import json
 
 global_path = '/data/xuanrenSong/CM_Power_Website'
 file_path = os.path.join(global_path, 'data')
+tools_path = os.path.join(global_path, 'tools')
 
 country_list = ['Australia', 'Brazil', 'Chile', 'China',
                 'EU27&UK', 'France', 'Germany',
@@ -19,6 +19,17 @@ categories = {
     'Fossil': ['coal', 'gas', 'oil'],
     'Nuclear': ['nuclear'],
     'Renewables': ['solar', 'wind', 'other', 'hydro']
+}
+
+COLORS = {
+    "coal": "#A3A090",
+    "oil": "#D4A58F",
+    "gas": "#B6A1D4",
+    "hydro": "#89C5C8",
+    "nuclear": "#98D4A1",
+    "other": "#E8ACBF",
+    "solar": "#FDDCA3",
+    "wind": "#AED3DE"
 }
 
 
@@ -63,26 +74,7 @@ def process_data():
     df_7mean.to_csv(os.path.join(file_path, 'data_for_line_chart.csv'), index=False, encoding='utf_8_sig')
 
     # 再输出一版给stacked area用的
-    df_7mean = df_7mean[~df_7mean['type'].isin(['fossil', 'renewables', 'total'])].reset_index(drop=True)
-    df_7mean['total'] = df_7mean.groupby(['country', 'date'])['value'].transform('sum')
-    df_7mean['percentage'] = round((df_7mean['value'] / df_7mean['total']) * 100, 2)
-
-    df_7mean = df_7mean[['date', 'country', 'year', 'type', 'percentage']]
-    df_7mean.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart.csv'), index=False, encoding='utf_8_sig')
-
-    # 根据最后一年选择的能源类型占比来分类 - 平均值
-    last_year = max(df_7mean['year'])
-    df_7mean['category'] = df_7mean['type'].apply(map_to_category)
-    # Group by the new 'category' column to get the sum of percentages for each category
-    df_7mean = df_7mean.groupby(['date', 'country', 'year', 'category'])['percentage'].sum().reset_index()
-
-    filtered_df = df_7mean[(df_7mean['year'] == last_year)]
-
-    filtered_df = filtered_df.drop(columns=['year']).groupby(['country', 'category']).mean().reset_index()
-    filtered_df['percentage'] = round(filtered_df['percentage'], 2)
-
-    filtered_df.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart_for_sort.csv'),
-                       index=False, encoding='utf_8_sig')
+    process_stacked_area_data(df_7mean)
 
     # 再计算一版散点图用的
     df = load_power_data(df)
@@ -90,6 +82,162 @@ def process_data():
     df_filtered = prepare_comparison_data(df, df_iea)
 
     df_filtered.to_csv(os.path.join(file_path, 'data_for_scatter_plot.csv'), index=False, encoding='utf_8_sig')
+
+
+def process_stacked_area_data(dataframe):
+    dataframe = dataframe[~dataframe['type'].isin(['fossil', 'renewables', 'total'])].reset_index(drop=True)
+    dataframe['total'] = dataframe.groupby(['country', 'date'])['value'].transform('sum')
+    dataframe['percentage'] = round((dataframe['value'] / dataframe['total']) * 100, 2)
+
+    df_7mean = dataframe[['date', 'country', 'year', 'type', 'percentage']]
+    # df_7mean.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart.csv'), index=False, encoding='utf_8_sig')
+
+    # 根据最后一年选择的能源类型占比来分类 - 平均值
+    df_sort = df_7mean.copy()
+    last_year = max(df_sort['year'])
+    df_sort['category'] = df_sort['type'].apply(map_to_category)
+    # Group by the new 'category' column to get the sum of percentages for each category
+    df_sort = df_sort.groupby(['date', 'country', 'year', 'category'])['percentage'].sum().reset_index()
+
+    filtered_df = df_sort[(df_sort['year'] == last_year)].drop(columns=['year'])
+
+    filtered_df = filtered_df.groupby(['country', 'category']).mean(numeric_only=True).reset_index()
+    filtered_df['percentage'] = round(filtered_df['percentage'], 2)
+
+    # filtered_df.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart_for_sort.csv'),
+    #                    index=False, encoding='utf_8_sig')
+
+    # 再输出画图要用的json
+    for selected_category, _ in categories.items():
+
+        temp_df = filtered_df[filtered_df['category'] == selected_category]
+        # Sort the countries by the average percentage in descending order
+        sorted_countries = temp_df.sort_values(by='percentage', ascending=False)['country'].tolist()
+
+        # Store the summed percentages in a dictionary for easier retrieval
+        percentage_dict = dict(temp_df[['country', 'percentage']].values)
+
+        energy_types = ['coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other']
+
+        COLS = 4
+        ROWS = int(math.ceil(len(sorted_countries) / COLS))
+        WIDTH = 100 / COLS
+        HEIGHT = 92 / ROWS
+
+        ROWS_PER_GRID = math.ceil(len(sorted_countries) / COLS)
+        PLOT_HEIGHT = 200  # 根据需要进行调整
+
+        WIDTH_ADJUSTMENT = 0.8
+        HEIGHT_ADJUSTMENT = 1.0
+
+        option = {
+            "title": [{
+                "text": "Power Generation Distribution by Source for Key Countries (%)",
+                "left": "center",
+                "top": "0%"
+            }],
+            "tooltip": {
+                "trigger": "axis"
+            },
+            "legend": {
+                "data": energy_types,
+                "orient": "horizontal",
+                "left": 'center',
+                "top": 50,
+                "icon": "circle",  # This will give a filled circle symbol
+                "itemWidth": 12,  # Controls the width of the circle
+                "itemHeight": 12,  # Controls the height of the circle
+                "borderColor": "#333",  # Border color, here it's a dark gray
+                "borderWidth": 1,  # Width of the border
+                "borderRadius": 4,  # Rounded corners, adjust for desired roundness
+                "padding": 10,  # Padding around the legend items
+                "backgroundColor": "#f4f4f4",  # Light gray background for the legend
+                "textStyle": {
+                    "fontSize": 16,
+                    "color": "#333"  # Font color matching the border color
+                }
+            },
+            "xAxis": [],
+            "yAxis": [],
+            "grid": [],
+            "series": [],
+            "graphic": [],
+        }
+
+        # Grid, xAxis, and yAxis configurations remain the same
+        for idx, country in enumerate(sorted_countries):
+            country_data = df_7mean[df_7mean['country'] == country].reset_index(drop=True)
+            country_dates = country_data['date'].dt.strftime('%Y-%m-%d').drop_duplicates().tolist()
+
+            ratio_sum = percentage_dict.get(country, 0)
+            ratio_sum_str = f"{ratio_sum:.2f}%"
+
+            option["graphic"].append({
+                "type": "text",
+                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT + WIDTH / 2 - 6}%",  # Centered horizontally
+                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 8}%",  # At the top of the grid
+                "z": 100,  # Place it above other elements
+                "style": {
+                    "text": f"{country} - {selected_category} {ratio_sum_str}",
+                    "fontSize": 14,
+                    "fontWeight": "bold",
+                    "textAlign": "center"  # Center align text
+                }
+            })
+
+            option["grid"].append({
+                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
+                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
+                "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
+                "height": f"{HEIGHT - 4 * HEIGHT_ADJUSTMENT}%",
+                "containLabel": True
+            })
+
+            option["xAxis"].append({
+                "gridIndex": idx,
+                "type": "category",
+                "data": country_dates
+            })
+
+            option["yAxis"].append({
+                "gridIndex": idx,
+                "type": "value",
+                "min": 0,
+                "max": 100,
+                # "name": f"{country} - {selected_category} {ratio_sum_str}",
+                "nameTextStyle": {
+                    "fontSize": 14,
+                    "fontWeight": "bold",
+                    "padding": [0, 0, 0, 100]
+                }
+            })
+
+        # New nested structure for series creation
+        for energy_type in energy_types:
+            for idx, country in enumerate(sorted_countries):
+                country_data = df_7mean[df_7mean['country'] == country].reset_index(drop=True)
+                series_data = country_data[country_data['type'] == energy_type]['percentage'].tolist()
+
+                if len(series_data) == len(option["xAxis"][idx]["data"]):  # Ensure data alignment
+                    option["series"].append({
+                        "name": energy_type,
+                        "type": "line",
+                        "stack": country,  # Unique stack label based on country name
+                        "areaStyle": {"color": COLORS.get(energy_type)},
+                        "itemStyle": {"color": COLORS.get(energy_type)},
+                        "xAxisIndex": idx,
+                        "yAxisIndex": idx,
+                        "data": series_data
+                    })
+
+        # 输出json
+        # Save the configuration as a JSON file with the subcategory name
+        with open(os.path.join(tools_path, f'{selected_category}.json'), 'w') as config_file:
+            json.dump({
+                "option": option,
+                "ROWS_PER_GRID": ROWS_PER_GRID,
+                "PLOT_HEIGHT": PLOT_HEIGHT
+            }, config_file)
 
 
 def load_power_data(df):
@@ -107,7 +255,7 @@ def load_iea_data():
     }
     df_iea['country'] = df_iea['country'].replace(country_replacements)
 
-    with open(os.path.join(file_path, 'eu_countries.txt'), 'r') as file:
+    with open(os.path.join(tools_path, 'eu_countries.txt'), 'r') as file:
         eu_countries = ast.literal_eval(file.read())
 
     df_iea_eu = df_iea[df_iea['country'].isin(eu_countries)].reset_index(drop=True)
