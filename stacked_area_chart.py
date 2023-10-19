@@ -67,6 +67,7 @@ def main():
         'Sort Countries by Energy Category:',
         list(categories.keys()),
         captions=captions)
+    st.write(selected_category)
 
 
     df_7mean = data_read()
