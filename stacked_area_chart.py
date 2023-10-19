@@ -177,7 +177,7 @@ def generate_grid_area_option(df_7mean, selected_category):
         option["graphic"].append({
             "type": "text",
             "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT + WIDTH/2}%",  # Centered horizontally
-            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT}%",  # At the top of the grid
+            "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 2}%",  # At the top of the grid
             "z": 100,  # Place it above other elements
             "style": {
                 "text": f"{country} - {selected_category} {ratio_sum_str}",
