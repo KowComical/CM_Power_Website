@@ -1,6 +1,4 @@
 import pandas as pd
-import json
-import base64
 import datetime
 import os
 
@@ -59,6 +57,7 @@ CONTINENT_COLORS = {
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
 tools_path = './tools'
+data_description_path = os.path.join(tools_path, 'data_description')
 
 
 def main():
@@ -78,35 +77,12 @@ def main():
         # 筛选能源类型
         selected_energy = st.sidebar.selectbox(
             'Select Energy Type',
-            ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'], index=0)
+            ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables'],
+            index=0)
 
-        df = df[df['type'] == selected_energy].reset_index(drop=True)
-
-        # 筛选大洲
-        continents = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-        all_continents = ['World'] + continents
-
-        selected_continent = st.sidebar.multiselect(
-            'Select Continents',
-            all_continents,
-            default=['World'])  # Setting the default value to "All Continents"
-
-        # If "All Continents" is selected, the output will be all the continents.
-        if 'World' in selected_continent:
-            selected_continents = continents
-        else:
-            selected_continents = selected_continent
-
-        # 处理数据
-        df = transform_data(df, selected_energy, selected_continents)
-
-        # 按照值的大小排序
-        df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
-
-        # cb_view_details = st.sidebar.checkbox('View Details')
         view_details = display_switch_button()
 
-        table_scorecard = get_scorecard(df, view_details)
+        table_scorecard = read_html_file(selected_energy, view_details)
         st.markdown(table_scorecard, unsafe_allow_html=True)
 
         # 使用 Streamlit 的下载按钮进行一键下载
@@ -122,6 +98,13 @@ def main():
             mime="text/csv",
             use_container_width=True,
         )
+
+
+def read_html_file(selected_energy, view_details):
+    html_name = os.path.join(data_description_path, f'{selected_energy}_{view_details}.html')
+    with open(html_name, 'r', encoding='utf-8') as file:
+        content = file.read()
+    return content
 
 
 def add_logo(base64_file):
@@ -332,9 +315,9 @@ def display_switch_button():
     )
 
     if st.session_state['toggle_switch']:
-        view_details = ""
+        view_details = 'none'
     else:
-        view_details = """style="display: none;" """
+        view_details = 'visible'
 
     return view_details
 
