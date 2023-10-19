@@ -117,14 +117,20 @@ def generate_grid_area_option(df_7mean, selected_category):
     # Group by country and type, then sum the percentages
     summed_df = last_year_data.groupby(['country', 'type'])['percentage'].sum().reset_index()
     
-    # Filter by the selected category
-    filtered_df = summed_df[summed_df['type'].isin(categories[selected_category])]
+    # Filter for the last year and the selected category
+    filtered_df = summed_df[
+        (summed_df['type'].isin(categories[selected_category])) &
+        (summed_df['date'].dt.year == last_year)
+    ]
     
     # Now, group by country and compute the mean percentage
     average_percentages = filtered_df.groupby('country')['percentage'].mean()
     
     # Sort the countries by the average percentage in descending order
     sorted_countries = average_percentages.sort_values(ascending=False).index.tolist()
+
+    # Store the summed percentages in a dictionary for easier retrieval
+    percentage_dict = dict(filtered_df[['country', 'percentage']].values)
     
     energy_types = ['coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other']
 
@@ -181,11 +187,8 @@ def generate_grid_area_option(df_7mean, selected_category):
         country_data = df_7mean[df_7mean['country'] == country].reset_index(drop=True)
         country_dates = country_data['date'].dt.strftime('%Y-%m-%d').drop_duplicates().tolist()
 
-        # Compute the ratio sum for the selected category for the country
-        category_data = country_data[country_data['type'].isin(categories[selected_category])]
-        ratio_sum = category_data['percentage'].sum()
+        ratio_sum = percentage_dict.get(country, 0)
         ratio_sum_str = f"{ratio_sum:.2f}%"
-
 
         option["graphic"].append({
             "type": "text",
