@@ -163,7 +163,7 @@ def generate_grid_area_option(df_7mean, selected_category):
 
         # Compute the ratio sum for the selected category for the country
         category_data = country_data[country_data['type'].isin(categories[selected_category])]
-        ratio_sum = category_data['percentage'].sum()
+        ratio_sum = category_data['percentage'].mean()
         ratio_sum_str = f"{ratio_sum:.2f}%"
 
         option["grid"].append({
