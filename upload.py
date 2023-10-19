@@ -5,6 +5,7 @@ import ast
 import math
 import json
 from datetime import datetime
+import base64
 
 global_path = '/data/xuanrenSong/CM_Power_Website'
 file_path = os.path.join(global_path, 'data')
@@ -42,7 +43,9 @@ COLORS = {
 def main():
     # 先更新数据
     process_data()
-    # Usage:
+    # 更新图
+    save_image_as_base64('logo_edited.png')
+    # 上传
     git_push(global_path)
 
 
@@ -482,6 +485,17 @@ def adjust_lightness(rgb, factor):
     g = min(max(0, g + int(g * factor)), 255)
     b = min(max(0, b + int(b * factor)), 255)
     return r, g, b
+
+
+def save_image_as_base64(image_name):
+    # Open the image file
+    with open(os.path.join(tools_path, image_name), "rb") as img_file:
+        # Encode the image as Base64
+        b64_string = base64.b64encode(img_file.read()).decode()
+
+    # Save the base64 string to the output file
+    with open(os.path.join(tools_path, f'{image_name}.txt'), "w") as f:
+        f.write(b64_string)
 
 
 if __name__ == "__main__":

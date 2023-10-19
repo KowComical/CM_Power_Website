@@ -46,7 +46,7 @@ line_path = os.path.join(tools_path, 'line_chart')
 
 # 主程序
 def main():
-    add_logo(os.path.join(tools_path, 'logo_edited.png'))
+    add_logo(os.path.join(tools_path, 'logo_edited.txt'))
 
     category_name = st.sidebar.selectbox(
         'Select Energy Type',
@@ -60,11 +60,10 @@ def main():
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
 
-def add_logo(image_path):
-    # Open the image file
-    with open(image_path, "rb") as img_file:
-        # Encode the image as Base64
-        b64_string = base64.b64encode(img_file.read()).decode()
+def add_logo(base64_file):
+    # Read the Base64 string from the file
+    with open(base64_file, "r") as f:
+        b64_string = f.read()
 
     # Insert the Base64 string into the CSS
     st.markdown(
@@ -73,14 +72,15 @@ def add_logo(image_path):
             [data-testid="stSidebarNav"] {{
                 background-image: url(data:image/png;base64,{b64_string});
                 background-repeat: no-repeat;
-                background-size: 80% auto;  /* Set width to 80% of the sidebar, height scales automatically */
-                padding-top: 40px;  /* Adjust based on your image's height */
+                background-size: 80% auto;
+                padding-top: 40px;
                 background-position: 20px 20px;
             }}
         </style>
         """,
         unsafe_allow_html=True,
     )
+
 
 
 def get_configuration_for_category(category):
