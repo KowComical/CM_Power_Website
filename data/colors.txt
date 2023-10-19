@@ -1,1 +1,12 @@
-{"coal": "#836A58", "oil": "#F2A5A0", "gas": "#A4BADF", "hydro": "#A4D4B4", "nuclear": "#F4B6BC", "other": "#CDE199", "solar": "#FFF9D7", "wind": "#FFD4A5", "fossil": "#A89E92", "renewables": "#CBE2DA"}
+{
+    "coal": "#836A58",
+    "oil": "#9B7E6D",
+    "gas": "#B19283",
+    "hydro": "#FFBC58",
+    "nuclear": "#F4B6BC",
+    "other": "#FFD182",
+    "solar": "#FFF9D7",
+    "wind": "#FFE5AC",
+    "fossil": "#A89E92",
+    "renewables": "#CBE2DA"
+}
