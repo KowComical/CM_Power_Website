@@ -87,6 +87,7 @@ def process_data():
     # 输出阶段
     # 先输出一版给首页data description 用的
     df.to_csv(os.path.join(file_path, 'data_for_download.csv'), index=False, encoding='utf_8_sig')
+    process_data_description(df)
 
     # 再输出一版给line图用的
     process_line_data(df_7mean)
@@ -126,7 +127,7 @@ def process_data_description(dataframe):
         df['type'] = selected_energy
 
         # 读取国家信息
-        data_description = pd.read_csv('./data/data_description.csv')
+        data_description = pd.read_csv('/data/xuanrenSong/CM_Power_Website/data/data_description.csv')
 
         data_description['duration'] = pd.to_datetime(data_description['duration']).dt.strftime('%Y-%b')
 
