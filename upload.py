@@ -10,7 +10,7 @@ import base64
 global_path = '/data/xuanrenSong/CM_Power_Website'
 file_path = os.path.join(global_path, 'data')
 tools_path = os.path.join(global_path, 'tools')
-# stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
+data_description_path = os.path.join(tools_path, 'data_description')
 line_path = os.path.join(tools_path, 'line_chart')
 stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
 
@@ -37,6 +37,15 @@ COLORS = {
     "other": "#E8ACBF",
     "solar": "#FDDCA3",
     "wind": "#AED3DE"
+}
+
+CONTINENT_COLORS = {
+    'Asia': '#FFE5B4',
+    'Africa': '#FF9898',
+    'Europe': '#B0C4DE',
+    'North America': '#BA9192',
+    'South America': '#D8BFD8',
+    'Oceania': '#CBE2DA',
 }
 
 
@@ -91,6 +100,55 @@ def process_data():
     df_filtered = prepare_comparison_data(df, df_iea)
 
     df_filtered.to_csv(os.path.join(file_path, 'data_for_scatter_plot.csv'), index=False, encoding='utf_8_sig')
+
+
+def process_data_description(dataframe):
+    for selected_energy in sub_category:
+        df = dataframe[dataframe['type'] == selected_energy].reset_index(drop=True)
+
+        df['value'] = df['value'] / 1000  # Gwh to Twh
+        df['date'] = pd.to_datetime(df['date'])
+
+        ytd_sum_res = df.groupby('country').apply(current_year_sum)
+        lytd_sum_res = df.groupby('country').apply(last_year_ytd_sum)
+        percentage_change_res = ((ytd_sum_res - lytd_sum_res) / lytd_sum_res) * 100
+
+        results = [{'country': country,
+                    'max_date': max(df[df['country'] == country]['date']),
+                    'total_value': sum(df[df['country'] == country]['value']),
+                    'row_count': len(df[df['country'] == country])}
+                   for country in df['country'].unique()]
+
+        df = pd.DataFrame(results)
+        df['year_to_date_sum'] = df['country'].map(ytd_sum_res)
+        df['percentage_change'] = df['country'].map(percentage_change_res)
+        df['test_country'] = df['country']
+        df['type'] = selected_energy
+
+        # 读取国家信息
+        data_description = pd.read_csv('./data/data_description.csv')
+
+        data_description['duration'] = pd.to_datetime(data_description['duration']).dt.strftime('%Y-%b')
+
+        df = pd.merge(df, data_description)
+
+        # 按照值的大小排序
+        df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+
+        view_details_list = ["", """style="display: none;" """]
+
+        for view_details in view_details_list:
+            html_content = get_scorecard(df, view_details)
+
+            if view_details == "":
+                view_details_name = 'none'
+            else:
+                view_details_name = 'visible'
+
+            html_name = os.path.join(data_description_path, f'{selected_energy}_{view_details_name}.html')
+            # Write the HTML content to a file
+            with open(html_name, 'w', encoding='utf-8') as f:
+                f.write(html_content)
 
 
 def process_line_data(dataframe):
@@ -496,6 +554,126 @@ def save_image_as_base64(image_name):
     # Save the base64 string to the output file
     with open(os.path.join(tools_path, 'logo_base64.txt'), "w") as f:
         f.write(b64_string)
+
+
+def current_year_sum(group):
+    latest_date_for_country = group['date'].max()
+    current_year_data = group[group['date'].dt.year == latest_date_for_country.year]
+    return current_year_data[current_year_data['date'] <= latest_date_for_country]['value'].sum()
+
+
+def last_year_ytd_sum(group):
+    latest_date_for_country = group['date'].max()
+    lytd_end_date = latest_date_for_country.replace(year=latest_date_for_country.year - 1)
+    last_year_data = group[group['date'].dt.year == lytd_end_date.year]
+    return last_year_data[last_year_data['date'] <= lytd_end_date]['value'].sum()
+
+
+def get_scorecard(df, view_details):
+    n_countries = len(df)
+    latest_date = min(df['max_date'].dt.strftime('%Y-%B'))
+    # Example additional statistic
+    selected_energy = df['type'].tolist()[0]
+
+    table_scorecard = f"""
+    <style>
+        .ui.statistics .statistic .label {{
+            margin-top: 10px !important; 
+        }}
+
+        .extra.content .meta {{
+            font-size: 1.2rem;
+            text-align: left;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 5px;
+        }}
+    </style>
+
+    <div class="ui four small statistics">
+        <div class="grey statistic">
+            <div class="value">
+                {selected_energy}
+            </div>
+            <div class="label">
+                energy type
+            </div>
+        </div>
+        <div class="grey statistic">
+            <div class="value">
+                {n_countries}
+            </div>
+            <div class="label">
+                number of key countries included so far
+            </div>
+        </div>
+        <div class="grey statistic">
+            <div class="value">
+                {latest_date}
+            </div>
+            <div class="label">
+                latest date for all countries
+            </div>
+        </div>
+        <div class="grey statistic">
+            <div class="value">
+                Twh
+            </div>
+            <div class="label">
+                Unit
+            </div>
+        </div>
+    </div>
+    """
+
+    table_scorecard += "<br><br><br><div id='mydiv' class='ui centered cards'>"
+
+    # <div class="content" style="background-color: {header_bg(row['type'])};">
+
+    for index, row in df.iterrows():
+        table_scorecard += f"""
+            <div class="card">
+                <div class="content" style="background-color: {header_bg(row['continent'])};">
+                    <div class="header smallheader">{row['country']}</div>
+                    <div class="meta smallheader">{row['continent']}</div>
+                </div>
+                <div class="content">
+                    <div class="column kpi number">
+                        {round(row['year_to_date_sum'], 2)}<br>
+                        <p class="kpi text">Year-to-Date (YTD)</p>
+                    </div>
+                    <div class="column kpi number" style="color: {color_percentage(row['percentage_change'])};">
+                        {row['percentage_change']:.2f}%<br>
+                        <p class="kpi text">YTD YoY Change</p>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="meta"><i class="user icon"></i>Source: <a href="{row['source_url']}" target="_blank">{row['source']}</a></div>
+                    <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
+                </div>
+                <div class="extra content" {view_details}> 
+                    <div class="meta"><i class="history icon"></i> Time Resolution: {row['resolution']}</div>
+                    <div class="meta"><i class="edit icon"></i> Data Starts: {row['duration']}</div>
+                    <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {row['update_frequency']}</div>
+                    <div class="meta"><i class="th icon"></i> Region Data Aviability: {row['region_data']}</div>
+                </div>
+            </div>"""
+
+    return table_scorecard
+
+
+def color_percentage(value):
+    if value < 0:
+        return "red"
+    else:
+        return "green"
+
+
+def header_bg(continent):
+    return CONTINENT_COLORS.get(continent, "#BAD2DE")  # A soft warm default color
 
 
 if __name__ == "__main__":
