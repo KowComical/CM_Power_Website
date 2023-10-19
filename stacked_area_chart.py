@@ -59,10 +59,15 @@ def main():
     categories = {
     'Fossil': ['coal', 'gas', 'oil'],
     'Nuclear': ['nuclear'],
-    'Renewables': ['solar', 'wind', 'other', 'hydro']
-    }
+    'Renewables': ['solar', 'wind', 'other', 'hydro']}
+    
+    captions = [', '.join(items) for items in categories.values()]
+    
+    selected_category = st.sidebar.radio(
+        'Sort Countries by Energy Category:',
+        list(categories.keys()),
+        captions=captions)
 
-    selected_category = st.sidebar.radio('Sort Countries by Energy Category:', list(categories.keys()))
 
     df_7mean = data_read()
 
