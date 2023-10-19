@@ -15,6 +15,12 @@ country_list = ['Australia', 'Brazil', 'Chile', 'China',
                 'Russia', 'South Africa', 'Spain',
                 'Turkey', 'United Kingdom', 'United States', 'Bolivia', 'Bangladesh']
 
+categories = {
+    'Fossil': ['coal', 'gas', 'oil'],
+    'Nuclear': ['nuclear'],
+    'Renewables': ['solar', 'wind', 'other', 'hydro']
+}
+
 
 def main():
     # 先更新数据
@@ -62,8 +68,21 @@ def process_data():
     df_7mean['percentage'] = round((df_7mean['value'] / df_7mean['total']) * 100, 2)
 
     df_7mean = df_7mean[['date', 'country', 'year', 'type', 'percentage']]
-
     df_7mean.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart.csv'), index=False, encoding='utf_8_sig')
+
+    # 根据最后一年选择的能源类型占比来分类 - 平均值
+    last_year = max(df_7mean['year'])
+    df_7mean['category'] = df_7mean['type'].apply(map_to_category)
+    # Group by the new 'category' column to get the sum of percentages for each category
+    df_7mean = df_7mean.groupby(['date', 'country', 'year', 'category'])['percentage'].sum().reset_index()
+
+    filtered_df = df_7mean[(df_7mean['year'] == last_year)]
+
+    filtered_df = filtered_df.drop(columns=['year']).groupby(['country', 'category']).mean().reset_index()
+    filtered_df['percentage'] = round(filtered_df['percentage'], 2)
+
+    filtered_df.to_csv(os.path.join(file_path, 'data_for_stacked_area_chart_for_sort.csv'),
+                       index=False, encoding='utf_8_sig')
 
     # 再计算一版散点图用的
     df = load_power_data(df)
@@ -128,6 +147,13 @@ def git_push(repo_path, commit_message="Automated commit"):
         print("Changes pulled and pushed successfully.")
     except Exception as e:
         print(f"Error: {e}")
+
+
+def map_to_category(type_):
+    for category, types in categories.items():
+        if type_ in types:
+            return category
+    return None
 
 
 if __name__ == "__main__":
