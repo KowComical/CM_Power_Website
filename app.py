@@ -111,6 +111,8 @@ def main():
         table_scorecard = get_scorecard(df, view_details)
         st.markdown(table_scorecard, unsafe_allow_html=True)
 
+        space = st.sidebar.empty()
+
         # 使用 Streamlit 的下载按钮进行一键下载
         if selected_energy == 'total':
             csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
@@ -124,6 +126,8 @@ def main():
             mime="text/csv",
             use_container_width=True,
         )
+
+        space.empty()
       
 
 def load_base64_file(base64_file):
