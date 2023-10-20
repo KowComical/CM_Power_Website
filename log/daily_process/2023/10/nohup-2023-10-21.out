@@ -1,0 +1,7 @@
+From github.com:kowcomical/CM_Power_Website
+   a490398..14411bc  master     -> origin/master
+error: Your local changes to the following files would be overwritten by merge:
+	app.py
+Please, commit your changes or stash them before you can merge.
+Aborting
+Updating a490398..14411bc
