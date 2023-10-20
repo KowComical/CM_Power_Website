@@ -42,6 +42,8 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 tools_path = './tools'
 line_path = os.path.join(tools_path, 'line_chart')
 
+ttl_duration = 60 * 60 * 24 + 60 * 10  # 24 hours + 10 minutes in seconds
+
 
 # 主程序
 def main():
@@ -59,10 +61,14 @@ def main():
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
 
-def add_logo(base64_file):
-    # Read the Base64 string from the file
+@st.cache_data(ttl=ttl_duration)
+def load_base64_file(base64_file):
     with open(base64_file, "r") as f:
         b64_string = f.read()
+    return b64_string
+
+def add_logo(base64_file):
+    b64_string = load_base64_file(base64_file)
 
     # Insert the Base64 string into the CSS
     st.markdown(
@@ -79,8 +85,8 @@ def add_logo(base64_file):
         """,
         unsafe_allow_html=True,
     )
-
-
+  
+@st.cache_data(ttl=ttl_duration)
 def get_configuration_for_category(category):
     with open(os.path.join(line_path, f"{category}.json"), "r") as file:
         data = json.load(file)
