@@ -124,6 +124,12 @@ def main():
             mime="text/csv",
             use_container_width=True,
         )
+      
+
+def load_base64_file(base64_file):
+    with open(base64_file, "r") as f:
+        b64_string = f.read()
+    return b64_string
 
 
 def add_logo(base64_file):
@@ -167,9 +173,6 @@ def local_css(file_name):
 def remote_css(url):
     st.markdown(f'<link href="{url}" rel="stylesheet">', unsafe_allow_html=True)
 
-
-# def header_bg(table_type):
-#     return COLORS.get(table_type, "#BAD2DE")  # A soft warm default color
 
 def header_bg(continent):
     return CONTINENT_COLORS.get(continent, "#BAD2DE")  # A soft warm default color
