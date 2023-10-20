@@ -79,7 +79,15 @@ def main():
 
         view_details = display_switch_button()
 
-        table_scorecard = read_html_file(selected_energy, view_details)
+        # 筛选大洲
+        continents = ['World', 'Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
+
+        selected_continent = st.sidebar.selectbox(
+            'Select Continents',
+            continents,
+            index=0)
+
+        table_scorecard = read_html_file(selected_energy, selected_continent, view_details)
         st.markdown(table_scorecard, unsafe_allow_html=True)
 
         # 使用 Streamlit 的下载按钮进行一键下载
@@ -97,8 +105,8 @@ def main():
         )
 
 
-def read_html_file(selected_energy, view_details):
-    html_name = os.path.join(data_description_path, f'{selected_energy}_{view_details}.html')
+def read_html_file(selected_energy, selected_continent, view_details):
+    html_name = os.path.join(data_description_path, f'{selected_energy}_{selected_continent}_{view_details}.html')
     with open(html_name, 'r', encoding='utf-8') as file:
         content = file.read()
     return content

@@ -133,23 +133,32 @@ def process_data_description(dataframe):
 
         df = pd.merge(df, data_description)
 
-        # 按照值的大小排序
-        df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
-
-        view_details_list = ["", """style="display: none;" """]
-
-        for view_details in view_details_list:
-            html_content = get_scorecard(df, view_details)
-
-            if view_details == "":
-                view_details_name = 'none'
+        # 筛选大洲
+        continent_list = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America', 'World']
+        for continent in continent_list:
+            if continent != 'World':
+                df_continent = df[df['continent'] == continent]
             else:
-                view_details_name = 'visible'
+                df_continent = df.copy()
 
-            html_name = os.path.join(data_description_path, f'{selected_energy}_{view_details_name}.html')
-            # Write the HTML content to a file
-            with open(html_name, 'w', encoding='utf-8') as f:
-                f.write(html_content)
+            # 按照值的大小排序
+            df_continent = df_continent.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+
+            view_details_list = ["", """style="display: none;" """]
+
+            for view_details in view_details_list:
+                html_content = get_scorecard(df_continent, view_details)
+
+                if view_details == "":
+                    view_details_name = 'none'
+                else:
+                    view_details_name = 'visible'
+
+                html_name = os.path.join(
+                    data_description_path, f'{selected_energy}_{continent}_{view_details_name}.html')
+                # Write the HTML content to a file
+                with open(html_name, 'w', encoding='utf-8') as f:
+                    f.write(html_content)
 
 
 def process_line_data(dataframe):
