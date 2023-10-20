@@ -47,8 +47,6 @@ categories = {
 tools_path = './tools'
 stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
 
-ttl_duration = 60 * 60 * 24 + 60 * 10  # 24 hours + 10 minutes in seconds
-
 
 def main():
     add_logo(os.path.join(tools_path, 'logo_base64.txt'))
@@ -72,14 +70,11 @@ def main():
     st_echarts(options=option,
                height=f"{PLOT_HEIGHT * ROWS_PER_GRID * 1.2}px")
 
-@st.cache_data(ttl=ttl_duration)
-def load_base64_file(base64_file):
-    with open(base64_file, "r") as f:
-        b64_string = f.read()
-    return b64_string
 
 def add_logo(base64_file):
-    b64_string = load_base64_file(base64_file)
+    # Read the Base64 string from the file
+    with open(base64_file, "r") as f:
+        b64_string = f.read()
 
     # Insert the Base64 string into the CSS
     st.markdown(
@@ -97,7 +92,7 @@ def add_logo(base64_file):
         unsafe_allow_html=True,
     )
 
-@st.cache_data(ttl=ttl_duration)
+
 def get_configuration_for_category(category):
     with open(os.path.join(stacked_area_path, f"{category}.json"), "r") as file:
         data = json.load(file)
