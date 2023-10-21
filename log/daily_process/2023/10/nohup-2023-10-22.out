@@ -1,0 +1,7 @@
+From github.com:kowcomical/CM_Power_Website
+   14411bc..086f4d5  master     -> origin/master
+Auto-merging app.py
+Merge made by the 'recursive' strategy.
+ .streamlit/pages.toml |  2 +-
+ app.py                | 14 +++++++++++---
+ 2 files changed, 12 insertions(+), 4 deletions(-)
