@@ -2,6 +2,7 @@ import pandas as pd
 import json
 import base64
 import datetime
+import os
 
 import streamlit as st
 from streamlit_toggle import st_toggle_switch
@@ -110,6 +111,8 @@ def main():
         table_scorecard = get_scorecard(df, view_details)
         st.markdown(table_scorecard, unsafe_allow_html=True)
 
+        space = st.sidebar.empty()
+
         # 使用 Streamlit 的下载按钮进行一键下载
         if selected_energy == 'total':
             csv_data = df_download[df_download['type'] != 'total'].to_csv(index=False)
@@ -123,6 +126,14 @@ def main():
             mime="text/csv",
             use_container_width=True,
         )
+
+        space.empty()
+      
+
+def load_base64_file(base64_file):
+    with open(base64_file, "r") as f:
+        b64_string = f.read()
+    return b64_string
 
 
 def load_base64_file(base64_file):
@@ -172,9 +183,6 @@ def local_css(file_name):
 def remote_css(url):
     st.markdown(f'<link href="{url}" rel="stylesheet">', unsafe_allow_html=True)
 
-
-# def header_bg(table_type):
-#     return COLORS.get(table_type, "#BAD2DE")  # A soft warm default color
 
 def header_bg(continent):
     return CONTINENT_COLORS.get(continent, "#BAD2DE")  # A soft warm default color
