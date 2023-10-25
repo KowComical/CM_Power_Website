@@ -16,6 +16,6 @@ Mexico,Gobierno de Mexico,https://www.cenace.gob.mx/Paginas/SIM/Reportes/Energia
 Brazil,ONS,http://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao,South America,Hourly,Hourly,2016-1-1,Not Available
 Chile,Coordinador Eléctrico Nacional,https://www.coordinador.cl/operacion/graficos/operacion-real/generacion-real/,South America,Hourly,Daily,2012-1-1,Not Available
 Australia,Opennem,https://opennem.org.au/energy/nem/?range=7d&interval=30m,Oceania,Hourly,Hourly,1999-1-1,Available
-New Zealand,EMI,https://www.emi.ea.govt.nz/Wholesale/Datasets/Generation/Generation_MD,Oceania,Hourly,Hourly,1997-8-1,Not Available
+New Zealand,EMI,https://www.emi.ea.govt.nz/Wholesale/Datasets/Generation/Generation_MD,Oceania,Hourly,Monthly,1997-8-1,Not Available
 Bolivia,CNDC,https://www.cndc.bo/estadisticas/index.php,South America,Hourly,Daily,2005-9-1,Not Available
 Bangladesh,PGCB,https://erp.pgcb.gov.bd/web/generations/view_generations,Asia,Hourly,Daily,2014-1-24,Not Available
