@@ -86,7 +86,7 @@ def add_logo(base64_file):
         unsafe_allow_html=True,
     )
   
-@st.cache_data(ttl=ttl_duration)
+# @st.cache_data(ttl=ttl_duration)
 def get_configuration_for_category(category):
     with open(os.path.join(line_path, f"{category}.json"), "r") as file:
         data = json.load(file)
