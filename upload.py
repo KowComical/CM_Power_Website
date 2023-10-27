@@ -237,9 +237,12 @@ def process_line_data(dataframe):
             # })
 
             # Assuming there are 365 data points for a year,
-            num_data_points = 365
-            num_ticks = 4
-            interval_value = math.floor(num_data_points / num_ticks)
+            first_quarter_idx = 0  # Jan 1
+            second_quarter_idx = 90  # April 1
+            third_quarter_idx = 181  # July 1
+            fourth_quarter_idx = 273  # Oct 1
+
+            tick_indices = [first_quarter_idx, second_quarter_idx, third_quarter_idx, fourth_quarter_idx]
 
             option["xAxis"].append({
                 "gridIndex": idx,
@@ -247,10 +250,14 @@ def process_line_data(dataframe):
                 "data": formatted_dates,
                 "axisTick": {
                     "alignWithLabel": True,
-                    "interval": interval_value
+                    # Manually set tick positions
+                    "interval": 0,
+                    "data": tick_indices
                 },
                 "axisLabel": {
-                    "interval": interval_value
+                    # Manually set label positions
+                    "interval": 0,
+                    "data": tick_indices
                 }
             })
 
