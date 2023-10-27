@@ -190,9 +190,6 @@ def process_line_data(dataframe):
         WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
         HEIGHT_ADJUSTMENT = 1.0  # 增加或减少以调整垂直间距
 
-        # 格式化日期以用于 x 轴
-        # formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
-
         option = {
             "title": [{
                 "text": "Global Power Generation Trends by Source for Key Countries (TWh)",
@@ -230,19 +227,9 @@ def process_line_data(dataframe):
             max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
 
             # 为网格创建 x 和 y 轴
-            # option["xAxis"].append({
-            #     "gridIndex": idx,
-            #     "type": "category",
-            #     "data": formatted_dates,
-            # })
-
-            # Assuming there are 365 data points for a year,
-            first_quarter_idx = 0  # Jan 1
-            second_quarter_idx = 90  # April 1
-            third_quarter_idx = 181  # July 1
-            fourth_quarter_idx = 273  # Oct 1
-
-            tick_indices = [first_quarter_idx, second_quarter_idx, third_quarter_idx, fourth_quarter_idx]
+            num_data_points = 365
+            num_ticks = 4
+            interval_value = math.floor(num_data_points / num_ticks)
 
             option["xAxis"].append({
                 "gridIndex": idx,
@@ -250,14 +237,10 @@ def process_line_data(dataframe):
                 "data": formatted_dates,
                 "axisTick": {
                     "alignWithLabel": True,
-                    # Manually set tick positions
-                    "interval": 0,
-                    "data": tick_indices
+                    "interval": interval_value
                 },
                 "axisLabel": {
-                    # Manually set label positions
-                    "interval": 0,
-                    "data": tick_indices
+                    "interval": interval_value
                 }
             })
 
