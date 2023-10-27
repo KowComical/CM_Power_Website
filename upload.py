@@ -162,6 +162,13 @@ def process_data_description(dataframe):
 
 
 def process_line_data(dataframe):
+    quarter_first_days = []
+    for month in [1, 4, 7, 10]:
+        quarter_first_days.append(f"2021-{month:02d}-01")
+
+    # NEW: Format the quarter first days
+    formatted_first_days = pd.to_datetime(quarter_first_days).strftime('%b-%d').tolist()
+
     # Grouping by country and summing the values for the specific type
     for category_name in sub_category:
         type_sum = dataframe[dataframe['type'] == category_name].groupby('country')['value'].sum()
@@ -230,7 +237,8 @@ def process_line_data(dataframe):
             option["xAxis"].append({
                 "gridIndex": idx,
                 "type": "category",
-                "data": formatted_dates,
+                # "data": formatted_dates,
+                "data": formatted_first_days,
             })
 
             option["yAxis"].append({
