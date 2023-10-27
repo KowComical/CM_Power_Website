@@ -239,18 +239,20 @@ def process_line_data(dataframe):
             #     "data": formatted_dates,
             # })
 
+            # Assuming there are 365 data points for a year,
+            # setting an interval of 91 will roughly show 4 ticks for the whole year.
+            interval_value = 91
+
             option["xAxis"].append({
                 "gridIndex": idx,
                 "type": "category",
                 "data": formatted_dates,
                 "axisTick": {
                     "alignWithLabel": True,
-                    "interval": 0,  # Always check the tick, but rely on axisTick's show property
-                    "show": tick_visibility  # Use the pre-calculated visibility list
+                    "interval": interval_value
                 },
                 "axisLabel": {
-                    "interval": 0,  # Always show the label, but rely on axisLabel's show property
-                    "show": tick_visibility  # Use the pre-calculated visibility list
+                    "interval": interval_value
                 }
             })
 
