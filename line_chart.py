@@ -67,6 +67,7 @@ def load_base64_file(base64_file):
         b64_string = f.read()
     return b64_string
 
+
 def add_logo(base64_file):
     b64_string = load_base64_file(base64_file)
 
@@ -85,7 +86,8 @@ def add_logo(base64_file):
         """,
         unsafe_allow_html=True,
     )
-  
+
+
 # @st.cache_data(ttl=ttl_duration)
 def get_configuration_for_category(category):
     with open(os.path.join(line_path, f"{category}.json"), "r") as file:

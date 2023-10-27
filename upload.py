@@ -18,7 +18,7 @@ country_list = ['Australia', 'Brazil', 'Chile', 'China',
                 'EU27&UK', 'France', 'Germany',
                 'India', 'Italy', 'Japan', 'Mexico', 'New Zealand',
                 'Russia', 'South Africa', 'Spain',
-                'Turkey', 'United Kingdom', 'United States', 'Bolivia', 'Bangladesh', 'Peru']
+                'Turkey', 'United Kingdom', 'United States', 'Bolivia', 'Bangladesh', 'Peru', 'Costa Rica']
 
 categories = {
     'Fossil': ['coal', 'gas', 'oil'],
