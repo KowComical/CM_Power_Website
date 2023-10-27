@@ -227,9 +227,7 @@ def process_line_data(dataframe):
             max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
 
             # 为网格创建 x 和 y 轴
-            num_data_points = 365
-            num_ticks = 4
-            interval_value = math.floor(num_data_points / num_ticks)
+            interval_value = 89
 
             option["xAxis"].append({
                 "gridIndex": idx,
