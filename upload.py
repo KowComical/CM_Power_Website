@@ -162,12 +162,11 @@ def process_data_description(dataframe):
 
 
 def process_line_data(dataframe):
-    quarter_first_days = []
-    for month in [1, 4, 7, 10]:
-        quarter_first_days.append(f"2021-{month:02d}-01")
-
-    # NEW: Format the quarter first days
-    formatted_first_days = pd.to_datetime(quarter_first_days).strftime('%b-%d').tolist()
+    # Format the dates in %b-%d format
+    formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
+    # Assuming `formatted_dates` contains the x-axis date labels in the format 'Mon-Day'
+    quarter_ticks = ['Jan-01', 'Apr-01', 'Jul-01', 'Oct-01']
+    tick_visibility = [1 if date in quarter_ticks else 0 for date in formatted_dates]
 
     # Grouping by country and summing the values for the specific type
     for category_name in sub_category:
@@ -195,7 +194,7 @@ def process_line_data(dataframe):
         HEIGHT_ADJUSTMENT = 1.0  # 增加或减少以调整垂直间距
 
         # 格式化日期以用于 x 轴
-        formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
+        # formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
 
         option = {
             "title": [{
@@ -234,11 +233,25 @@ def process_line_data(dataframe):
             max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
 
             # 为网格创建 x 和 y 轴
+            # option["xAxis"].append({
+            #     "gridIndex": idx,
+            #     "type": "category",
+            #     "data": formatted_dates,
+            # })
+
             option["xAxis"].append({
                 "gridIndex": idx,
                 "type": "category",
-                # "data": formatted_dates,
-                "data": formatted_first_days,
+                "data": formatted_dates,
+                "axisTick": {
+                    "alignWithLabel": True,
+                    "interval": 0,  # Always check the tick, but rely on axisTick's show property
+                    "show": tick_visibility  # Use the pre-calculated visibility list
+                },
+                "axisLabel": {
+                    "interval": 0,  # Always show the label, but rely on axisLabel's show property
+                    "show": tick_visibility  # Use the pre-calculated visibility list
+                }
             })
 
             option["yAxis"].append({
