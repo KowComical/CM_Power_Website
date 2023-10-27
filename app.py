@@ -136,12 +136,6 @@ def load_base64_file(base64_file):
     return b64_string
 
 
-def load_base64_file(base64_file):
-    with open(base64_file, "r") as f:
-        b64_string = f.read()
-    return b64_string
-
-
 def add_logo(base64_file):
     b64_string = load_base64_file(base64_file)
 

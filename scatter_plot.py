@@ -161,7 +161,6 @@ def create_echart(df_filtered):
         }
     }
 
-
     # Adding titles for each subplot
     for idx, (name, _) in enumerate(type_grouped):
         col_idx = idx % 4
