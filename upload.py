@@ -164,8 +164,6 @@ def process_data_description(dataframe):
 def process_line_data(dataframe):
     # Format the dates in %b-%d format
     formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
-    # Assuming `formatted_dates` contains the x-axis date labels in the format 'Mon-Day'
-    quarter_ticks = ['Jan-01', 'Apr-01', 'Jul-01', 'Oct-01']
 
     # Grouping by country and summing the values for the specific type
     for category_name in sub_category:
@@ -239,8 +237,9 @@ def process_line_data(dataframe):
             # })
 
             # Assuming there are 365 data points for a year,
-            # setting an interval of 91 will roughly show 4 ticks for the whole year.
-            interval_value = 91
+            num_data_points = 365
+            num_ticks = 4
+            interval_value = math.floor(num_data_points / num_ticks)
 
             option["xAxis"].append({
                 "gridIndex": idx,
