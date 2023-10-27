@@ -163,9 +163,9 @@ def process_data_description(dataframe):
 
 def process_line_data(dataframe):
     # Format the dates in %b-%d format
-    formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
+    formatted_dates = dataframe['date'].dt.strftime('%b').drop_duplicates().tolist()
     # Assuming `formatted_dates` contains the x-axis date labels in the format 'Mon-Day'
-    quarter_ticks = ['Jan-01', 'Apr-01', 'Jul-01', 'Oct-01']
+    quarter_ticks = ['Jan', 'Apr', 'Jul', 'Oct']
     tick_visibility = [1 if date in quarter_ticks else 0 for date in formatted_dates]
 
     # Grouping by country and summing the values for the specific type
