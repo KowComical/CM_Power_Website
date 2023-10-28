@@ -219,6 +219,8 @@ def transform_data(df, selected_energy, selected_continents):
     if selected_continents:
         df = df[df['continent'].isin(selected_continents)].reset_index(drop=True)
 
+    st.write(df)
+
     return df
 
 
