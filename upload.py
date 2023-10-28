@@ -562,11 +562,11 @@ def get_line_colors(years_list):
     colors = []
 
     for year in years_list:
-        if year == 2019:
+        if year == 2020:
             factor = -0.2  # Darken by 20% for 2019
             adjusted_blue = adjust_lightness(blue_rgb, factor)
             colors.append(f'rgb{adjusted_blue}')
-        elif year == 2020:
+        elif year == 2019:
             factor = 0.1  # Lighten by 10% for 2020
             adjusted_blue = adjust_lightness(blue_rgb, factor)
             colors.append(f'rgb{adjusted_blue}')
