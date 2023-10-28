@@ -226,6 +226,7 @@ def get_scorecard(df, view_details):
     n_countries = len(df)
     latest_date = min(df['max_date'].dt.strftime('%Y-%B'))
     st.write(df['max_date'].dt.strftime('%Y-%B'))
+    st.write(latest_date)
     # Example additional statistic
     selected_energy = df['type'].tolist()[0]
 
