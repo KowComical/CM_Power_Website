@@ -219,14 +219,13 @@ def transform_data(df, selected_energy, selected_continents):
     if selected_continents:
         df = df[df['continent'].isin(selected_continents)].reset_index(drop=True)
 
-    st.write(df)
-
     return df
 
 
 def get_scorecard(df, view_details):
     n_countries = len(df)
     latest_date = min(df['max_date'].dt.strftime('%Y-%B'))
+    st.write(df['max_date'].dt.strftime('%Y-%B'))
     # Example additional statistic
     selected_energy = df['type'].tolist()[0]
 
