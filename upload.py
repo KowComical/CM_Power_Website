@@ -33,10 +33,10 @@ COLORS = {
     "oil": "#D4A58F",
     "gas": "#B6A1D4",
     "hydro": "#89C5C8",
-    "nuclear": "#E8ACBF", 
-    "other": "#98D4A1",
+    "nuclear": "#E8ACBF",
+    "other": "#AED3DE",
     "solar": "#FDDCA3",
-    "wind": "#AED3DE"
+    "wind": "#98D4A1"
 }
 
 CONTINENT_COLORS = {
