@@ -33,8 +33,8 @@ COLORS = {
     "oil": "#D4A58F",
     "gas": "#B6A1D4",
     "hydro": "#89C5C8",
-    "nuclear": "#98D4A1",
-    "other": "#E8ACBF",
+    "nuclear": "#E8ACBF", 
+    "other": "#98D4A1",
     "solar": "#FDDCA3",
     "wind": "#AED3DE"
 }
