@@ -224,7 +224,7 @@ def transform_data(df, selected_energy, selected_continents):
 
 def get_scorecard(df, view_details):
     n_countries = len(df)
-    latest_date = min(df['max_date']).strftime('%Y-%B')
+    latest_date = min(df['max_date']).strftime('%Y-%b')
 
     # Example additional statistic
     selected_energy = df['type'].tolist()[0]
@@ -261,7 +261,7 @@ def get_scorecard(df, view_details):
                 {n_countries}
             </div>
             <div class="label">
-                number of key countries included so far
+                number of key countries
             </div>
         </div>
         <div class="grey statistic">
