@@ -618,8 +618,8 @@ def last_year_ytd_sum(group):
 
 def get_scorecard(df, view_details):
     n_countries = len(df)
-    latest_date = min(df['max_date'].dt.strftime('%Y-%B'))
-    # Example additional statistic
+    latest_date = min(df['max_date'].dt.strftime('%Y-%b'))
+    # Example additional statisti
     selected_energy = df['type'].tolist()[0]
 
     table_scorecard = f"""
@@ -654,7 +654,7 @@ def get_scorecard(df, view_details):
                 {n_countries}
             </div>
             <div class="label">
-                number of key countries included so far
+                number of key countries
             </div>
         </div>
         <div class="grey statistic">
