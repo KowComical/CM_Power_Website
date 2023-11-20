@@ -525,32 +525,6 @@ def map_to_category(type_):
     return None
 
 
-# def get_line_colors(years_list):
-#     # Base colors
-#     blue_rgb = (76, 164, 224)  # Macaron Blue
-#     orange_rgb = (186, 97, 93)  # Macaron Orange
-#     black_color = 'rgb(0, 0, 0)'
-#
-#     current_year = datetime.now().year  # Get the current year
-#
-#     colors = []
-#
-#     for year in years_list:
-#         if year in [2019, 2020]:
-#             factor = (year - 2020) * 0.4  # Darken by 10% for each year away from 2020
-#             # factor = clamp(factor, min_factor, max_factor)  # Ensure within range
-#             adjusted_blue = adjust_lightness(blue_rgb, -factor)
-#             colors.append(f'rgb{adjusted_blue}')
-#         elif year == current_year:  # Latest year
-#             colors.append(black_color)
-#         else:
-#             factor = (current_year - year) * 0.4  # Lighten by 20% for each year away from the current year
-#
-#             adjusted_orange = adjust_lightness(orange_rgb, factor)
-#             colors.append(f'rgb{adjusted_orange}')
-#
-#     return colors
-
 def get_line_colors(years_list):
     # Base colors
     blue_rgb = (76, 164, 224)  # Macaron Blue
