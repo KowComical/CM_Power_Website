@@ -215,7 +215,8 @@ def process_line_data(dataframe):
 
             # 创建网格并进行间距调整
             option["grid"].append({
-                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT - 20}%",
+                # "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT - 20}%",
+                "top": f"0%",
                 "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
                 "width": f"{WIDTH - 2.0 * WIDTH_ADJUSTMENT}%",
                 "height": f"{HEIGHT - 4.0 * HEIGHT_ADJUSTMENT}%",
