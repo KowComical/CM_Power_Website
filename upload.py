@@ -185,7 +185,7 @@ def process_line_data(dataframe):
         HEIGHT = 92 / ROWS
 
         ROWS_PER_GRID = math.ceil(len(sorted_countries) / COLS)
-        PLOT_HEIGHT = 300  # 根据需要进行调整
+        PLOT_HEIGHT = 250  # 根据需要进行调整
 
         # 调整间距
         WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
@@ -215,7 +215,7 @@ def process_line_data(dataframe):
 
             # 创建网格并进行间距调整
             option["grid"].append({
-                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 5}%",
+                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 1}%",
                 "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
                 "width": f"{WIDTH - 2.0 * WIDTH_ADJUSTMENT}%",
                 "height": f"{HEIGHT - 4.0 * HEIGHT_ADJUSTMENT}%",
