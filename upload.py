@@ -14,11 +14,11 @@ data_description_path = os.path.join(tools_path, 'data_description')
 line_path = os.path.join(tools_path, 'line_chart')
 stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
 
-country_list = ['Australia', 'Brazil', 'Chile', 'China',
-                'EU27&UK', 'France', 'Germany',
-                'India', 'Italy', 'Japan', 'Mexico', 'New Zealand',
-                'Russia', 'South Africa', 'Spain',
-                'Turkey', 'United Kingdom', 'United States', 'Bolivia', 'Bangladesh', 'Peru', 'Costa Rica', 'Dominican Republic']
+# country_list = ['Australia', 'Brazil', 'Chile', 'China',
+#                 'EU27&UK', 'France', 'Germany',
+#                 'India', 'Italy', 'Japan', 'Mexico', 'New Zealand',
+#                 'Russia', 'South Africa', 'Spain',
+#                 'Turkey', 'United Kingdom', 'United States', 'Bolivia', 'Bangladesh', 'Peru', 'Costa Rica', 'Dominican Republic']
 
 categories = {
     'Fossil': ['coal', 'gas', 'oil'],
@@ -71,7 +71,7 @@ def process_data():
     df['country'] = df['country'].str.replace('EU27 & UK', 'EU27&UK')
     df['country'] = df['country'].replace('UK', 'United Kingdom')
     df['country'] = df['country'].str.replace('US', 'United States')
-    df = df[df['country'].isin(country_list)].reset_index(drop=True)
+    # df = df[df['country'].isin(country_list)].reset_index(drop=True)
 
     df['year'] = df['date'].dt.year
     df = df.set_index(['date', 'country', 'year']).stack().reset_index().rename(columns={'level_3': 'type', 0: 'value'})
@@ -129,7 +129,7 @@ def process_data_description(dataframe):
         # 读取国家信息
         data_description = pd.read_csv('/data/xuanrenSong/CM_Power_Website/data/data_description.csv')
 
-        data_description['duration'] = pd.to_datetime(data_description['duration']).dt.strftime('%Y-%b')
+        data_description['starting_date'] = pd.to_datetime(data_description['starting_date']).dt.strftime('%Y-%b')
 
         df = pd.merge(df, data_description)
 
@@ -677,7 +677,7 @@ def get_scorecard(df, view_details):
                 </div>
                 <div class="extra content" {view_details}> 
                     <div class="meta"><i class="history icon"></i> Time Resolution: {row['resolution']}</div>
-                    <div class="meta"><i class="edit icon"></i> Data Starts: {row['duration']}</div>
+                    <div class="meta"><i class="edit icon"></i> Data Starts: {row['starting_date']}</div>
                     <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {row['update_frequency']}</div>
                     <div class="meta"><i class="th icon"></i> Region Data Aviability: {row['region_data']}</div>
                 </div>

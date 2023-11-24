@@ -1,24 +1,56 @@
-country,source,source_url,continent,resolution,update_frequency,duration,region_data
-China,中国电力企业联合会,https://cec.org.cn/menu/index.html?170,Asia,Monthly,Monthly,2016-1-1,Not Available
-India,POSOCO,https://posoco.in/reports/daily-reports/,Asia,Daily,Daily,2015-1-1,Available
-Japan,OCCTO,https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login#,Asia,Hourly,Monthly,2016-1-1,Not Available
-Turkey,YTBS,https://ytbsbilgi.teias.gov.tr/ytbsbilgi/frm_istatistikler.jsf,Asia,Hourly,Daily,2018-1-1,Not Available
-South Africa,Eskom,https://www.eskom.co.za/dataportal/supply-side/station-build-up-for-the-last-7-days/,Africa,Hourly,Hourly,2018-4-1,Not Available
-EU27&UK,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-1-1,Not Available
-Germany,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-1-1,Not Available
-France,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-1-1,Not Available
-Italy,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-1-1,Not Available
-Spain,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,2015-1-1,Not Available
-United Kingdom,BMRS,https://www.bmreports.com/bmrs,Europe,Hourly,Hourly,2018-1-1,Not Available
-Russia,EMRES,https://emres.cn,Europe,Hourly,Hourly,2015-1-1,Not Available
-United States,EIA,https://www.eia.gov/electricity/,North America,Hourly,Hourly,2018-1-1,Available
-Mexico,Gobierno de Mexico,https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx,North America,Hourly,Monthly,2016-4-1,Not Available
-Brazil,ONS,http://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao,South America,Hourly,Hourly,2016-1-1,Not Available
-Chile,Coordinador Eléctrico Nacional,https://www.coordinador.cl/operacion/graficos/operacion-real/generacion-real/,South America,Hourly,Daily,2012-1-1,Available
-Australia,Opennem,https://opennem.org.au/energy/nem/?range=7d&interval=30m,Oceania,Hourly,Hourly,1999-1-1,Available
-New Zealand,EMI,https://www.emi.ea.govt.nz/Wholesale/Datasets/Generation/Generation_MD,Oceania,Hourly,Monthly,1997-8-1,Available
-Bolivia,CNDC,https://www.cndc.bo/estadisticas/index.php,South America,Hourly,Daily,2005-9-1,Available
-Bangladesh,PGCB,https://erp.pgcb.gov.bd/web/generations/view_generations,Asia,Hourly,Daily,2014-1-24,Not Available
-Peru,COES,https://www.coes.org.pe/Portal/portalinformacion/Generacion,South America,Hourly,Daily,1997-1-1,Available
-Costa Rica,ICE,https://apps.grupoice.com/CenceWeb/paginas/GeneracionReal.html,North America,Hourly,Daily,2014-1-1,Available
-Dominican Republic,OC,https://www.oc.org.do/Servicios/Reportes/postdespacho,North America,Hourly,Hourly,2013-1-1,Available
+﻿country,source,source_url,continent,resolution,update_frequency,region_data,starting_date
+China,中国电力企业联合会,https://cec.org.cn/menu/index.html?170,Asia,Monthly,Monthly,Not Available,2016-01-01
+India,POSOCO,https://posoco.in/reports/daily-reports/,Asia,Daily,Daily,Available,2015-01-01
+Japan,OCCTO,https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login#,Asia,Hourly,Monthly,Not Available,2016-01-01
+Turkey,YTBS,https://ytbsbilgi.teias.gov.tr/ytbsbilgi/frm_istatistikler.jsf,Asia,Hourly,Daily,Not Available,2018-01-01
+South Africa,Eskom,https://www.eskom.co.za/dataportal/supply-side/station-build-up-for-the-last-7-days/,Africa,Hourly,Hourly,Not Available,2018-04-01
+EU27&UK,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Germany,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+France,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Italy,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-04
+Spain,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+United Kingdom,BMRS,https://www.bmreports.com/bmrs,Europe,Hourly,Hourly,Not Available,2018-01-01
+Russia,EMRES,https://emres.cn,Europe,Hourly,Hourly,Not Available,2015-01-01
+United States,EIA,https://www.eia.gov/electricity/,North America,Hourly,Hourly,Available,2016-01-01
+Mexico,Gobierno de Mexico,https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx,North America,Hourly,Monthly,Not Available,2016-04-01
+Brazil,ONS,http://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao,South America,Hourly,Hourly,Not Available,2016-01-01
+Chile,Coordinador Eléctrico Nacional,https://www.coordinador.cl/operacion/graficos/operacion-real/generacion-real/,South America,Hourly,Daily,Available,2012-01-01
+Australia,Opennem,https://opennem.org.au/energy/nem/?range=7d&interval=30m,Oceania,Hourly,Hourly,Available,1999-01-01
+New Zealand,EMI,https://www.emi.ea.govt.nz/Wholesale/Datasets/Generation/Generation_MD,Oceania,Hourly,Monthly,Available,1997-08-01
+Bolivia,CNDC,https://www.cndc.bo/estadisticas/index.php,South America,Hourly,Daily,Available,2005-09-01
+Bangladesh,PGCB,https://erp.pgcb.gov.bd/web/generations/view_generations,Asia,Hourly,Daily,Not Available,2014-01-24
+Peru,COES,https://www.coes.org.pe/Portal/portalinformacion/Generacion,South America,Hourly,Daily,Available,1997-01-01
+Costa Rica,ICE,https://apps.grupoice.com/CenceWeb/paginas/GeneracionReal.html,North America,Hourly,Daily,Available,2014-01-01
+Dominican Republic,OC,https://www.oc.org.do/Servicios/Reportes/postdespacho,North America,Hourly,Hourly,Available,2013-01-01
+Slovenia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Austria,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Romania,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-05
+Kosovo,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2021-08-22
+Portugal,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Cyprus,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-07-24
+Moldova,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2020-01-15
+Norway,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Estonia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Switzerland,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Greece,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Serbia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2016-12-23
+Bosnia & Herz,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2017-02-28
+Denmark,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+North Macedonia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2016-05-10
+Montenegro,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-05
+Poland,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Ireland,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Lithuania,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-04
+Czech Republic,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Georgia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2021-12-20
+Luxembourg,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2021-05-25
+Croatia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2019-01-01
+Sweden,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-05
+Finland,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Slovakia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Latvia,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Hungary,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Belgium,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Bulgaria,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Ukraine,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2021-09-01
+Netherlands,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
