@@ -65,6 +65,7 @@ def process_data():
     df = pd.pivot_table(df, index=['country', 'date'], values='value', columns='sector').reset_index()
     df.columns = ['country', 'date', 'coal', 'gas', 'hydro', 'nuclear', 'oil', 'other', 'solar', 'wind']
     df['total'] = df.sum(axis=1, numeric_only=True)
+    df = df[df['total'] != 0].reset_index(drop=True)
     df['fossil'] = df[['coal', 'gas', 'oil']].sum(axis=1)
     df['renewables'] = df[['hydro', 'other', 'solar', 'wind']].sum(axis=1)
 
