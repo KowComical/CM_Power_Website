@@ -189,7 +189,7 @@ def process_line_data(dataframe):
 
         # 调整间距
         WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
-        HEIGHT_ADJUSTMENT = 1.0  # 增加或减少以调整垂直间距
+        HEIGHT_ADJUSTMENT = 0.5  # 增加或减少以调整垂直间距
 
         option = {
             "title": [{
