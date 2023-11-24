@@ -261,7 +261,7 @@ def get_scorecard(df, view_details):
                 {n_countries}
             </div>
             <div class="label">
-                number of key countries
+                number of countries
             </div>
         </div>
         <div class="grey statistic">
