@@ -216,7 +216,7 @@ def process_line_data(dataframe):
             # 创建网格并进行间距调整
             option["grid"].append({
                 "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 2.5}%",
-                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT + 0.1}%",
+                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT -0.1}%",
                 "width": f"{WIDTH - 2.0 * WIDTH_ADJUSTMENT}%",
                 "height": f"{HEIGHT - 4.0 * HEIGHT_ADJUSTMENT}%",
                 "containLabel": True
@@ -347,10 +347,10 @@ def process_stacked_area_data(dataframe):
         HEIGHT = 92 / ROWS
 
         ROWS_PER_GRID = math.ceil(len(sorted_countries) / COLS)
-        PLOT_HEIGHT = 200  # 根据需要进行调整
+        PLOT_HEIGHT = 275  # 根据需要进行调整
 
         WIDTH_ADJUSTMENT = 0.8
-        HEIGHT_ADJUSTMENT = 1.0
+        HEIGHT_ADJUSTMENT = 0.1
 
         option = {
             "title": [{
