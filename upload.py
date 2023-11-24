@@ -189,7 +189,7 @@ def process_line_data(dataframe):
 
         # 调整间距
         WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
-        HEIGHT_ADJUSTMENT = 0.1  # 增加或减少以调整垂直间距
+        HEIGHT_ADJUSTMENT = 0.3  # 增加或减少以调整垂直间距
 
         option = {
             "title": [{
@@ -216,7 +216,7 @@ def process_line_data(dataframe):
             # 创建网格并进行间距调整
             option["grid"].append({
                 "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 2.5}%",
-                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT -0.1}%",
+                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT -0.15}%",
                 "width": f"{WIDTH - 2.0 * WIDTH_ADJUSTMENT}%",
                 "height": f"{HEIGHT - 4.0 * HEIGHT_ADJUSTMENT}%",
                 "containLabel": True
@@ -350,7 +350,7 @@ def process_stacked_area_data(dataframe):
         PLOT_HEIGHT = 275  # 根据需要进行调整
 
         WIDTH_ADJUSTMENT = 0.8
-        HEIGHT_ADJUSTMENT = 0.1
+        HEIGHT_ADJUSTMENT = 0.3
 
         option = {
             "title": [{
