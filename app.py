@@ -211,7 +211,7 @@ def transform_data(df, selected_energy, selected_continents):
     # 读取国家信息
     data_description = pd.read_csv('./data/data_description.csv')
 
-    data_description['duration'] = pd.to_datetime(data_description['duration']).dt.strftime('%Y-%b')
+    data_description['starting_date'] = pd.to_datetime(data_description['starting_date']).dt.strftime('%Y-%b')
 
     df = pd.merge(df, data_description)
 
@@ -310,7 +310,7 @@ def get_scorecard(df, view_details):
                 </div>
                 <div class="extra content" {view_details}> 
                     <div class="meta"><i class="history icon"></i> Time Resolution: {row['resolution']}</div>
-                    <div class="meta"><i class="edit icon"></i> Data Starts: {row['duration']}</div>
+                    <div class="meta"><i class="edit icon"></i> Data Starts: {row['starting_date']}</div>
                     <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {row['update_frequency']}</div>
                     <div class="meta"><i class="th icon"></i> Region Data Aviability: {row['region_data']}</div>
                 </div>
