@@ -397,7 +397,7 @@ def process_stacked_area_data(dataframe):
             option["graphic"].append({
                 "type": "text",
                 "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT + WIDTH / 2 - 6}%",  # Centered horizontally
-                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 8}%",  # At the top of the grid
+                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 18}%",  # At the top of the grid
                 "z": 100,  # Place it above other elements
                 "style": {
                     "text": f"{country} - {selected_category} {ratio_sum_str}",
@@ -408,10 +408,6 @@ def process_stacked_area_data(dataframe):
             })
 
             option["grid"].append({
-                # "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 10}%",
-                # "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT}%",
-                # "width": f"{WIDTH - 2 * WIDTH_ADJUSTMENT}%",
-                # "height": f"{HEIGHT - 4 * HEIGHT_ADJUSTMENT}%",
                 "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 2.5}%",
                 "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT - 0.2}%",
                 "width": f"{WIDTH - 2.0 * WIDTH_ADJUSTMENT}%",
