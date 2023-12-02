@@ -16488,9 +16488,9 @@
 2022,1,Belgium,solar,0.1,0.13
 2022,1,Belgium,total,8.7,8.98
 2022,1,Belgium,wind,0.9,1.13
-2022,1,Brazil,coal,5.53,0.94
+2022,1,Brazil,coal,5.42,0.94
 2022,1,Brazil,fossil,7.0,7.25
-2022,1,Brazil,gas,0.36,5.77
+2022,1,Brazil,gas,0.47,5.77
 2022,1,Brazil,hydro,39.19,38.84
 2022,1,Brazil,nuclear,1.48,1.39
 2022,1,Brazil,oil,1.12,0.54
@@ -16961,9 +16961,9 @@
 2022,2,Belgium,solar,0.22,0.29
 2022,2,Belgium,total,7.36,7.89
 2022,2,Belgium,wind,1.38,1.89
-2022,2,Brazil,coal,3.42,0.71
+2022,2,Brazil,coal,3.35,0.71
 2022,2,Brazil,fossil,4.56,4.58
-2022,2,Brazil,gas,0.24,3.46
+2022,2,Brazil,gas,0.32,3.46
 2022,2,Brazil,hydro,38.16,37.57
 2022,2,Brazil,nuclear,1.27,1.18
 2022,2,Brazil,oil,0.89,0.42
@@ -19799,9 +19799,9 @@
 2022,8,Belgium,solar,0.86,0.93
 2022,8,Belgium,total,7.72,7.86
 2022,8,Belgium,wind,0.46,0.48
-2022,8,Brazil,coal,2.35,1.02
+2022,8,Brazil,coal,2.34,1.02
 2022,8,Brazil,fossil,4.88,3.02
-2022,8,Brazil,gas,0.0,1.85
+2022,8,Brazil,gas,0.01,1.85
 2022,8,Brazil,hydro,32.6,31.41
 2022,8,Brazil,nuclear,1.18,1.12
 2022,8,Brazil,oil,2.53,0.15
@@ -20747,7 +20747,7 @@
 2022,10,Belgium,wind,1.01,1.14
 2022,10,Brazil,coal,2.41,0.93
 2022,10,Brazil,fossil,4.68,3.17
-2022,10,Brazil,gas,0.0,2.09
+2022,10,Brazil,gas,0.01,2.09
 2022,10,Brazil,hydro,33.17,30.99
 2022,10,Brazil,nuclear,1.49,1.41
 2022,10,Brazil,oil,2.27,0.16
