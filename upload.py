@@ -14,11 +14,6 @@ data_description_path = os.path.join(tools_path, 'data_description')
 line_path = os.path.join(tools_path, 'line_chart')
 stacked_area_path = os.path.join(tools_path, 'stacked_area_chart')
 
-# country_list = ['Australia', 'Brazil', 'Chile', 'China',
-#                 'EU27&UK', 'France', 'Germany',
-#                 'India', 'Italy', 'Japan', 'Mexico', 'New Zealand',
-#                 'Russia', 'South Africa', 'Spain',
-#                 'Turkey', 'United Kingdom', 'United States', 'Bolivia', 'Bangladesh', 'Peru', 'Costa Rica', 'Dominican Republic']
 
 categories = {
     'Fossil': ['coal', 'gas', 'oil'],
@@ -72,7 +67,6 @@ def process_data():
     df['country'] = df['country'].str.replace('EU27 & UK', 'EU27&UK')
     df['country'] = df['country'].replace('UK', 'United Kingdom')
     df['country'] = df['country'].str.replace('US', 'United States')
-    # df = df[df['country'].isin(country_list)].reset_index(drop=True)
 
     df['year'] = df['date'].dt.year
     df = df.set_index(['date', 'country', 'year']).stack().reset_index().rename(columns={'level_3': 'type', 0: 'value'})

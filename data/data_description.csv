@@ -1,4 +1,4 @@
-﻿country,source,source_url,continent,resolution,update_frequency,region_data,starting_date
+country,source,source_url,continent,resolution,update_frequency,region_data,starting_date
 China,中国电力企业联合会,https://cec.org.cn/menu/index.html?170,Asia,Monthly,Monthly,Not Available,2016-01-01
 India,POSOCO,https://posoco.in/reports/daily-reports/,Asia,Daily,Daily,Available,2015-01-01
 Japan,OCCTO,https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login#,Asia,Hourly,Monthly,Not Available,2016-01-01
@@ -54,3 +54,4 @@ Belgium,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerP
 Bulgaria,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
 Ukraine,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2021-09-01
 Netherlands,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
+Argentina,CAMMESA,https://cammesaweb.cammesa.com/programacion-diaria/,South America,Hourly,Daily,Available,2005-12-01
