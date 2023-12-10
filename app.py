@@ -65,7 +65,7 @@ def main():
     add_logo(os.path.join(tools_path, 'logo_base64.txt'))
     # Styling and Layout
     remote_css("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css")
-    # local_css("./data/remote_style.css")
+
     local_css(os.path.join(tools_path, 'style.css'))
 
     # Load the data
@@ -103,9 +103,8 @@ def main():
         df = transform_data(df, selected_energy, selected_continents)
 
         # 按照值的大小排序
-        df = df.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+        df = df.sort_values(by='year_to_date_sum', ascending=False).reset_index(drop=True)
 
-        # cb_view_details = st.sidebar.checkbox('View Details')
         view_details = display_switch_button()
 
         table_scorecard = get_scorecard(df, view_details)

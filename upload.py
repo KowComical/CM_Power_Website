@@ -137,7 +137,7 @@ def process_data_description(dataframe):
                 df_continent = df.copy()
 
             # 按照值的大小排序
-            df_continent = df_continent.sort_values(by='total_value', ascending=False).reset_index(drop=True)
+            df_continent = df_continent.sort_values(by='year_to_date_sum', ascending=False).reset_index(drop=True)
 
             view_details_list = ["", """style="display: none;" """]
 
