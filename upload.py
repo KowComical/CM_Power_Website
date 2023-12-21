@@ -502,7 +502,7 @@ def git_push(repo_path, commit_message="Automated commit"):
         subprocess.run(['git', 'pull'])
 
         subprocess.run(['git', 'add', '--all'])
-        subprocess.run(['git', 'commit', '-m', commit_message])
+        subprocess.run(['git', 'commit', '-m', commit_message], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         # Get the current branch name
         current_branch = subprocess.getoutput('git rev-parse --abbrev-ref HEAD')
