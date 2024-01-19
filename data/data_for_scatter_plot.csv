@@ -6,10 +6,10 @@
 2019,1,Argentina,nuclear,0.21,0.2
 2019,1,Argentina,oil,0.26,0.28
 2019,1,Argentina,other,0.03,0.07
-2019,1,Argentina,renewables,4.63,3.29
+2019,1,Argentina,renewables,4.61,3.29
 2019,1,Argentina,solar,0.05,0.04
-2019,1,Argentina,total,14.8,11.49
-2019,1,Argentina,wind,0.3,0.29
+2019,1,Argentina,total,14.78,11.49
+2019,1,Argentina,wind,0.28,0.29
 2019,1,Australia,coal,13.97,13.25
 2019,1,Australia,fossil,16.55,18.66
 2019,1,Australia,gas,2.58,4.95
@@ -462,7 +462,7 @@
 2019,1,United States,total,337.12,363.75
 2019,1,United States,wind,24.97,24.59
 2019,2,Argentina,coal,0.15,0.12
-2019,2,Argentina,fossil,9.77,8.31
+2019,2,Argentina,fossil,9.76,8.31
 2019,2,Argentina,gas,9.34,7.37
 2019,2,Argentina,hydro,3.22,1.98
 2019,2,Argentina,nuclear,0.32,0.3
@@ -1387,7 +1387,7 @@
 2019,3,United States,wind,24.76,25.44
 2019,4,Argentina,coal,0.0,0.0
 2019,4,Argentina,fossil,7.91,6.79
-2019,4,Argentina,gas,7.78,6.75
+2019,4,Argentina,gas,7.77,6.75
 2019,4,Argentina,hydro,3.25,1.94
 2019,4,Argentina,nuclear,0.71,0.64
 2019,4,Argentina,oil,0.14,0.04
@@ -1856,7 +1856,7 @@
 2019,5,Argentina,other,0.06,0.12
 2019,5,Argentina,renewables,4.33,3.5
 2019,5,Argentina,solar,0.04,0.04
-2019,5,Argentina,total,13.66,10.51
+2019,5,Argentina,total,13.65,10.51
 2019,5,Argentina,wind,0.36,0.33
 2019,5,Australia,coal,12.55,11.9
 2019,5,Australia,fossil,14.61,16.46
@@ -2318,7 +2318,7 @@
 2019,6,Argentina,other,0.09,0.16
 2019,6,Argentina,renewables,4.24,3.43
 2019,6,Argentina,solar,0.04,0.04
-2019,6,Argentina,total,14.82,10.88
+2019,6,Argentina,total,14.81,10.88
 2019,6,Argentina,wind,0.45,0.41
 2019,6,Australia,coal,12.76,12.1
 2019,6,Australia,fossil,14.99,16.83
@@ -2773,7 +2773,7 @@
 2019,6,United States,wind,21.58,22.87
 2019,7,Argentina,coal,0.41,0.31
 2019,7,Argentina,fossil,10.85,8.33
-2019,7,Argentina,gas,10.18,7.54
+2019,7,Argentina,gas,10.17,7.54
 2019,7,Argentina,hydro,3.9,2.33
 2019,7,Argentina,nuclear,0.81,0.74
 2019,7,Argentina,oil,0.26,0.48
@@ -4159,12 +4159,12 @@
 2019,9,United States,wind,23.27,23.74
 2019,10,Argentina,coal,0.05,0.05
 2019,10,Argentina,fossil,8.34,7.59
-2019,10,Argentina,gas,8.04,7.14
+2019,10,Argentina,gas,8.03,7.14
 2019,10,Argentina,hydro,3.2,2.19
 2019,10,Argentina,nuclear,0.79,0.72
 2019,10,Argentina,oil,0.25,0.4
 2019,10,Argentina,other,0.08,0.16
-2019,10,Argentina,renewables,3.93,3.68
+2019,10,Argentina,renewables,3.92,3.68
 2019,10,Argentina,solar,0.08,0.1
 2019,10,Argentina,total,13.05,11.26
 2019,10,Argentina,wind,0.56,0.52
@@ -4626,10 +4626,10 @@
 2019,11,Argentina,nuclear,0.85,0.77
 2019,11,Argentina,oil,0.2,0.15
 2019,11,Argentina,other,0.07,0.15
-2019,11,Argentina,renewables,4.47,4.02
+2019,11,Argentina,renewables,4.46,4.02
 2019,11,Argentina,solar,0.1,0.11
-2019,11,Argentina,total,13.57,11.17
-2019,11,Argentina,wind,0.65,0.56
+2019,11,Argentina,total,13.56,11.17
+2019,11,Argentina,wind,0.64,0.56
 2019,11,Australia,coal,11.39,10.81
 2019,11,Australia,fossil,13.08,14.81
 2019,11,Australia,gas,1.69,3.66
@@ -5082,16 +5082,16 @@
 2019,11,United States,total,303.24,321.96
 2019,11,United States,wind,25.56,25.06
 2019,12,Argentina,coal,0.27,0.24
-2019,12,Argentina,fossil,8.91,7.77
+2019,12,Argentina,fossil,8.9,7.77
 2019,12,Argentina,gas,8.43,7.42
 2019,12,Argentina,hydro,3.65,2.38
 2019,12,Argentina,nuclear,0.79,0.73
 2019,12,Argentina,oil,0.2,0.12
 2019,12,Argentina,other,0.06,0.14
-2019,12,Argentina,renewables,4.52,3.97
-2019,12,Argentina,solar,0.12,0.12
-2019,12,Argentina,total,14.21,11.74
-2019,12,Argentina,wind,0.69,0.6
+2019,12,Argentina,renewables,4.51,3.97
+2019,12,Argentina,solar,0.11,0.12
+2019,12,Argentina,total,14.2,11.74
+2019,12,Argentina,wind,0.68,0.6
 2019,12,Australia,coal,12.8,12.14
 2019,12,Australia,fossil,14.57,16.48
 2019,12,Australia,gas,1.77,3.97
@@ -5550,10 +5550,10 @@
 2020,1,Argentina,nuclear,0.9,0.8
 2020,1,Argentina,oil,0.25,0.9
 2020,1,Argentina,other,0.05,0.11
-2020,1,Argentina,renewables,4.53,4.08
+2020,1,Argentina,renewables,4.52,4.08
 2020,1,Argentina,solar,0.1,0.11
-2020,1,Argentina,total,15.55,12.46
-2020,1,Argentina,wind,0.78,0.68
+2020,1,Argentina,total,15.54,12.46
+2020,1,Argentina,wind,0.77,0.68
 2020,1,Australia,coal,13.3,12.62
 2020,1,Australia,fossil,15.29,17.48
 2020,1,Australia,gas,1.99,4.49
@@ -6012,10 +6012,10 @@
 2020,2,Argentina,nuclear,0.88,0.81
 2020,2,Argentina,oil,0.25,0.37
 2020,2,Argentina,other,0.04,0.1
-2020,2,Argentina,renewables,3.91,3.59
-2020,2,Argentina,solar,0.09,0.08
-2020,2,Argentina,total,14.33,11.35
-2020,2,Argentina,wind,0.76,0.64
+2020,2,Argentina,renewables,3.9,3.59
+2020,2,Argentina,solar,0.08,0.08
+2020,2,Argentina,total,14.32,11.35
+2020,2,Argentina,wind,0.75,0.64
 2020,2,Australia,coal,12.13,11.52
 2020,2,Australia,fossil,14.27,16.34
 2020,2,Australia,gas,2.14,4.46
@@ -7393,7 +7393,7 @@
 2020,4,United States,wind,29.18,29.45
 2020,5,Argentina,coal,0.03,0.02
 2020,5,Argentina,fossil,8.9,6.78
-2020,5,Argentina,gas,8.8,6.73
+2020,5,Argentina,gas,8.79,6.73
 2020,5,Argentina,hydro,2.47,1.62
 2020,5,Argentina,nuclear,1.11,1.02
 2020,5,Argentina,oil,0.07,0.02
@@ -7855,7 +7855,7 @@
 2020,5,United States,wind,28.21,28.1
 2020,6,Argentina,coal,0.13,0.1
 2020,6,Argentina,fossil,9.15,7.33
-2020,6,Argentina,gas,8.82,6.77
+2020,6,Argentina,gas,8.81,6.77
 2020,6,Argentina,hydro,3.59,2.17
 2020,6,Argentina,nuclear,1.02,0.93
 2020,6,Argentina,oil,0.21,0.46
@@ -9246,10 +9246,10 @@
 2020,9,Argentina,nuclear,0.99,0.88
 2020,9,Argentina,oil,0.13,0.22
 2020,9,Argentina,other,0.11,0.23
-2020,9,Argentina,renewables,4.21,3.98
-2020,9,Argentina,solar,0.19,0.12
-2020,9,Argentina,total,13.57,10.6
-2020,9,Argentina,wind,1.04,0.84
+2020,9,Argentina,renewables,4.1,3.98
+2020,9,Argentina,solar,0.11,0.12
+2020,9,Argentina,total,13.46,10.6
+2020,9,Argentina,wind,1.02,0.84
 2020,9,Australia,coal,10.65,10.11
 2020,9,Australia,fossil,12.04,13.76
 2020,9,Australia,gas,1.38,3.37
@@ -9708,10 +9708,10 @@
 2020,10,Argentina,nuclear,0.74,0.69
 2020,10,Argentina,oil,0.11,0.05
 2020,10,Argentina,other,0.11,0.22
-2020,10,Argentina,renewables,4.09,3.87
-2020,10,Argentina,solar,0.21,0.15
-2020,10,Argentina,total,14.05,10.99
-2020,10,Argentina,wind,1.13,0.9
+2020,10,Argentina,renewables,4.06,3.87
+2020,10,Argentina,solar,0.19,0.15
+2020,10,Argentina,total,14.02,10.99
+2020,10,Argentina,wind,1.12,0.9
 2020,10,Australia,coal,10.56,10.02
 2020,10,Australia,fossil,12.18,13.93
 2020,10,Australia,gas,1.62,3.62
@@ -10170,10 +10170,10 @@
 2020,11,Argentina,nuclear,0.73,0.68
 2020,11,Argentina,oil,0.37,1.06
 2020,11,Argentina,other,0.11,0.23
-2020,11,Argentina,renewables,3.56,3.64
+2020,11,Argentina,renewables,3.55,3.64
 2020,11,Argentina,solar,0.27,0.19
 2020,11,Argentina,total,14.82,11.98
-2020,11,Argentina,wind,1.07,0.86
+2020,11,Argentina,wind,1.06,0.86
 2020,11,Australia,coal,11.04,10.48
 2020,11,Australia,fossil,12.43,14.23
 2020,11,Australia,gas,1.39,3.47
@@ -10626,7 +10626,7 @@
 2020,11,United States,total,286.73,305.28
 2020,11,United States,wind,33.36,33.74
 2020,12,Argentina,coal,0.49,0.34
-2020,12,Argentina,fossil,11.1,8.62
+2020,12,Argentina,fossil,11.09,8.62
 2020,12,Argentina,gas,10.24,7.15
 2020,12,Argentina,hydro,2.41,1.86
 2020,12,Argentina,nuclear,0.76,0.7
@@ -10634,7 +10634,7 @@
 2020,12,Argentina,other,0.11,0.24
 2020,12,Argentina,renewables,4.1,4.02
 2020,12,Argentina,solar,0.29,0.21
-2020,12,Argentina,total,15.96,12.65
+2020,12,Argentina,total,15.95,12.65
 2020,12,Argentina,wind,1.3,1.01
 2020,12,Australia,coal,11.61,11.03
 2020,12,Australia,fossil,13.1,14.95
@@ -11562,7 +11562,7 @@
 2021,1,United States,wind,30.52,30.48
 2021,2,Argentina,coal,0.06,0.03
 2021,2,Argentina,fossil,12.35,7.01
-2021,2,Argentina,gas,12.08,6.46
+2021,2,Argentina,gas,12.07,6.46
 2021,2,Argentina,hydro,2.89,2.04
 2021,2,Argentina,nuclear,0.6,0.53
 2021,2,Argentina,oil,0.22,0.52
@@ -12034,16 +12034,16 @@
 2021,2,United States,total,315.65,332.16
 2021,2,United States,wind,26.66,26.73
 2021,3,Argentina,coal,0.34,0.18
-2021,3,Argentina,fossil,14.04,7.9
-2021,3,Argentina,gas,13.42,7.05
+2021,3,Argentina,fossil,14.03,7.9
+2021,3,Argentina,gas,13.41,7.05
 2021,3,Argentina,hydro,2.19,1.63
 2021,3,Argentina,nuclear,0.78,0.71
 2021,3,Argentina,oil,0.28,0.67
 2021,3,Argentina,other,0.13,0.14
-2021,3,Argentina,renewables,3.81,3.58
+2021,3,Argentina,renewables,3.79,3.58
 2021,3,Argentina,solar,0.23,0.16
-2021,3,Argentina,total,18.62,11.49
-2021,3,Argentina,wind,1.26,0.94
+2021,3,Argentina,total,18.6,11.49
+2021,3,Argentina,wind,1.24,0.94
 2021,3,Australia,coal,11.8,11.17
 2021,3,Australia,fossil,13.18,15.16
 2021,3,Australia,gas,1.37,3.65
@@ -12513,10 +12513,10 @@
 2021,4,Argentina,nuclear,0.6,0.53
 2021,4,Argentina,oil,0.36,0.81
 2021,4,Argentina,other,0.13,0.14
-2021,4,Argentina,renewables,3.16,3.0
+2021,4,Argentina,renewables,3.15,3.0
 2021,4,Argentina,solar,0.2,0.14
-2021,4,Argentina,total,16.18,10.3
-2021,4,Argentina,wind,1.27,0.95
+2021,4,Argentina,total,16.16,10.3
+2021,4,Argentina,wind,1.26,0.95
 2021,4,Australia,coal,11.21,10.61
 2021,4,Australia,fossil,12.6,14.48
 2021,4,Australia,gas,1.39,3.54
@@ -12988,7 +12988,7 @@
 2021,5,Argentina,other,0.14,0.16
 2021,5,Argentina,renewables,3.88,3.65
 2021,5,Argentina,solar,0.18,0.12
-2021,5,Argentina,total,17.08,11.54
+2021,5,Argentina,total,17.07,11.54
 2021,5,Argentina,wind,1.39,1.02
 2021,5,Australia,coal,11.82,11.18
 2021,5,Australia,fossil,13.51,15.51
@@ -13947,15 +13947,15 @@
 2021,6,United States,solar,10.47,15.69
 2021,6,United States,total,356.02,380.69
 2021,6,United States,wind,27.02,26.44
-2021,7,Argentina,coal,0.5,0.27
+2021,7,Argentina,coal,0.49,0.27
 2021,7,Argentina,fossil,14.9,9.1
 2021,7,Argentina,gas,14.07,7.63
 2021,7,Argentina,hydro,2.58,1.44
 2021,7,Argentina,nuclear,1.19,1.11
 2021,7,Argentina,oil,0.34,1.2
 2021,7,Argentina,other,0.19,0.2
-2021,7,Argentina,renewables,4.75,4.16
-2021,7,Argentina,solar,0.21,0.14
+2021,7,Argentina,renewables,4.74,4.16
+2021,7,Argentina,solar,0.2,0.14
 2021,7,Argentina,total,20.84,13.26
 2021,7,Argentina,wind,1.76,1.28
 2021,7,Australia,coal,12.73,12.04
@@ -14433,7 +14433,7 @@
 2021,7,United States,wind,21.56,21.47
 2021,8,Argentina,coal,0.49,0.27
 2021,8,Argentina,fossil,15.53,8.96
-2021,8,Argentina,gas,14.77,8.03
+2021,8,Argentina,gas,14.76,8.03
 2021,8,Argentina,hydro,2.03,1.29
 2021,8,Argentina,nuclear,1.17,1.07
 2021,8,Argentina,oil,0.27,0.67
@@ -14916,15 +14916,15 @@
 2021,8,United States,total,397.69,421.37
 2021,8,United States,wind,26.58,26.35
 2021,9,Argentina,coal,0.57,0.31
-2021,9,Argentina,fossil,12.31,7.34
+2021,9,Argentina,fossil,12.3,7.34
 2021,9,Argentina,gas,11.43,6.25
 2021,9,Argentina,hydro,2.78,1.8
 2021,9,Argentina,nuclear,0.87,0.78
 2021,9,Argentina,oil,0.3,0.77
 2021,9,Argentina,other,0.2,0.21
-2021,9,Argentina,renewables,4.72,4.03
-2021,9,Argentina,solar,0.28,0.19
-2021,9,Argentina,total,17.9,11.36
+2021,9,Argentina,renewables,4.7,4.03
+2021,9,Argentina,solar,0.26,0.19
+2021,9,Argentina,total,17.87,11.36
 2021,9,Argentina,wind,1.46,1.04
 2021,9,Australia,coal,10.19,9.63
 2021,9,Australia,fossil,11.45,13.16
@@ -15406,9 +15406,9 @@
 2021,10,Argentina,nuclear,0.96,0.91
 2021,10,Argentina,oil,0.23,0.84
 2021,10,Argentina,other,0.2,0.22
-2021,10,Argentina,renewables,5.48,4.56
-2021,10,Argentina,solar,0.41,0.26
-2021,10,Argentina,total,17.53,11.18
+2021,10,Argentina,renewables,5.46,4.56
+2021,10,Argentina,solar,0.39,0.26
+2021,10,Argentina,total,17.51,11.18
 2021,10,Argentina,wind,1.78,1.22
 2021,10,Australia,coal,10.36,9.79
 2021,10,Australia,fossil,11.54,13.31
@@ -15884,7 +15884,7 @@
 2021,10,United States,total,309.08,326.52
 2021,10,United States,wind,31.66,32.48
 2021,11,Argentina,coal,0.48,0.27
-2021,11,Argentina,fossil,11.47,7.07
+2021,11,Argentina,fossil,11.46,7.07
 2021,11,Argentina,gas,10.71,6.16
 2021,11,Argentina,hydro,2.47,1.67
 2021,11,Argentina,nuclear,1.16,1.07
@@ -15892,7 +15892,7 @@
 2021,11,Argentina,other,0.17,0.2
 2021,11,Argentina,renewables,4.63,4.31
 2021,11,Argentina,solar,0.45,0.28
-2021,11,Argentina,total,17.26,11.38
+2021,11,Argentina,total,17.25,11.38
 2021,11,Argentina,wind,1.54,1.1
 2021,11,Australia,coal,10.27,9.71
 2021,11,Australia,fossil,11.39,13.14
@@ -16368,16 +16368,16 @@
 2021,11,United States,total,299.06,320.2
 2021,11,United States,wind,36.19,36.11
 2021,12,Argentina,coal,0.43,0.24
-2021,12,Argentina,fossil,14.4,9.09
-2021,12,Argentina,gas,13.49,7.54
+2021,12,Argentina,fossil,14.39,9.09
+2021,12,Argentina,gas,13.48,7.54
 2021,12,Argentina,hydro,2.37,1.58
 2021,12,Argentina,nuclear,1.12,1.03
 2021,12,Argentina,oil,0.48,1.31
 2021,12,Argentina,other,0.15,0.18
-2021,12,Argentina,renewables,4.44,4.13
+2021,12,Argentina,renewables,4.41,4.13
 2021,12,Argentina,solar,0.41,0.25
-2021,12,Argentina,total,19.96,13.22
-2021,12,Argentina,wind,1.5,1.1
+2021,12,Argentina,total,19.92,13.22
+2021,12,Argentina,wind,1.47,1.1
 2021,12,Australia,coal,10.89,10.29
 2021,12,Australia,fossil,12.15,13.99
 2021,12,Australia,gas,1.26,3.38
@@ -16860,7 +16860,7 @@
 2022,1,Argentina,other,0.15,0.18
 2022,1,Argentina,renewables,4.68,4.2
 2022,1,Argentina,solar,0.41,0.25
-2022,1,Argentina,total,20.86,14.02
+2022,1,Argentina,total,20.85,14.02
 2022,1,Argentina,wind,1.75,1.18
 2022,1,Australia,coal,11.86,11.21
 2022,1,Australia,fossil,13.34,15.36
@@ -17336,7 +17336,7 @@
 2022,1,United States,total,358.38,384.91
 2022,1,United States,wind,38.01,38.26
 2022,2,Argentina,coal,0.41,0.22
-2022,2,Argentina,fossil,12.7,7.72
+2022,2,Argentina,fossil,12.69,7.72
 2022,2,Argentina,gas,11.97,6.52
 2022,2,Argentina,hydro,1.63,1.12
 2022,2,Argentina,nuclear,0.98,0.9
@@ -17828,7 +17828,7 @@
 2022,3,Argentina,other,0.16,0.16
 2022,3,Argentina,renewables,4.28,3.76
 2022,3,Argentina,solar,0.42,0.26
-2022,3,Argentina,total,17.67,11.77
+2022,3,Argentina,total,17.66,11.77
 2022,3,Argentina,wind,1.85,1.26
 2022,3,Australia,coal,11.56,10.93
 2022,3,Australia,fossil,13.08,15.1
@@ -18305,7 +18305,7 @@
 2022,3,United States,wind,43.43,43.31
 2022,4,Argentina,coal,0.47,0.26
 2022,4,Argentina,fossil,10.83,6.45
-2022,4,Argentina,gas,10.11,5.4
+2022,4,Argentina,gas,10.1,5.4
 2022,4,Argentina,hydro,2.79,1.74
 2022,4,Argentina,nuclear,0.71,0.66
 2022,4,Argentina,oil,0.25,0.8
@@ -18789,7 +18789,7 @@
 2022,4,United States,wind,45.93,46.3
 2022,5,Argentina,coal,0.41,0.22
 2022,5,Argentina,fossil,12.07,7.86
-2022,5,Argentina,gas,11.3,6.02
+2022,5,Argentina,gas,11.29,6.02
 2022,5,Argentina,hydro,3.05,1.8
 2022,5,Argentina,nuclear,0.67,0.63
 2022,5,Argentina,oil,0.36,1.62
@@ -19272,7 +19272,7 @@
 2022,5,United States,total,327.28,350.8
 2022,5,United States,wind,42.09,41.97
 2022,6,Argentina,coal,0.62,0.33
-2022,6,Argentina,fossil,12.24,8.63
+2022,6,Argentina,fossil,12.23,8.63
 2022,6,Argentina,gas,11.19,5.98
 2022,6,Argentina,hydro,3.98,2.37
 2022,6,Argentina,nuclear,0.73,0.68
@@ -21692,7 +21692,7 @@
 2022,10,United States,total,302.08,320.07
 2022,10,United States,wind,32.78,32.88
 2022,11,Argentina,coal,0.17,0.09
-2022,11,Argentina,fossil,10.45,6.83
+2022,11,Argentina,fossil,10.44,6.83
 2022,11,Argentina,gas,9.96,5.58
 2022,11,Argentina,hydro,4.32,2.92
 2022,11,Argentina,nuclear,0.03,0.03
@@ -22176,8 +22176,8 @@
 2022,11,United States,total,308.29,328.15
 2022,11,United States,wind,40.54,42.04
 2022,12,Argentina,coal,0.53,0.25
-2022,12,Argentina,fossil,12.54,7.99
-2022,12,Argentina,gas,11.57,5.57
+2022,12,Argentina,fossil,12.53,7.99
+2022,12,Argentina,gas,11.56,5.57
 2022,12,Argentina,hydro,3.42,2.29
 2022,12,Argentina,nuclear,0.4,0.4
 2022,12,Argentina,oil,0.44,2.17
@@ -22661,7 +22661,7 @@
 2022,12,United States,wind,38.74,39.34
 2023,1,Argentina,coal,0.38,0.21
 2023,1,Argentina,fossil,13.98,9.56
-2023,1,Argentina,gas,13.04,7.03
+2023,1,Argentina,gas,13.03,7.03
 2023,1,Argentina,hydro,3.03,1.33
 2023,1,Argentina,nuclear,0.69,0.64
 2023,1,Argentina,oil,0.56,2.32
@@ -23628,7 +23628,7 @@
 2023,2,United States,total,301.72,314.71
 2023,2,United States,wind,41.24,42.08
 2023,3,Argentina,coal,0.45,0.23
-2023,3,Argentina,fossil,13.96,9.21
+2023,3,Argentina,fossil,13.95,9.21
 2023,3,Argentina,gas,12.97,6.46
 2023,3,Argentina,hydro,3.85,1.66
 2023,3,Argentina,nuclear,0.68,0.64
@@ -23636,7 +23636,7 @@
 2023,3,Argentina,other,0.14,0.15
 2023,3,Argentina,renewables,5.97,3.81
 2023,3,Argentina,solar,0.43,0.27
-2023,3,Argentina,total,20.61,13.02
+2023,3,Argentina,total,20.6,13.02
 2023,3,Argentina,wind,1.55,1.09
 2023,3,Australia,coal,11.16,10.55
 2023,3,Australia,fossil,12.77,14.68
@@ -24120,7 +24120,7 @@
 2023,4,Argentina,other,0.16,0.16
 2023,4,Argentina,renewables,4.63,3.19
 2023,4,Argentina,solar,0.37,0.24
-2023,4,Argentina,total,14.41,8.72
+2023,4,Argentina,total,14.4,8.72
 2023,4,Argentina,wind,1.54,1.06
 2023,4,Australia,coal,9.88,9.34
 2023,4,Australia,fossil,11.37,13.08
@@ -25564,7 +25564,7 @@
 2023,6,United States,total,346.46,364.9
 2023,6,United States,wind,27.82,27.51
 2023,7,Argentina,coal,0.25,0.12
-2023,7,Argentina,fossil,11.63,7.33
+2023,7,Argentina,fossil,11.62,7.33
 2023,7,Argentina,gas,11.1,5.22
 2023,7,Argentina,hydro,4.38,2.14
 2023,7,Argentina,nuclear,0.75,0.71
@@ -26048,8 +26048,8 @@
 2023,7,United States,total,413.59,434.32
 2023,7,United States,wind,28.02,27.78
 2023,8,Argentina,coal,0.28,0.11
-2023,8,Argentina,fossil,10.03,5.74
-2023,8,Argentina,gas,9.55,5.32
+2023,8,Argentina,fossil,10.02,5.74
+2023,8,Argentina,gas,9.54,5.32
 2023,8,Argentina,hydro,4.84,2.5
 2023,8,Argentina,nuclear,0.76,0.73
 2023,8,Argentina,oil,0.2,0.3
