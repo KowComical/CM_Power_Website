@@ -496,17 +496,23 @@ def prepare_comparison_data(df, df_iea):
 
 def git_push(repo_path, commit_message="Automated commit"):
     try:
+        # 切换到 Git 仓库的目录
         os.chdir(repo_path)
 
-        # Pull the latest changes from the remote repository
-        subprocess.run(['git', 'pull'])
+        # 从远程仓库拉取最新的更改，只抑制标准输出
+        subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL)
 
+        # 添加所有更改的文件到 Git
         subprocess.run(['git', 'add', '--all'])
-        subprocess.run(['git', 'commit', '-m', commit_message], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        # Get the current branch name
+        # 提交更改，只抑制标准输出
+        subprocess.run(['git', 'commit', '-m', commit_message], stdout=subprocess.DEVNULL)
+
+        # 获取当前分支的名称
         current_branch = subprocess.getoutput('git rev-parse --abbrev-ref HEAD')
-        subprocess.run(['git', 'push', 'origin', current_branch])
+
+        # 推送到远程仓库，只抑制标准输出
+        subprocess.run(['git', 'push', 'origin', current_branch], stdout=subprocess.DEVNULL)
 
         print("Changes pulled and pushed successfully.")
     except Exception as e:
