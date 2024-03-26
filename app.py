@@ -162,20 +162,9 @@ def current_year_sum(group):
 
 
 def last_year_ytd_sum(group):
-    # 获取组内最晚日期
     latest_date_for_country = group['date'].max()
-
-    try:
-        # 尝试将年份设置为去年，保持月份和日期不变
-        lytd_end_date = latest_date_for_country.replace(year=latest_date_for_country.year - 1)
-    except ValueError:
-        # 如果遇到2月29日且去年不是闰年的情况，将日期调整为2月28日
-        lytd_end_date = latest_date_for_country.replace(year=latest_date_for_country.year - 1, day=28)
-
-    # 选择去年的数据
+    lytd_end_date = latest_date_for_country.replace(year=latest_date_for_country.year - 1)
     last_year_data = group[group['date'].dt.year == lytd_end_date.year]
-
-    # 计算去年至今的总和
     return last_year_data[last_year_data['date'] <= lytd_end_date]['value'].sum()
 
 
