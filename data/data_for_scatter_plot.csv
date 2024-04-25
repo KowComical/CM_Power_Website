@@ -538,8 +538,8 @@
 2019,2,Chile,solar,0.52,0.5
 2019,2,Chile,total,6.01,6.38
 2019,2,Chile,wind,0.25,0.25
-2019,2,China,coal,349.7,341.59
-2019,2,China,fossil,365.54,357.23
+2019,2,China,coal,352.0,341.59
+2019,2,China,fossil,367.84,357.23
 2019,2,China,gas,15.07,14.91
 2019,2,China,hydro,75.43,73.64
 2019,2,China,nuclear,20.65,19.65
@@ -547,7 +547,7 @@
 2019,2,China,other,16.23,8.5
 2019,2,China,renewables,132.21,143.06
 2019,2,China,solar,12.56,12.54
-2019,2,China,total,518.4,500.29
+2019,2,China,total,520.69,500.29
 2019,2,China,wind,27.97,28.73
 2019,2,Croatia,coal,0.12,0.12
 2019,2,Croatia,fossil,0.31,0.33
@@ -2851,13 +2851,13 @@
 2019,7,China,coal,396.86,408.62
 2019,7,China,fossil,422.08,427.34
 2019,7,China,gas,24.33,17.83
-2019,7,China,hydro,153.71,150.15
+2019,7,China,hydro,153.03,150.15
 2019,7,China,nuclear,27.15,29.43
 2019,7,China,oil,0.89,0.88
 2019,7,China,other,20.02,10.17
-2019,7,China,renewables,218.76,235.19
+2019,7,China,renewables,218.08,235.19
 2019,7,China,solar,20.92,20.74
-2019,7,China,total,667.99,662.52
+2019,7,China,total,667.31,662.52
 2019,7,China,wind,24.12,24.69
 2019,7,Croatia,coal,0.14,0.14
 2019,7,Croatia,fossil,0.29,0.3
@@ -6082,8 +6082,8 @@
 2020,2,Chile,solar,0.63,0.66
 2020,2,Chile,total,6.37,6.82
 2020,2,Chile,wind,0.38,0.39
-2020,2,China,coal,304.74,269.26
-2020,2,China,fossil,319.78,282.72
+2020,2,China,coal,337.53,269.26
+2020,2,China,fossil,352.56,282.72
 2020,2,China,gas,14.4,12.84
 2020,2,China,hydro,62.66,61.77
 2020,2,China,nuclear,16.2,15.23
@@ -6091,7 +6091,7 @@
 2020,2,China,other,16.88,7.73
 2020,2,China,renewables,124.99,131.37
 2020,2,China,solar,14.68,15.51
-2020,2,China,total,460.97,414.09
+2020,2,China,total,493.75,414.09
 2020,2,China,wind,30.76,31.13
 2020,2,Croatia,coal,0.14,0.14
 2020,2,Croatia,fossil,0.42,0.44
@@ -8395,13 +8395,13 @@
 2020,7,China,coal,400.01,405.88
 2020,7,China,fossil,423.16,426.18
 2020,7,China,gas,22.19,19.35
-2020,7,China,hydro,163.14,158.29
+2020,7,China,hydro,160.93,158.29
 2020,7,China,nuclear,33.39,31.4
 2020,7,China,oil,0.97,0.94
 2020,7,China,other,25.85,11.64
-2020,7,China,renewables,246.15,256.09
+2020,7,China,renewables,243.95,256.09
 2020,7,China,solar,23.59,22.73
-2020,7,China,total,702.71,682.27
+2020,7,China,total,700.5,682.27
 2020,7,China,wind,33.57,32.03
 2020,7,Croatia,coal,0.13,0.14
 2020,7,Croatia,fossil,0.39,0.42
@@ -9319,13 +9319,13 @@
 2020,9,China,coal,360.6,372.68
 2020,9,China,fossil,383.24,391.32
 2020,9,China,gas,21.76,17.77
-2020,9,China,hydro,149.21,149.81
+2020,9,China,hydro,146.99,149.81
 2020,9,China,nuclear,31.92,29.96
 2020,9,China,oil,0.88,0.87
 2020,9,China,other,25.92,10.69
-2020,9,China,renewables,227.87,243.36
+2020,9,China,renewables,225.65,243.36
 2020,9,China,solar,23.39,22.65
-2020,9,China,total,643.02,634.68
+2020,9,China,total,640.81,634.68
 2020,9,China,wind,29.35,30.26
 2020,9,Croatia,coal,0.12,0.11
 2020,9,Croatia,fossil,0.38,0.39
@@ -9778,8 +9778,8 @@
 2020,10,Chile,solar,0.82,0.82
 2020,10,Chile,total,6.49,6.65
 2020,10,Chile,wind,0.65,0.66
-2020,10,China,coal,342.24,352.18
-2020,10,China,fossil,361.75,369.8
+2020,10,China,coal,345.48,352.18
+2020,10,China,fossil,364.98,369.8
 2020,10,China,gas,18.67,16.79
 2020,10,China,hydro,149.2,145.98
 2020,10,China,nuclear,28.82,26.95
@@ -9787,7 +9787,7 @@
 2020,10,China,other,25.03,10.1
 2020,10,China,renewables,238.74,244.5
 2020,10,China,solar,23.14,21.7
-2020,10,China,total,629.31,614.29
+2020,10,China,total,632.55,614.29
 2020,10,China,wind,41.37,39.77
 2020,10,Croatia,coal,0.13,0.13
 2020,10,Croatia,fossil,0.39,0.42
@@ -10702,8 +10702,8 @@
 2020,12,Chile,solar,0.94,0.95
 2020,12,Chile,total,6.88,7.06
 2020,12,Chile,wind,0.55,0.54
-2020,12,China,coal,478.97,498.29
-2020,12,China,fossil,507.02,523.21
+2020,12,China,coal,479.91,498.29
+2020,12,China,fossil,507.97,523.21
 2020,12,China,gas,26.72,23.76
 2020,12,China,hydro,72.07,82.67
 2020,12,China,nuclear,35.26,33.16
@@ -10711,7 +10711,7 @@
 2020,12,China,other,16.79,14.28
 2020,12,China,renewables,152.93,195.94
 2020,12,China,solar,18.51,19.5
-2020,12,China,total,695.21,719.15
+2020,12,China,total,696.15,719.15
 2020,12,China,wind,45.56,46.33
 2020,12,Croatia,coal,0.12,0.12
 2020,12,Croatia,fossil,0.45,0.47
@@ -11164,8 +11164,8 @@
 2021,1,Chile,solar,0.93,0.87
 2021,1,Chile,total,6.76,7.01
 2021,1,Chile,wind,0.54,0.55
-2021,1,China,coal,500.69,507.25
-2021,1,China,fossil,524.55,533.41
+2021,1,China,coal,499.67,507.25
+2021,1,China,fossil,523.53,533.41
 2021,1,China,gas,22.77,25.09
 2021,1,China,hydro,86.83,83.98
 2021,1,China,nuclear,35.66,33.45
@@ -11173,7 +11173,7 @@
 2021,1,China,other,33.5,15.97
 2021,1,China,renewables,191.56,201.82
 2021,1,China,solar,21.95,21.59
-2021,1,China,total,751.76,735.22
+2021,1,China,total,750.74,735.22
 2021,1,China,wind,49.29,46.83
 2021,1,Costa Rica,coal,0.0,0.0
 2021,1,Costa Rica,fossil,0.0,0.0
@@ -11644,10 +11644,10 @@
 2021,2,China,nuclear,22.84,21.43
 2021,2,China,oil,0.7,0.68
 2021,2,China,other,21.48,10.24
-2021,2,China,renewables,165.35,176.81
+2021,2,China,renewables,170.54,176.81
 2021,2,China,solar,24.82,24.41
-2021,2,China,total,527.2,518.65
-2021,2,China,wind,60.73,64.32
+2021,2,China,total,532.39,518.65
+2021,2,China,wind,65.92,64.32
 2021,2,Costa Rica,coal,0.0,0.0
 2021,2,Costa Rica,fossil,0.0,0.0
 2021,2,Costa Rica,gas,0.0,0.0
@@ -14995,13 +14995,13 @@
 2021,9,China,coal,399.94,400.78
 2021,9,China,fossil,423.97,421.45
 2021,9,China,gas,23.16,19.82
-2021,9,China,hydro,154.05,153.05
+2021,9,China,hydro,150.81,153.05
 2021,9,China,nuclear,33.15,31.25
 2021,9,China,oil,0.87,0.84
 2021,9,China,other,25.62,12.62
-2021,9,China,renewables,250.4,265.92
+2021,9,China,renewables,247.16,265.92
 2021,9,China,solar,28.85,27.64
-2021,9,China,total,707.52,687.37
+2021,9,China,total,704.28,687.37
 2021,9,China,wind,41.88,41.36
 2021,9,Costa Rica,coal,0.0,0.0
 2021,9,Costa Rica,fossil,0.0,0.0
@@ -16444,8 +16444,8 @@
 2021,12,Chile,solar,1.3,1.26
 2021,12,Chile,total,7.11,7.6
 2021,12,Chile,wind,0.71,0.78
-2021,12,China,coal,481.83,481.57
-2021,12,China,fossil,508.71,506.41
+2021,12,China,coal,483.72,481.57
+2021,12,China,fossil,510.6,506.41
 2021,12,China,gas,25.79,23.82
 2021,12,China,hydro,74.02,77.69
 2021,12,China,nuclear,37.25,35.04
@@ -16453,7 +16453,7 @@
 2021,12,China,other,38.0,15.16
 2021,12,China,renewables,203.43,223.76
 2021,12,China,solar,25.27,26.45
-2021,12,China,total,749.38,730.17
+2021,12,China,total,751.27,730.17
 2021,12,China,wind,66.14,69.42
 2021,12,Costa Rica,coal,0.0,0.0
 2021,12,Costa Rica,fossil,0.0,0.0
@@ -16928,8 +16928,8 @@
 2022,1,Chile,solar,1.36,1.46
 2022,1,Chile,total,6.95,7.68
 2022,1,Chile,wind,0.73,0.85
-2022,1,China,coal,479.16,526.74
-2022,1,China,fossil,506.23,553.91
+2022,1,China,coal,482.86,526.74
+2022,1,China,fossil,509.93,553.91
 2022,1,China,gas,25.92,26.05
 2022,1,China,hydro,88.88,84.96
 2022,1,China,nuclear,40.59,38.35
@@ -16937,7 +16937,7 @@
 2022,1,China,other,34.39,16.58
 2022,1,China,renewables,222.85,243.4
 2022,1,China,solar,26.55,25.05
-2022,1,China,total,769.67,797.31
+2022,1,China,total,773.38,797.31
 2022,1,China,wind,73.04,78.46
 2022,1,Costa Rica,coal,0.0,0.0
 2022,1,Costa Rica,fossil,0.0,0.0
@@ -18387,10 +18387,10 @@
 2022,4,China,nuclear,32.66,30.71
 2022,4,China,oil,0.76,0.75
 2022,4,China,other,30.02,11.19
-2022,4,China,renewables,254.97,256.23
+2022,4,China,renewables,255.28,256.23
 2022,4,China,solar,42.24,38.31
-2022,4,China,total,650.21,629.8
-2022,4,China,wind,75.51,76.3
+2022,4,China,total,650.52,629.8
+2022,4,China,wind,75.82,76.3
 2022,4,Costa Rica,coal,0.0,0.0
 2022,4,Costa Rica,fossil,0.01,0.0
 2022,4,Costa Rica,gas,0.0,0.0
@@ -19351,13 +19351,13 @@
 2022,6,China,coal,386.28,403.55
 2022,6,China,fossil,408.36,424.36
 2022,6,China,gas,21.23,19.96
-2022,6,China,hydro,133.88,160.92
+2022,6,China,hydro,132.52,160.92
 2022,6,China,nuclear,32.87,30.7
 2022,6,China,oil,0.85,0.85
 2022,6,China,other,29.74,12.71
-2022,6,China,renewables,267.32,306.38
+2022,6,China,renewables,265.95,306.38
 2022,6,China,solar,43.18,38.33
-2022,6,China,total,708.56,730.74
+2022,6,China,total,707.19,730.74
 2022,6,China,wind,60.52,63.72
 2022,6,Costa Rica,coal,0.0,0.0
 2022,6,Costa Rica,fossil,0.0,0.0
@@ -19835,13 +19835,13 @@
 2022,7,China,coal,483.96,492.81
 2022,7,China,fossil,515.1,518.22
 2022,7,China,gas,30.07,24.38
-2022,7,China,hydro,156.57,158.9
+2022,7,China,hydro,154.61,158.9
 2022,7,China,nuclear,37.04,34.75
 2022,7,China,oil,1.07,1.04
 2022,7,China,other,31.58,15.51
-2022,7,China,renewables,284.03,303.94
+2022,7,China,renewables,282.07,303.94
 2022,7,China,solar,44.88,39.31
-2022,7,China,total,836.16,822.16
+2022,7,China,total,834.21,822.16
 2022,7,China,wind,51.0,55.47
 2022,7,Costa Rica,coal,0.0,0.0
 2022,7,Costa Rica,fossil,0.0,0.0
@@ -20316,8 +20316,8 @@
 2022,8,Chile,solar,1.08,1.13
 2022,8,Chile,total,6.91,7.21
 2022,8,Chile,wind,0.65,0.77
-2022,8,China,coal,503.54,530.9
-2022,8,China,fossil,535.35,558.28
+2022,8,China,coal,504.47,530.9
+2022,8,China,fossil,536.29,558.28
 2022,8,China,gas,30.66,26.26
 2022,8,China,hydro,141.2,133.25
 2022,8,China,nuclear,36.37,34.14
@@ -20325,7 +20325,7 @@
 2022,8,China,other,30.46,16.71
 2022,8,China,renewables,268.1,278.8
 2022,8,China,solar,43.4,38.48
-2022,8,China,total,839.83,837.08
+2022,8,China,total,840.76,837.08
 2022,8,China,wind,53.04,56.22
 2022,8,Costa Rica,coal,0.0,0.0
 2022,8,Costa Rica,fossil,0.0,0.0
@@ -22736,17 +22736,17 @@
 2023,1,Chile,solar,1.62,1.66
 2023,1,Chile,total,6.87,7.59
 2023,1,Chile,wind,0.72,0.87
-2023,1,China,coal,450.99,462.69
-2023,1,China,fossil,475.11,486.55
+2023,1,China,coal,459.42,462.69
+2023,1,China,fossil,483.54,486.55
 2023,1,China,gas,23.11,22.89
 2023,1,China,hydro,76.11,75.72
 2023,1,China,nuclear,32.72,30.56
 2023,1,China,oil,1.0,0.97
 2023,1,China,other,32.59,14.56
-2023,1,China,renewables,214.27,236.91
+2023,1,China,renewables,220.08,236.91
 2023,1,China,solar,35.88,33.14
-2023,1,China,total,722.1,723.46
-2023,1,China,wind,69.68,82.93
+2023,1,China,total,736.34,723.46
+2023,1,China,wind,75.49,82.93
 2023,1,Costa Rica,coal,0.0,0.0
 2023,1,Costa Rica,fossil,0.0,0.0
 2023,1,Costa Rica,gas,0.0,0.0
@@ -23227,10 +23227,10 @@
 2023,2,China,nuclear,34.47,32.19
 2023,2,China,oil,0.87,0.85
 2023,2,China,other,28.33,12.66
-2023,2,China,renewables,209.3,232.93
+2023,2,China,renewables,212.84,232.93
 2023,2,China,solar,38.74,35.78
-2023,2,China,total,664.07,655.82
-2023,2,China,wind,69.1,79.55
+2023,2,China,total,667.61,655.82
+2023,2,China,wind,72.64,79.55
 2023,2,Costa Rica,coal,0.0,0.0
 2023,2,Costa Rica,fossil,0.0,0.0
 2023,2,Costa Rica,gas,0.0,0.0
@@ -23711,10 +23711,10 @@
 2023,3,China,nuclear,37.18,34.38
 2023,3,China,oil,0.98,0.96
 2023,3,China,other,31.66,14.36
-2023,3,China,renewables,238.43,257.6
+2023,3,China,renewables,240.61,257.6
 2023,3,China,solar,52.03,45.3
-2023,3,China,total,749.13,737.26
-2023,3,China,wind,79.14,89.31
+2023,3,China,total,751.31,737.26
+2023,3,China,wind,81.32,89.31
 2023,3,Costa Rica,coal,0.0,0.0
 2023,3,Costa Rica,fossil,0.01,0.0
 2023,3,Costa Rica,gas,0.0,0.0
@@ -24679,10 +24679,10 @@
 2023,5,China,nuclear,36.89,34.68
 2023,5,China,oil,0.89,0.88
 2023,5,China,other,34.78,13.15
-2023,5,China,renewables,257.21,272.17
-2023,5,China,solar,49.34,44.86
-2023,5,China,total,719.68,711.44
-2023,5,China,wind,76.92,90.38
+2023,5,China,renewables,265.54,272.17
+2023,5,China,solar,53.53,44.86
+2023,5,China,total,728.01,711.44
+2023,5,China,wind,81.05,90.38
 2023,5,Costa Rica,coal,0.0,0.0
 2023,5,Costa Rica,fossil,0.03,0.0
 2023,5,Costa Rica,gas,0.0,0.0
@@ -25163,9 +25163,9 @@
 2023,6,China,nuclear,36.78,34.93
 2023,6,China,oil,1.0,0.98
 2023,6,China,other,36.28,14.59
-2023,6,China,renewables,254.54,272.33
-2023,6,China,solar,43.18,48.35
-2023,6,China,total,767.76,759.69
+2023,6,China,renewables,258.41,272.33
+2023,6,China,solar,47.04,48.35
+2023,6,China,total,771.62,759.69
 2023,6,China,wind,60.84,67.76
 2023,6,Costa Rica,coal,0.0,0.0
 2023,6,Costa Rica,fossil,0.03,0.0
@@ -25640,16 +25640,16 @@
 2023,7,Chile,solar,1.14,1.11
 2023,7,Chile,total,7.04,7.82
 2023,7,Chile,wind,0.7,0.78
-2023,7,China,coal,497.53,531.62
-2023,7,China,fossil,530.95,559.03
+2023,7,China,coal,494.58,531.62
+2023,7,China,fossil,528.01,559.03
 2023,7,China,gas,32.28,26.3
 2023,7,China,hydro,141.74,131.6
 2023,7,China,nuclear,38.03,35.76
 2023,7,China,oil,1.14,1.12
 2023,7,China,other,31.58,16.73
-2023,7,China,renewables,288.53,306.95
-2023,7,China,solar,44.88,48.27
-2023,7,China,total,857.51,865.98
+2023,7,China,renewables,291.98,306.95
+2023,7,China,solar,48.33,48.27
+2023,7,China,total,858.02,865.98
 2023,7,China,wind,70.33,74.59
 2023,7,Costa Rica,coal,0.0,0.0
 2023,7,Costa Rica,fossil,0.03,0.0
@@ -26124,16 +26124,16 @@
 2023,8,Chile,solar,1.19,1.16
 2023,8,Chile,total,6.74,7.81
 2023,8,Chile,wind,0.67,0.82
-2023,8,China,coal,519.74,522.14
-2023,8,China,fossil,555.53,549.07
+2023,8,China,coal,521.61,522.14
+2023,8,China,fossil,557.4,549.07
 2023,8,China,gas,34.66,25.83
-2023,8,China,hydro,148.41,159.29
+2023,8,China,hydro,147.46,159.29
 2023,8,China,nuclear,38.37,36.03
 2023,8,China,oil,1.13,1.1
 2023,8,China,other,28.86,16.43
-2023,8,China,renewables,268.91,315.5
-2023,8,China,solar,43.4,50.19
-2023,8,China,total,862.81,864.57
+2023,8,China,renewables,269.05,315.5
+2023,8,China,solar,44.48,50.19
+2023,8,China,total,864.82,864.57
 2023,8,China,wind,48.24,53.55
 2023,8,Costa Rica,coal,0.0,0.0
 2023,8,Costa Rica,fossil,0.04,0.0
@@ -26611,13 +26611,13 @@
 2023,9,China,coal,434.87,440.81
 2023,9,China,fossil,453.7,463.55
 2023,9,China,gas,17.91,21.8
-2023,9,China,hydro,147.36,151.42
+2023,9,China,hydro,135.46,151.42
 2023,9,China,nuclear,34.51,32.46
 2023,9,China,oil,0.92,0.93
 2023,9,China,other,19.85,13.88
-2023,9,China,renewables,260.8,304.13
+2023,9,China,renewables,248.9,304.13
 2023,9,China,solar,42.76,45.88
-2023,9,China,total,749.02,767.68
+2023,9,China,total,737.12,767.68
 2023,9,China,wind,50.83,60.49
 2023,9,Costa Rica,coal,0.0,0.0
 2023,9,Costa Rica,fossil,0.05,0.0
@@ -27099,9 +27099,9 @@
 2023,10,China,nuclear,35.93,33.78
 2023,10,China,oil,0.89,0.87
 2023,10,China,other,36.1,12.99
-2023,10,China,renewables,282.34,293.58
-2023,10,China,solar,43.62,45.55
-2023,10,China,total,719.42,727.4
+2023,10,China,renewables,293.9,293.58
+2023,10,China,solar,55.18,45.55
+2023,10,China,total,730.98,727.4
 2023,10,China,wind,61.0,68.44
 2023,10,Costa Rica,coal,0.0,0.0
 2023,10,Costa Rica,fossil,0.04,0.0
@@ -27583,10 +27583,10 @@
 2023,11,China,nuclear,36.55,34.27
 2023,11,China,oil,0.97,0.95
 2023,11,China,other,32.17,14.17
-2023,11,China,renewables,230.24,280.04
-2023,11,China,solar,37.27,43.74
-2023,11,China,total,735.15,753.25
-2023,11,China,wind,66.85,97.71
+2023,11,China,renewables,246.01,280.04
+2023,11,China,solar,48.03,43.74
+2023,11,China,total,750.92,753.25
+2023,11,China,wind,71.85,97.71
 2023,11,Costa Rica,coal,0.0,0.0
 2023,11,Costa Rica,fossil,0.01,0.0
 2023,11,Costa Rica,gas,0.0,0.0
@@ -28064,13 +28064,13 @@
 2023,12,China,fossil,533.64,569.44
 2023,12,China,gas,24.87,26.79
 2023,12,China,hydro,86.84,84.2
-2023,12,China,nuclear,40.82,35.78
+2023,12,China,nuclear,40.92,35.78
 2023,12,China,oil,1.15,1.14
 2023,12,China,other,35.4,17.04
-2023,12,China,renewables,245.09,275.23
+2023,12,China,renewables,246.34,275.23
 2023,12,China,solar,45.1,39.26
-2023,12,China,total,819.55,844.68
-2023,12,China,wind,77.74,98.96
+2023,12,China,total,820.91,844.68
+2023,12,China,wind,79.0,98.96
 2023,12,Costa Rica,coal,0.0,0.0
 2023,12,Costa Rica,fossil,0.05,0.0
 2023,12,Costa Rica,gas,0.0,0.0
@@ -28544,17 +28544,17 @@
 2024,1,Chile,solar,1.63,1.85
 2024,1,Chile,total,6.9,7.91
 2024,1,Chile,wind,0.73,0.95
-2024,1,China,coal,450.99,485.78
-2024,1,China,fossil,464.34,510.83
-2024,1,China,gas,12.79,24.03
-2024,1,China,hydro,39.85,80.32
-2024,1,China,nuclear,16.85,35.24
-2024,1,China,oil,0.56,1.02
-2024,1,China,other,18.03,15.29
-2024,1,China,renewables,129.34,273.78
-2024,1,China,solar,27.65,42.04
-2024,1,China,total,610.53,784.6
-2024,1,China,wind,43.81,100.89
+2024,1,China,coal,506.59,485.78
+2024,1,China,fossil,533.18,510.83
+2024,1,China,gas,25.48,24.03
+2024,1,China,hydro,79.5,80.32
+2024,1,China,nuclear,33.7,35.24
+2024,1,China,oil,1.11,1.02
+2024,1,China,other,35.94,15.29
+2024,1,China,renewables,253.51,273.78
+2024,1,China,solar,52.34,42.04
+2024,1,China,total,820.4,784.6
+2024,1,China,wind,85.74,100.89
 2024,1,Costa Rica,coal,0.0,0.0
 2024,1,Costa Rica,fossil,0.02,0.01
 2024,1,Costa Rica,gas,0.0,0.0

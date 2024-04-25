@@ -531,7 +531,7 @@ def get_line_colors(years_list):
     blue_rgb = (76, 164, 224)  # Macaron Blue
     orange_rgb = (186, 97, 93)  # Macaron Orange
     black_color = 'rgb(0, 0, 0)'
-
+    yellow_color = 'rgn(255, 204, 0)'
     current_year = datetime.now().year  # Get the current year
 
     colors = []
@@ -545,6 +545,8 @@ def get_line_colors(years_list):
             factor = 0.1  # Lighten by 10% for 2020
             adjusted_blue = adjust_lightness(blue_rgb, factor)
             colors.append(f'rgb{adjusted_blue}')
+        elif year == current_year - 1:
+            colors.append(yellow_color)
         elif year == current_year:  # Latest year
             colors.append(black_color)
         else:
