@@ -531,7 +531,7 @@ def get_line_colors(years_list):
     blue_rgb = (76, 164, 224)  # Macaron Blue
     orange_rgb = (186, 97, 93)  # Macaron Orange
     black_color = 'rgb(0, 0, 0)'
-    yellow_color = 'rgn(255, 204, 0)'
+    yellow_color = 'rgb(255, 204, 0)'
     current_year = datetime.now().year  # Get the current year
 
     colors = []
