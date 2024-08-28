@@ -57,3 +57,5 @@ Netherlands,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGeneration
 Argentina,CAMMESA,https://cammesaweb.cammesa.com/programacion-diaria/,South America,Hourly,Daily,Available,2005-12-01
 El Salvador,Unidad de Transacciones,https://estadistico.ut.com.sv/OperacionDiaria.aspx,North America,Hourly,Daily,Not Available,2011-08-01
 Uruguay,UTE,https://apps.ute.com.uy/SgePublico/ConsHistBalancePotXFuente.aspx,South America,Hourly,Daily,Not Available,2004-01-01
+South Korea,전력거래소,https://new.kpx.or.kr/powerSource.es?mid=a10606030000&device=chart,Asia,Hourly,Daily,Not Available,2022-01-01
+Thailand,Sothailand,https://www.sothailand.com/sysgen/ws/sysgen,Asia,Hourly,Daily,Not Available,2023-01-01
