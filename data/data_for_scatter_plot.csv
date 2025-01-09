@@ -22230,8 +22230,8 @@
 2023,1,Costa Rica,solar,0.0,0.01
 2023,1,Costa Rica,total,0.99,1.0
 2023,1,Costa Rica,wind,0.19,0.19
-2023,1,Croatia,coal,0.13,0.12
-2023,1,Croatia,fossil,0.35,0.42
+2023,1,Croatia,coal,0.15,0.12
+2023,1,Croatia,fossil,0.37,0.42
 2023,1,Croatia,gas,0.22,0.29
 2023,1,Croatia,hydro,0.52,0.85
 2023,1,Croatia,nuclear,0.0,0.0
@@ -22239,9 +22239,9 @@
 2023,1,Croatia,other,0.09,0.1
 2023,1,Croatia,renewables,0.79,1.2
 2023,1,Croatia,solar,0.0,0.02
-2023,1,Croatia,total,1.14,1.62
+2023,1,Croatia,total,1.16,1.62
 2023,1,Croatia,wind,0.19,0.24
-2023,1,Czech Republic,coal,2.68,3.03
+2023,1,Czech Republic,coal,2.69,3.03
 2023,1,Czech Republic,fossil,2.95,3.34
 2023,1,Czech Republic,gas,0.27,0.31
 2023,1,Czech Republic,hydro,0.23,0.33
@@ -22250,7 +22250,7 @@
 2023,1,Czech Republic,other,0.43,0.39
 2023,1,Czech Republic,renewables,0.8,3.81
 2023,1,Czech Republic,solar,0.02,0.05
-2023,1,Czech Republic,total,6.68,7.15
+2023,1,Czech Republic,total,6.69,7.15
 2023,1,Czech Republic,wind,0.11,0.07
 2023,1,Denmark,coal,0.31,0.31
 2023,1,Denmark,fossil,0.5,0.47
@@ -22263,8 +22263,8 @@
 2023,1,Denmark,solar,0.02,0.04
 2023,1,Denmark,total,2.79,3.59
 2023,1,Denmark,wind,1.85,2.24
-2023,1,EU27&UK,coal,30.65,37.1
-2023,1,EU27&UK,fossil,64.9,90.1
+2023,1,EU27&UK,coal,30.67,37.1
+2023,1,EU27&UK,fossil,64.93,90.1
 2023,1,EU27&UK,gas,32.79,48.82
 2023,1,EU27&UK,hydro,31.4,34.48
 2023,1,EU27&UK,nuclear,55.08,60.69
@@ -22272,8 +22272,8 @@
 2023,1,EU27&UK,other,16.69,18.93
 2023,1,EU27&UK,renewables,113.05,186.15
 2023,1,EU27&UK,solar,4.17,7.04
-2023,1,EU27&UK,total,233.04,276.24
-2023,1,EU27&UK,wind,60.78,65.0
+2023,1,EU27&UK,total,233.06,276.24
+2023,1,EU27&UK,wind,60.79,65.0
 2023,1,Estonia,coal,0.04,0.33
 2023,1,Estonia,fossil,0.27,0.34
 2023,1,Estonia,gas,0.0,0.0
@@ -22703,8 +22703,8 @@
 2023,2,Costa Rica,solar,0.0,0.01
 2023,2,Costa Rica,total,0.9,0.9
 2023,2,Costa Rica,wind,0.18,0.18
-2023,2,Croatia,coal,0.08,0.1
-2023,2,Croatia,fossil,0.32,0.47
+2023,2,Croatia,coal,0.09,0.1
+2023,2,Croatia,fossil,0.33,0.47
 2023,2,Croatia,gas,0.24,0.34
 2023,2,Croatia,hydro,0.42,0.62
 2023,2,Croatia,nuclear,0.0,0.0
@@ -22712,7 +22712,7 @@
 2023,2,Croatia,other,0.08,0.09
 2023,2,Croatia,renewables,0.66,0.94
 2023,2,Croatia,solar,0.0,0.02
-2023,2,Croatia,total,0.98,1.41
+2023,2,Croatia,total,0.99,1.41
 2023,2,Croatia,wind,0.16,0.2
 2023,2,Czech Republic,coal,2.43,2.75
 2023,2,Czech Republic,fossil,2.68,3.12
@@ -22736,8 +22736,8 @@
 2023,2,Denmark,solar,0.05,0.1
 2023,2,Denmark,total,2.48,3.14
 2023,2,Denmark,wind,1.57,1.81
-2023,2,EU27&UK,coal,28.64,35.23
-2023,2,EU27&UK,fossil,66.3,91.91
+2023,2,EU27&UK,coal,28.65,35.23
+2023,2,EU27&UK,fossil,66.32,91.91
 2023,2,EU27&UK,gas,36.32,52.62
 2023,2,EU27&UK,hydro,24.87,25.8
 2023,2,EU27&UK,nuclear,48.84,53.99
@@ -22745,7 +22745,7 @@
 2023,2,EU27&UK,other,15.61,18.06
 2023,2,EU27&UK,renewables,95.33,157.61
 2023,2,EU27&UK,solar,6.82,12.09
-2023,2,EU27&UK,total,210.48,249.52
+2023,2,EU27&UK,total,210.49,249.52
 2023,2,EU27&UK,wind,48.04,47.67
 2023,2,Estonia,coal,0.04,0.29
 2023,2,Estonia,fossil,0.24,0.29
@@ -22778,9 +22778,9 @@
 2023,2,France,other,0.35,1.02
 2023,2,France,renewables,9.71,38.11
 2023,2,France,solar,0.64,1.31
-2023,2,France,total,35.91,43.75
+2023,2,France,total,35.92,43.75
 2023,2,France,wind,4.26,3.3
-2023,2,Germany,coal,8.87,14.84
+2023,2,Germany,coal,8.88,14.84
 2023,2,Germany,fossil,12.24,23.33
 2023,2,Germany,gas,3.16,8.14
 2023,2,Germany,hydro,2.14,1.58
@@ -22789,7 +22789,7 @@
 2023,2,Germany,other,3.85,4.23
 2023,2,Germany,renewables,23.63,22.07
 2023,2,Germany,solar,1.16,2.54
-2023,2,Germany,total,37.64,45.4
+2023,2,Germany,total,37.65,45.4
 2023,2,Germany,wind,16.47,11.83
 2023,2,Greece,coal,0.43,0.61
 2023,2,Greece,fossil,1.32,1.87
@@ -23108,7 +23108,7 @@
 2023,3,Austria,other,0.28,0.46
 2023,3,Austria,renewables,3.26,4.53
 2023,3,Austria,solar,0.05,0.3
-2023,3,Austria,total,3.66,5.64
+2023,3,Austria,total,3.67,5.64
 2023,3,Austria,wind,0.8,0.81
 2023,3,Belgium,coal,0.0,0.2
 2023,3,Belgium,fossil,1.0,2.0
@@ -23176,8 +23176,8 @@
 2023,3,Costa Rica,solar,0.0,0.01
 2023,3,Costa Rica,total,0.95,0.94
 2023,3,Costa Rica,wind,0.15,0.15
-2023,3,Croatia,coal,0.09,0.13
-2023,3,Croatia,fossil,0.35,0.51
+2023,3,Croatia,coal,0.07,0.13
+2023,3,Croatia,fossil,0.33,0.51
 2023,3,Croatia,gas,0.26,0.38
 2023,3,Croatia,hydro,0.52,0.85
 2023,3,Croatia,nuclear,0.0,0.0
@@ -23185,7 +23185,7 @@
 2023,3,Croatia,other,0.08,0.1
 2023,3,Croatia,renewables,0.77,1.17
 2023,3,Croatia,solar,0.0,0.04
-2023,3,Croatia,total,1.12,1.68
+2023,3,Croatia,total,1.1,1.68
 2023,3,Croatia,wind,0.16,0.19
 2023,3,Czech Republic,coal,2.35,2.31
 2023,3,Czech Republic,fossil,2.61,2.65
@@ -23209,8 +23209,8 @@
 2023,3,Denmark,solar,0.09,0.2
 2023,3,Denmark,total,2.59,3.15
 2023,3,Denmark,wind,1.63,1.78
-2023,3,EU27&UK,coal,27.71,30.82
-2023,3,EU27&UK,fossil,63.34,83.32
+2023,3,EU27&UK,coal,27.69,30.82
+2023,3,EU27&UK,fossil,63.32,83.32
 2023,3,EU27&UK,gas,34.33,48.56
 2023,3,EU27&UK,hydro,27.76,29.22
 2023,3,EU27&UK,nuclear,51.37,54.0
@@ -23218,7 +23218,7 @@
 2023,3,EU27&UK,other,16.97,18.82
 2023,3,EU27&UK,renewables,109.87,176.53
 2023,3,EU27&UK,solar,10.45,18.64
-2023,3,EU27&UK,total,224.58,259.85
+2023,3,EU27&UK,total,224.57,259.85
 2023,3,EU27&UK,wind,54.7,55.84
 2023,3,Estonia,coal,0.04,0.28
 2023,3,Estonia,fossil,0.24,0.29
@@ -23252,11 +23252,11 @@
 2023,3,France,renewables,11.94,39.13
 2023,3,France,solar,0.8,1.73
 2023,3,France,total,36.98,43.58
-2023,3,France,wind,5.61,5.79
+2023,3,France,wind,5.62,5.79
 2023,3,Germany,coal,8.12,12.16
 2023,3,Germany,fossil,11.4,20.18
 2023,3,Germany,gas,3.05,7.7
-2023,3,Germany,hydro,2.47,2.14
+2023,3,Germany,hydro,2.46,2.14
 2023,3,Germany,nuclear,1.98,2.13
 2023,3,Germany,oil,0.23,0.32
 2023,3,Germany,other,4.18,4.47
@@ -23650,7 +23650,7 @@
 2023,4,Costa Rica,total,0.95,0.9
 2023,4,Costa Rica,wind,0.14,0.14
 2023,4,Croatia,coal,0.07,0.04
-2023,4,Croatia,fossil,0.32,0.39
+2023,4,Croatia,fossil,0.31,0.39
 2023,4,Croatia,gas,0.24,0.35
 2023,4,Croatia,hydro,0.42,0.59
 2023,4,Croatia,nuclear,0.0,0.0
@@ -23684,7 +23684,7 @@
 2023,4,Denmark,wind,1.44,1.45
 2023,4,EU27&UK,coal,23.76,25.79
 2023,4,EU27&UK,fossil,54.62,69.4
-2023,4,EU27&UK,gas,29.75,40.15
+2023,4,EU27&UK,gas,29.74,40.15
 2023,4,EU27&UK,hydro,25.98,28.5
 2023,4,EU27&UK,nuclear,49.11,50.19
 2023,4,EU27&UK,oil,1.12,3.47
@@ -24595,8 +24595,8 @@
 2023,6,Costa Rica,solar,0.0,0.01
 2023,6,Costa Rica,total,1.0,0.94
 2023,6,Costa Rica,wind,0.06,0.06
-2023,6,Croatia,coal,0.11,0.13
-2023,6,Croatia,fossil,0.3,0.36
+2023,6,Croatia,coal,0.07,0.13
+2023,6,Croatia,fossil,0.26,0.36
 2023,6,Croatia,gas,0.18,0.23
 2023,6,Croatia,hydro,0.46,0.67
 2023,6,Croatia,nuclear,0.0,0.0
@@ -24604,7 +24604,7 @@
 2023,6,Croatia,other,0.08,0.08
 2023,6,Croatia,renewables,0.68,0.96
 2023,6,Croatia,solar,0.01,0.07
-2023,6,Croatia,total,0.97,1.32
+2023,6,Croatia,total,0.93,1.32
 2023,6,Croatia,wind,0.13,0.14
 2023,6,Czech Republic,coal,1.73,1.37
 2023,6,Czech Republic,fossil,1.99,1.68
@@ -24628,16 +24628,16 @@
 2023,6,Denmark,solar,0.28,0.61
 2023,6,Denmark,total,1.92,1.91
 2023,6,Denmark,wind,1.13,0.82
-2023,6,EU27&UK,coal,20.37,20.09
-2023,6,EU27&UK,fossil,53.74,65.47
+2023,6,EU27&UK,coal,20.33,20.09
+2023,6,EU27&UK,fossil,53.7,65.47
 2023,6,EU27&UK,gas,32.3,41.57
-2023,6,EU27&UK,hydro,26.56,30.78
+2023,6,EU27&UK,hydro,26.57,30.78
 2023,6,EU27&UK,nuclear,46.85,46.0
 2023,6,EU27&UK,oil,1.08,3.81
 2023,6,EU27&UK,other,14.37,14.01
 2023,6,EU27&UK,renewables,95.18,150.88
 2023,6,EU27&UK,solar,18.74,34.4
-2023,6,EU27&UK,total,195.77,216.35
+2023,6,EU27&UK,total,195.73,216.35
 2023,6,EU27&UK,wind,35.51,25.69
 2023,6,Estonia,coal,0.04,0.2
 2023,6,Estonia,fossil,0.2,0.2
@@ -25068,8 +25068,8 @@
 2023,7,Costa Rica,solar,0.0,0.01
 2023,7,Costa Rica,total,1.01,0.98
 2023,7,Costa Rica,wind,0.13,0.13
-2023,7,Croatia,coal,0.11,0.12
-2023,7,Croatia,fossil,0.35,0.46
+2023,7,Croatia,coal,0.07,0.12
+2023,7,Croatia,fossil,0.31,0.46
 2023,7,Croatia,gas,0.24,0.33
 2023,7,Croatia,hydro,0.42,0.58
 2023,7,Croatia,nuclear,0.0,0.0
@@ -25077,9 +25077,9 @@
 2023,7,Croatia,other,0.08,0.07
 2023,7,Croatia,renewables,0.62,0.84
 2023,7,Croatia,solar,0.01,0.08
-2023,7,Croatia,total,0.97,1.29
+2023,7,Croatia,total,0.94,1.29
 2023,7,Croatia,wind,0.11,0.11
-2023,7,Czech Republic,coal,1.93,1.73
+2023,7,Czech Republic,coal,1.94,1.73
 2023,7,Czech Republic,fossil,2.2,2.03
 2023,7,Czech Republic,gas,0.26,0.29
 2023,7,Czech Republic,hydro,0.17,0.17
@@ -25101,8 +25101,8 @@
 2023,7,Denmark,solar,0.23,0.5
 2023,7,Denmark,total,2.25,2.49
 2023,7,Denmark,wind,1.48,1.49
-2023,7,EU27&UK,coal,20.91,20.68
-2023,7,EU27&UK,fossil,55.43,68.18
+2023,7,EU27&UK,coal,20.88,20.68
+2023,7,EU27&UK,fossil,55.4,68.18
 2023,7,EU27&UK,gas,33.41,43.03
 2023,7,EU27&UK,hydro,23.76,25.58
 2023,7,EU27&UK,nuclear,49.8,49.95
@@ -25110,7 +25110,7 @@
 2023,7,EU27&UK,other,15.37,15.23
 2023,7,EU27&UK,renewables,101.2,161.84
 2023,7,EU27&UK,solar,18.84,33.44
-2023,7,EU27&UK,total,206.43,230.03
+2023,7,EU27&UK,total,206.4,230.03
 2023,7,EU27&UK,wind,43.22,37.65
 2023,7,Estonia,coal,0.04,0.12
 2023,7,Estonia,fossil,0.16,0.12
@@ -25154,7 +25154,7 @@
 2023,7,Germany,other,3.89,4.09
 2023,7,Germany,renewables,27.09,23.99
 2023,7,Germany,solar,3.85,8.24
-2023,7,Germany,total,37.06,35.88
+2023,7,Germany,total,37.05,35.88
 2023,7,Germany,wind,16.71,9.88
 2023,7,Greece,coal,0.43,0.59
 2023,7,Greece,fossil,1.85,3.22
@@ -25541,8 +25541,8 @@
 2023,8,Costa Rica,solar,0.0,0.01
 2023,8,Costa Rica,total,1.0,0.87
 2023,8,Costa Rica,wind,0.1,0.09
-2023,8,Croatia,coal,0.12,0.15
-2023,8,Croatia,fossil,0.34,0.44
+2023,8,Croatia,coal,0.07,0.15
+2023,8,Croatia,fossil,0.3,0.44
 2023,8,Croatia,gas,0.22,0.29
 2023,8,Croatia,hydro,0.42,0.58
 2023,8,Croatia,nuclear,0.0,0.0
@@ -25550,7 +25550,7 @@
 2023,8,Croatia,other,0.08,0.07
 2023,8,Croatia,renewables,0.65,0.9
 2023,8,Croatia,solar,0.01,0.08
-2023,8,Croatia,total,1.0,1.35
+2023,8,Croatia,total,0.95,1.35
 2023,8,Croatia,wind,0.15,0.17
 2023,8,Czech Republic,coal,2.07,2.0
 2023,8,Czech Republic,fossil,2.31,2.25
@@ -25574,8 +25574,8 @@
 2023,8,Denmark,solar,0.18,0.41
 2023,8,Denmark,total,2.01,2.01
 2023,8,Denmark,wind,1.26,1.05
-2023,8,EU27&UK,coal,22.79,22.91
-2023,8,EU27&UK,fossil,57.19,69.89
+2023,8,EU27&UK,coal,22.74,22.91
+2023,8,EU27&UK,fossil,57.14,69.89
 2023,8,EU27&UK,gas,33.28,42.67
 2023,8,EU27&UK,hydro,25.24,27.7
 2023,8,EU27&UK,nuclear,49.1,48.86
@@ -25583,7 +25583,7 @@
 2023,8,EU27&UK,other,15.1,15.15
 2023,8,EU27&UK,renewables,98.21,154.9
 2023,8,EU27&UK,solar,17.31,30.47
-2023,8,EU27&UK,total,204.5,224.79
+2023,8,EU27&UK,total,204.45,224.79
 2023,8,EU27&UK,wind,40.57,32.72
 2023,8,Estonia,coal,0.04,0.16
 2023,8,Estonia,fossil,0.18,0.16
@@ -26014,8 +26014,8 @@
 2023,9,Costa Rica,solar,0.0,0.01
 2023,9,Costa Rica,total,0.95,0.91
 2023,9,Costa Rica,wind,0.1,0.1
-2023,9,Croatia,coal,0.12,0.14
-2023,9,Croatia,fossil,0.35,0.46
+2023,9,Croatia,coal,0.07,0.14
+2023,9,Croatia,fossil,0.3,0.46
 2023,9,Croatia,gas,0.23,0.32
 2023,9,Croatia,hydro,0.33,0.34
 2023,9,Croatia,nuclear,0.0,0.0
@@ -26023,7 +26023,7 @@
 2023,9,Croatia,other,0.08,0.08
 2023,9,Croatia,renewables,0.58,0.69
 2023,9,Croatia,solar,0.01,0.07
-2023,9,Croatia,total,0.93,1.15
+2023,9,Croatia,total,0.88,1.15
 2023,9,Croatia,wind,0.17,0.21
 2023,9,Czech Republic,coal,2.13,2.12
 2023,9,Czech Republic,fossil,2.38,2.39
@@ -26047,8 +26047,8 @@
 2023,9,Denmark,solar,0.18,0.38
 2023,9,Denmark,total,1.99,2.04
 2023,9,Denmark,wind,1.27,1.15
-2023,9,EU27&UK,coal,23.85,24.76
-2023,9,EU27&UK,fossil,57.36,71.36
+2023,9,EU27&UK,coal,23.8,24.76
+2023,9,EU27&UK,fossil,57.31,71.36
 2023,9,EU27&UK,gas,32.4,42.47
 2023,9,EU27&UK,hydro,22.32,23.62
 2023,9,EU27&UK,nuclear,48.96,50.27
@@ -26056,7 +26056,7 @@
 2023,9,EU27&UK,other,14.6,14.74
 2023,9,EU27&UK,renewables,92.31,148.35
 2023,9,EU27&UK,solar,14.89,26.64
-2023,9,EU27&UK,total,198.63,219.71
+2023,9,EU27&UK,total,198.59,219.71
 2023,9,EU27&UK,wind,40.5,33.1
 2023,9,Estonia,coal,0.04,0.18
 2023,9,Estonia,fossil,0.18,0.18
@@ -26487,8 +26487,8 @@
 2023,10,Costa Rica,solar,0.0,0.01
 2023,10,Costa Rica,total,1.01,0.98
 2023,10,Costa Rica,wind,0.03,0.03
-2023,10,Croatia,coal,0.12,0.15
-2023,10,Croatia,fossil,0.34,0.44
+2023,10,Croatia,coal,0.07,0.15
+2023,10,Croatia,fossil,0.29,0.44
 2023,10,Croatia,gas,0.22,0.29
 2023,10,Croatia,hydro,0.36,0.46
 2023,10,Croatia,nuclear,0.0,0.0
@@ -26496,7 +26496,7 @@
 2023,10,Croatia,other,0.08,0.08
 2023,10,Croatia,renewables,0.6,0.78
 2023,10,Croatia,solar,0.01,0.05
-2023,10,Croatia,total,0.94,1.22
+2023,10,Croatia,total,0.89,1.22
 2023,10,Croatia,wind,0.16,0.19
 2023,10,Czech Republic,coal,2.36,2.58
 2023,10,Czech Republic,fossil,2.59,2.84
@@ -26520,8 +26520,8 @@
 2023,10,Denmark,solar,0.08,0.15
 2023,10,Denmark,total,2.4,2.74
 2023,10,Denmark,wind,1.8,2.15
-2023,10,EU27&UK,coal,25.38,27.3
-2023,10,EU27&UK,fossil,57.16,71.24
+2023,10,EU27&UK,coal,25.33,27.3
+2023,10,EU27&UK,fossil,57.12,71.24
 2023,10,EU27&UK,gas,30.63,39.86
 2023,10,EU27&UK,hydro,25.32,26.52
 2023,10,EU27&UK,nuclear,51.13,52.46
@@ -26529,7 +26529,7 @@
 2023,10,EU27&UK,other,15.36,16.1
 2023,10,EU27&UK,renewables,103.8,165.33
 2023,10,EU27&UK,solar,9.52,16.87
-2023,10,EU27&UK,total,212.1,236.57
+2023,10,EU27&UK,total,212.06,236.57
 2023,10,EU27&UK,wind,53.6,53.37
 2023,10,Estonia,coal,0.04,0.17
 2023,10,Estonia,fossil,0.17,0.17
@@ -26960,8 +26960,8 @@
 2023,11,Costa Rica,solar,0.0,0.01
 2023,11,Costa Rica,total,1.05,1.04
 2023,11,Costa Rica,wind,0.08,0.08
-2023,11,Croatia,coal,0.11,0.11
-2023,11,Croatia,fossil,0.32,0.38
+2023,11,Croatia,coal,0.07,0.11
+2023,11,Croatia,fossil,0.27,0.38
 2023,11,Croatia,gas,0.2,0.27
 2023,11,Croatia,hydro,0.52,0.86
 2023,11,Croatia,nuclear,0.0,0.0
@@ -26969,7 +26969,7 @@
 2023,11,Croatia,other,0.08,0.08
 2023,11,Croatia,renewables,0.78,1.21
 2023,11,Croatia,solar,0.0,0.03
-2023,11,Croatia,total,1.1,1.59
+2023,11,Croatia,total,1.06,1.59
 2023,11,Croatia,wind,0.18,0.23
 2023,11,Czech Republic,coal,2.4,2.72
 2023,11,Czech Republic,fossil,2.62,2.99
@@ -26993,8 +26993,8 @@
 2023,11,Denmark,solar,0.03,0.06
 2023,11,Denmark,total,2.35,2.76
 2023,11,Denmark,wind,1.55,1.69
-2023,11,EU27&UK,coal,26.98,30.16
-2023,11,EU27&UK,fossil,59.41,76.29
+2023,11,EU27&UK,coal,26.95,30.16
+2023,11,EU27&UK,fossil,59.38,76.29
 2023,11,EU27&UK,gas,31.23,42.5
 2023,11,EU27&UK,hydro,32.23,37.32
 2023,11,EU27&UK,nuclear,50.67,52.45
@@ -27002,7 +27002,7 @@
 2023,11,EU27&UK,other,15.73,17.57
 2023,11,EU27&UK,renewables,110.35,177.41
 2023,11,EU27&UK,solar,5.63,9.78
-2023,11,EU27&UK,total,220.43,253.71
+2023,11,EU27&UK,total,220.4,253.71
 2023,11,EU27&UK,wind,56.76,60.29
 2023,11,Estonia,coal,0.04,0.27
 2023,11,Estonia,fossil,0.22,0.28
@@ -27035,9 +27035,9 @@
 2023,11,France,other,0.35,0.96
 2023,11,France,renewables,12.94,42.66
 2023,11,France,solar,0.47,0.96
-2023,11,France,total,38.19,46.33
+2023,11,France,total,38.2,46.33
 2023,11,France,wind,6.07,6.33
-2023,11,Germany,coal,7.85,11.64
+2023,11,Germany,coal,7.86,11.64
 2023,11,Germany,fossil,11.18,19.47
 2023,11,Germany,gas,3.09,7.42
 2023,11,Germany,hydro,2.58,2.3
@@ -27134,7 +27134,7 @@
 2023,11,Lithuania,other,0.06,0.06
 2023,11,Lithuania,renewables,0.36,0.37
 2023,11,Lithuania,solar,0.01,0.01
-2023,11,Lithuania,total,0.38,0.43
+2023,11,Lithuania,total,0.39,0.43
 2023,11,Lithuania,wind,0.27,0.22
 2023,11,Luxembourg,coal,0.0,0.0
 2023,11,Luxembourg,fossil,0.0,0.01
@@ -27433,8 +27433,8 @@
 2023,12,Costa Rica,solar,0.0,0.01
 2023,12,Costa Rica,total,1.02,0.97
 2023,12,Costa Rica,wind,0.18,0.18
-2023,12,Croatia,coal,0.08,0.04
-2023,12,Croatia,fossil,0.29,0.3
+2023,12,Croatia,coal,0.07,0.04
+2023,12,Croatia,fossil,0.28,0.3
 2023,12,Croatia,gas,0.21,0.27
 2023,12,Croatia,hydro,0.54,0.89
 2023,12,Croatia,nuclear,0.0,0.0
@@ -27442,7 +27442,7 @@
 2023,12,Croatia,other,0.08,0.08
 2023,12,Croatia,renewables,0.8,1.23
 2023,12,Croatia,solar,0.0,0.03
-2023,12,Croatia,total,1.1,1.53
+2023,12,Croatia,total,1.09,1.53
 2023,12,Croatia,wind,0.18,0.23
 2023,12,Czech Republic,coal,2.44,2.73
 2023,12,Czech Republic,fossil,2.69,3.05
@@ -27466,8 +27466,8 @@
 2023,12,Denmark,solar,0.01,0.02
 2023,12,Denmark,total,2.76,3.55
 2023,12,Denmark,wind,1.87,2.31
-2023,12,EU27&UK,coal,26.95,29.93
-2023,12,EU27&UK,fossil,61.33,78.37
+2023,12,EU27&UK,coal,26.94,29.93
+2023,12,EU27&UK,fossil,61.32,78.37
 2023,12,EU27&UK,gas,33.14,44.64
 2023,12,EU27&UK,hydro,33.38,39.2
 2023,12,EU27&UK,nuclear,55.62,59.79
@@ -27509,7 +27509,7 @@
 2023,12,France,renewables,13.59,47.62
 2023,12,France,solar,0.37,0.77
 2023,12,France,total,41.32,51.63
-2023,12,France,wind,6.29,6.59
+2023,12,France,wind,6.3,6.59
 2023,12,Germany,coal,7.8,11.27
 2023,12,Germany,fossil,11.33,19.04
 2023,12,Germany,gas,3.26,7.41
@@ -27838,7 +27838,7 @@
 2024,1,Austria,other,0.24,0.47
 2024,1,Austria,renewables,3.83,5.79
 2024,1,Austria,solar,0.06,0.11
-2024,1,Austria,total,4.4,7.32
+2024,1,Austria,total,4.41,7.32
 2024,1,Austria,wind,0.95,1.09
 2024,1,Belgium,coal,0.0,0.17
 2024,1,Belgium,fossil,0.91,1.82
@@ -27984,7 +27984,7 @@
 2024,1,France,total,43.42,55.74
 2024,1,France,wind,5.67,5.37
 2024,1,Germany,coal,7.86,11.2
-2024,1,Germany,fossil,12.29,21.03
+2024,1,Germany,fossil,12.3,21.03
 2024,1,Germany,gas,4.18,9.4
 2024,1,Germany,hydro,2.62,2.58
 2024,1,Germany,nuclear,1.66,0.0
@@ -28419,9 +28419,9 @@
 2024,2,EU27&UK,nuclear,51.9,56.28
 2024,2,EU27&UK,oil,1.2,3.6
 2024,2,EU27&UK,other,15.65,18.02
-2024,2,EU27&UK,renewables,105.44,184.21
+2024,2,EU27&UK,renewables,105.45,184.21
 2024,2,EU27&UK,solar,5.66,12.9
-2024,2,EU27&UK,total,209.74,253.73
+2024,2,EU27&UK,total,209.75,253.73
 2024,2,EU27&UK,wind,55.79,62.89
 2024,2,Estonia,coal,0.03,0.24
 2024,2,Estonia,fossil,0.21,0.25
@@ -28927,8 +28927,8 @@
 2024,3,France,other,0.41,1.31
 2024,3,France,renewables,13.39,45.45
 2024,3,France,solar,0.95,2.1
-2024,3,France,total,40.02,47.93
-2024,3,France,wind,5.38,4.47
+2024,3,France,total,40.03,47.93
+2024,3,France,wind,5.39,4.47
 2024,3,Germany,coal,6.94,9.31
 2024,3,Germany,fossil,10.48,17.36
 2024,3,Germany,gas,3.29,7.61
@@ -28938,7 +28938,7 @@
 2024,3,Germany,other,4.04,4.41
 2024,3,Germany,renewables,26.67,23.66
 2024,3,Germany,solar,2.45,5.2
-2024,3,Germany,total,38.82,41.01
+2024,3,Germany,total,38.81,41.01
 2024,3,Germany,wind,17.63,11.68
 2024,3,Greece,coal,0.28,0.28
 2024,3,Greece,fossil,1.44,1.92
@@ -29090,9 +29090,9 @@
 2024,3,Norway,nuclear,0.0,0.0
 2024,3,Norway,oil,0.0,0.02
 2024,3,Norway,other,0.05,0.14
-2024,3,Norway,renewables,11.56,14.41
+2024,3,Norway,renewables,11.57,14.41
 2024,3,Norway,solar,0.0,0.01
-2024,3,Norway,total,11.71,14.44
+2024,3,Norway,total,11.72,14.44
 2024,3,Norway,wind,1.3,1.31
 2024,3,Poland,coal,6.88,7.41
 2024,3,Poland,fossil,8.37,8.94
@@ -29840,7 +29840,7 @@
 2024,5,EU27&UK,other,16.24,16.61
 2024,5,EU27&UK,renewables,106.15,174.85
 2024,5,EU27&UK,solar,16.58,37.1
-2024,5,EU27&UK,total,201.66,226.47
+2024,5,EU27&UK,total,201.67,226.47
 2024,5,EU27&UK,wind,41.81,32.47
 2024,5,Estonia,coal,0.04,0.19
 2024,5,Estonia,fossil,0.19,0.19
@@ -30744,8 +30744,8 @@
 2024,7,Costa Rica,solar,0.0,0.01
 2024,7,Costa Rica,total,1.07,1.05
 2024,7,Costa Rica,wind,0.1,0.11
-2024,7,Croatia,coal,0.11,0.1
-2024,7,Croatia,fossil,0.32,0.37
+2024,7,Croatia,coal,0.07,0.1
+2024,7,Croatia,fossil,0.29,0.37
 2024,7,Croatia,gas,0.21,0.27
 2024,7,Croatia,hydro,0.37,0.49
 2024,7,Croatia,nuclear,0.0,0.0
@@ -30753,7 +30753,7 @@
 2024,7,Croatia,other,0.08,0.07
 2024,7,Croatia,renewables,0.61,0.89
 2024,7,Croatia,solar,0.01,0.16
-2024,7,Croatia,total,0.93,1.26
+2024,7,Croatia,total,0.9,1.26
 2024,7,Croatia,wind,0.15,0.18
 2024,7,Czech Republic,coal,1.87,1.53
 2024,7,Czech Republic,fossil,2.07,1.68
@@ -30777,8 +30777,8 @@
 2024,7,Denmark,solar,0.25,0.57
 2024,7,Denmark,total,2.14,2.3
 2024,7,Denmark,wind,1.35,1.24
-2024,7,EU27&UK,coal,20.01,20.73
-2024,7,EU27&UK,fossil,49.35,60.92
+2024,7,EU27&UK,coal,19.97,20.73
+2024,7,EU27&UK,fossil,49.31,60.92
 2024,7,EU27&UK,gas,28.32,36.09
 2024,7,EU27&UK,hydro,28.78,33.67
 2024,7,EU27&UK,nuclear,52.95,54.64
@@ -30786,7 +30786,7 @@
 2024,7,EU27&UK,other,16.71,16.12
 2024,7,EU27&UK,renewables,105.07,177.22
 2024,7,EU27&UK,solar,18.5,41.34
-2024,7,EU27&UK,total,207.36,238.14
+2024,7,EU27&UK,total,207.33,238.14
 2024,7,EU27&UK,wind,41.08,31.45
 2024,7,Estonia,coal,0.04,0.15
 2024,7,Estonia,fossil,0.19,0.16
@@ -30830,7 +30830,7 @@
 2024,7,Germany,other,3.85,4.0
 2024,7,Germany,renewables,26.57,24.06
 2024,7,Germany,solar,4.64,10.26
-2024,7,Germany,total,36.51,36.23
+2024,7,Germany,total,36.5,36.23
 2024,7,Germany,wind,15.19,7.03
 2024,7,Greece,coal,0.33,0.38
 2024,7,Greece,fossil,1.97,3.4
@@ -31217,8 +31217,8 @@
 2024,8,Costa Rica,solar,0.0,0.01
 2024,8,Costa Rica,total,1.02,0.96
 2024,8,Costa Rica,wind,0.08,0.08
-2024,8,Croatia,coal,0.12,0.13
-2024,8,Croatia,fossil,0.33,0.41
+2024,8,Croatia,coal,0.07,0.13
+2024,8,Croatia,fossil,0.28,0.41
 2024,8,Croatia,gas,0.21,0.27
 2024,8,Croatia,hydro,0.34,0.41
 2024,8,Croatia,nuclear,0.0,0.0
@@ -31226,7 +31226,7 @@
 2024,8,Croatia,other,0.08,0.07
 2024,8,Croatia,renewables,0.57,0.8
 2024,8,Croatia,solar,0.02,0.17
-2024,8,Croatia,total,0.9,1.21
+2024,8,Croatia,total,0.86,1.21
 2024,8,Croatia,wind,0.14,0.15
 2024,8,Czech Republic,coal,1.92,1.64
 2024,8,Czech Republic,fossil,2.15,1.86
@@ -31250,16 +31250,16 @@
 2024,8,Denmark,solar,0.25,0.54
 2024,8,Denmark,total,2.14,2.25
 2024,8,Denmark,wind,1.34,1.21
-2024,8,EU27&UK,coal,20.26,21.29
-2024,8,EU27&UK,fossil,48.25,60.02
+2024,8,EU27&UK,coal,20.21,21.29
+2024,8,EU27&UK,fossil,48.21,60.02
 2024,8,EU27&UK,gas,26.89,34.75
-2024,8,EU27&UK,hydro,25.8,26.73
+2024,8,EU27&UK,hydro,25.79,26.73
 2024,8,EU27&UK,nuclear,53.6,55.55
 2024,8,EU27&UK,oil,1.11,3.98
 2024,8,EU27&UK,other,16.52,16.42
 2024,8,EU27&UK,renewables,102.96,171.19
 2024,8,EU27&UK,solar,17.65,38.92
-2024,8,EU27&UK,total,204.81,231.21
+2024,8,EU27&UK,total,204.76,231.21
 2024,8,EU27&UK,wind,43.0,33.58
 2024,8,Estonia,coal,0.05,0.12
 2024,8,Estonia,fossil,0.17,0.12
@@ -31297,11 +31297,11 @@
 2024,8,Germany,coal,6.02,7.64
 2024,8,Germany,fossil,8.63,13.05
 2024,8,Germany,gas,2.35,5.04
-2024,8,Germany,hydro,2.73,2.39
+2024,8,Germany,hydro,2.72,2.39
 2024,8,Germany,nuclear,1.66,0.0
 2024,8,Germany,oil,0.26,0.37
 2024,8,Germany,other,3.79,4.09
-2024,8,Germany,renewables,25.9,22.77
+2024,8,Germany,renewables,25.89,22.77
 2024,8,Germany,solar,4.46,9.79
 2024,8,Germany,total,36.19,35.82
 2024,8,Germany,wind,14.92,6.49
@@ -31690,8 +31690,8 @@
 2024,9,Costa Rica,solar,0.0,0.01
 2024,9,Costa Rica,total,0.96,0.9
 2024,9,Costa Rica,wind,0.03,0.03
-2024,9,Croatia,coal,0.1,0.08
-2024,9,Croatia,fossil,0.3,0.33
+2024,9,Croatia,coal,0.07,0.08
+2024,9,Croatia,fossil,0.27,0.33
 2024,9,Croatia,gas,0.2,0.25
 2024,9,Croatia,hydro,0.32,0.32
 2024,9,Croatia,nuclear,0.0,0.0
@@ -31699,7 +31699,7 @@
 2024,9,Croatia,other,0.08,0.07
 2024,9,Croatia,renewables,0.59,0.74
 2024,9,Croatia,solar,0.01,0.11
-2024,9,Croatia,total,0.89,1.07
+2024,9,Croatia,total,0.86,1.07
 2024,9,Croatia,wind,0.18,0.23
 2024,9,Czech Republic,coal,1.96,1.79
 2024,9,Czech Republic,fossil,2.17,1.99
@@ -31723,16 +31723,16 @@
 2024,9,Denmark,solar,0.2,0.44
 2024,9,Denmark,total,2.06,2.22
 2024,9,Denmark,wind,1.31,1.22
-2024,9,EU27&UK,coal,19.81,21.08
-2024,9,EU27&UK,fossil,48.01,60.46
+2024,9,EU27&UK,coal,19.78,21.08
+2024,9,EU27&UK,fossil,47.98,60.46
 2024,9,EU27&UK,gas,27.1,35.78
-2024,9,EU27&UK,hydro,25.57,27.09
+2024,9,EU27&UK,hydro,25.56,27.09
 2024,9,EU27&UK,nuclear,50.63,51.71
 2024,9,EU27&UK,oil,1.09,3.6
 2024,9,EU27&UK,other,16.0,15.36
 2024,9,EU27&UK,renewables,100.31,164.59
 2024,9,EU27&UK,solar,12.63,28.36
-2024,9,EU27&UK,total,198.95,225.05
+2024,9,EU27&UK,total,198.92,225.05
 2024,9,EU27&UK,wind,46.12,42.07
 2024,9,Estonia,coal,0.04,0.18
 2024,9,Estonia,fossil,0.19,0.18
@@ -31774,9 +31774,9 @@
 2024,9,Germany,nuclear,1.61,0.0
 2024,9,Germany,oil,0.24,0.35
 2024,9,Germany,other,3.67,3.83
-2024,9,Germany,renewables,25.98,23.6
+2024,9,Germany,renewables,25.97,23.6
 2024,9,Germany,solar,3.08,6.85
-2024,9,Germany,total,36.16,36.57
+2024,9,Germany,total,36.15,36.57
 2024,9,Germany,wind,16.6,10.55
 2024,9,Greece,coal,0.21,0.16
 2024,9,Greece,fossil,1.48,2.31
