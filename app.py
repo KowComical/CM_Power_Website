@@ -70,7 +70,8 @@ def main():
 
     # Load the data
     df = pd.read_csv('./data/data_for_download.csv')
-
+    # 去掉暂时不要的国家
+    df = df[df['country'] != 'Cyprus'].reset_index(drop=True)
     # 复制一版给下载
     df_download = df.copy()
 
