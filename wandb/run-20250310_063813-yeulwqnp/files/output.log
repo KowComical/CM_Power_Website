@@ -1,0 +1,8 @@
+##### [Eu] started #####
+/data/xuanrenSong/CM_Power_Database/code/europe/eu27_uk/uk_bmrs.py:55: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  df_result = pd.pivot_table(df_result, index='startTime', values='generation', columns='fuelType').resample(
+/data/xuanrenSong/CM_Power_Database/code/europe/eu27_uk/uk_bmrs.py:55: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  df_result = pd.pivot_table(df_result, index='startTime', values='generation', columns='fuelType').resample(
+/data/xuanrenSong/CM_Power_Database/code/europe/eu27_uk/uk_bmrs.py:55: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  df_result = pd.pivot_table(df_result, index='startTime', values='generation', columns='fuelType').resample(
+##### [Eu] finished in 5 seconds #####

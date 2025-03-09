@@ -1,0 +1,36 @@
+{
+  "os": "Linux-5.15.0-130-generic-x86_64-with-glibc2.35",
+  "python": "CPython 3.12.9",
+  "startedAt": "2025-03-09T22:50:34.425550Z",
+  "args": [
+    "global_sum",
+    "cal_ef_emission",
+    "auto_upload",
+    "send_to_others",
+    "upload_to_streamlit"
+  ],
+  "program": "/data/xuanrenSong/CM_Power_Database/code/global_code/all_process.py",
+  "git": {
+    "remote": "git@github.com:KowComical/CM_Power_Website.git",
+    "commit": "c8a5b7f99f27ed275d481702948bd83f0b22db84"
+  },
+  "email": "xuanren1992@yahoo.com",
+  "root": "/data/xuanrenSong/CM_Power_Website",
+  "host": "iZrj9fto73cr589htilwtfZ",
+  "executable": "/opt/miniconda3/bin/python",
+  "cpu_count": 2,
+  "cpu_count_logical": 4,
+  "disk": {
+    "/": {
+      "total": "105286258688",
+      "used": "9243791360"
+    }
+  },
+  "memory": {
+    "total": "15620370432"
+  },
+  "cpu": {
+    "count": 2,
+    "countLogical": 4
+  }
+}

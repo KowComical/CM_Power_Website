@@ -1,0 +1,18 @@
+##### [Eu] started #####
+
+Error in Eu: list index out of range
+Traceback:
+Traceback (most recent call last):
+  File "/data/xuanrenSong/CM_Power_Database/code/global_code/all_process.py", line 148, in execute_workflow
+    workflow_module.main()
+  File "/data/xuanrenSong/CM_Power_Database/code/europe/eu27_uk/eu_workflow.py", line 48, in main
+    uk_new.main()  # 爬取UK最新数据
+    ^^^^^^^^^^^^^
+  File "/data/xuanrenSong/CM_Power_Database/code/europe/eu27_uk/uk_new_data.py", line 15, in main
+    craw()
+  File "/data/xuanrenSong/CM_Power_Database/code/europe/eu27_uk/uk_new_data.py", line 28, in craw
+    df = pd.DataFrame(data_table.findall(r.text)[0][2:-3].split('['))[1:]
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+##### [Eu] finished in 9 minutes 24 seconds #####
