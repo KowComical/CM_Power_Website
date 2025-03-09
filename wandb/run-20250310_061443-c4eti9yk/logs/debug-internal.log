@@ -1,0 +1,7 @@
+{"time":"2025-03-10T06:14:43.331308921+08:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/data/xuanrenSong/CM_Power_Website/wandb/run-20250310_061443-c4eti9yk/logs/debug-core.log"}
+{"time":"2025-03-10T06:14:43.43458285+08:00","level":"INFO","msg":"created new stream","id":"c4eti9yk"}
+{"time":"2025-03-10T06:14:43.434616506+08:00","level":"INFO","msg":"stream: started","id":"c4eti9yk"}
+{"time":"2025-03-10T06:14:43.434640301+08:00","level":"INFO","msg":"writer: Do: started","stream_id":"c4eti9yk"}
+{"time":"2025-03-10T06:14:43.434663731+08:00","level":"INFO","msg":"handler: started","stream_id":"c4eti9yk"}
+{"time":"2025-03-10T06:14:43.434767156+08:00","level":"INFO","msg":"sender: started","stream_id":"c4eti9yk"}
+{"time":"2025-03-10T06:14:43.685454944+08:00","level":"INFO","msg":"Starting system monitor"}
