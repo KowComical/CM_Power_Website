@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define variables for the command options and directory paths
-python_cmd="/home/xuanrenSong/miniconda3/bin/python"
+python_cmd="/opt/miniconda3/bin/python"
 script_file="/data/xuanrenSong/CM_Power_Website/upload.py"
 log_dir="/data/xuanrenSong/CM_Power_Website/log/daily_process"
 year_dir="$(date '+%Y')"

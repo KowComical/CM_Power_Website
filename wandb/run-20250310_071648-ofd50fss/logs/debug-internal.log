@@ -1,0 +1,15 @@
+{"time":"2025-03-10T07:16:48.589874678+08:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/data/xuanrenSong/CM_Power_Website/wandb/run-20250310_071648-ofd50fss/logs/debug-core.log"}
+{"time":"2025-03-10T07:16:48.693583555+08:00","level":"INFO","msg":"created new stream","id":"ofd50fss"}
+{"time":"2025-03-10T07:16:48.693629887+08:00","level":"INFO","msg":"stream: started","id":"ofd50fss"}
+{"time":"2025-03-10T07:16:48.693761683+08:00","level":"INFO","msg":"writer: Do: started","stream_id":"ofd50fss"}
+{"time":"2025-03-10T07:16:48.693775179+08:00","level":"INFO","msg":"sender: started","stream_id":"ofd50fss"}
+{"time":"2025-03-10T07:16:48.693792577+08:00","level":"INFO","msg":"handler: started","stream_id":"ofd50fss"}
+{"time":"2025-03-10T07:16:48.84232081+08:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-10T07:17:26.073196992+08:00","level":"INFO","msg":"stream: closing","id":"ofd50fss"}
+{"time":"2025-03-10T07:17:26.073235083+08:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-10T07:17:26.07381242+08:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-10T07:17:26.460222632+08:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-10T07:17:26.570291516+08:00","level":"INFO","msg":"handler: closed","stream_id":"ofd50fss"}
+{"time":"2025-03-10T07:17:26.570348178+08:00","level":"INFO","msg":"sender: closed","stream_id":"ofd50fss"}
+{"time":"2025-03-10T07:17:26.570342253+08:00","level":"INFO","msg":"writer: Close: closed","stream_id":"ofd50fss"}
+{"time":"2025-03-10T07:17:26.570446256+08:00","level":"INFO","msg":"stream: closed","id":"ofd50fss"}

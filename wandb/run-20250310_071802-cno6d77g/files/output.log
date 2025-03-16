@@ -1,0 +1,75 @@
+#### 开始更新 ####
+/data/xuanrenSong/CM_EU_Database/code/all_function.py:181: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  dataframe_sum = dataframe_2019.set_index('date').resample('Y').sum().reset_index()['sum'][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:147: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  eu24_2019_sum = eu_2019_date.set_index('date')[eu_country].resample('Y').sum().reset_index()[eu_country][0]
+/data/xuanrenSong/CM_EU_Database/code/all_process.py:191: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.
+  power_monthly_sum = power_data.set_index('date').resample('M').sum(numeric_only=True).reset_index()
+/data/xuanrenSong/CM_EU_Database/code/all_function.py:181: FutureWarning: 'Y' is deprecated and will be removed in a future version, please use 'YE' instead.
+  dataframe_sum = dataframe_2019.set_index('date').resample('Y').sum().reset_index()['sum'][0]
+/data/xuanrenSong/CM_EU_Database/code/process_new_residential.py:107: FutureWarning: 'M' is deprecated and will be removed in a future version, please use 'ME' instead.
+  for name, group in df_re.groupby(pd.Grouper(freq='M')):
+欧洲部门的新数据 - CM_EU_7mean.csv - 已经成功上传了
+Sending file: /data/xuanrenSong/CM_EU_Database/data/cleaned/CM_EU_new_residential.csv
+Sending file: /data/xuanrenSong/CM_EU_Database/data/cleaned/CM_EU_7mean.csv
+Sending file: /data/xuanrenSong/CM_EU_Database/data/cleaned/CM_EU.csv
+Sending file: /data/xuanrenSong/CM_EU_Database/data/cleaned/CM_EU_7mean_new_residential.csv
+All files sent

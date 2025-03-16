@@ -1,0 +1,13 @@
+#### 开始更新 ####
+Traceback (most recent call last):
+  File "/data/xuanrenSong/CM_EU_Database/code/all_process.py", line 617, in <module>
+  File "/data/xuanrenSong/CM_EU_Database/code/all_process.py", line 43, in main
+    determine_running()
+  File "/data/xuanrenSong/CM_EU_Database/code/all_process.py", line 609, in determine_running
+    elif should_run_due_to_time:  # 每天晚上11点运行一次 但不发邮件
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/xuanrenSong/CM_EU_Database/code/all_process.py", line 51, in whole_process
+    af.craw_eu(craw_path)
+  File "/data/xuanrenSong/CM_EU_Database/code/all_function.py", line 59, in craw_eu
+    import eurostat
+ModuleNotFoundError: No module named 'eurostat'
