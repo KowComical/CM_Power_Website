@@ -5154,7 +5154,7 @@
 2019,12,Hungary,nuclear,1.44,1.44
 2019,12,Hungary,oil,0.0,0.0
 2019,12,Hungary,other,0.18,0.19
-2019,12,Hungary,renewables,0.37,1.79
+2019,12,Hungary,renewables,0.38,1.79
 2019,12,Hungary,solar,0.09,0.05
 2019,12,Hungary,total,2.84,2.86
 2019,12,Hungary,wind,0.08,0.08
@@ -10501,7 +10501,7 @@
 2020,12,EU27&UK,oil,1.42,3.99
 2020,12,EU27&UK,other,16.97,21.0
 2020,12,EU27&UK,renewables,95.94,174.15
-2020,12,EU27&UK,solar,3.32,3.73
+2020,12,EU27&UK,solar,3.33,3.73
 2020,12,EU27&UK,total,252.3,277.54
 2020,12,EU27&UK,wind,43.6,47.69
 2020,12,Estonia,coal,0.04,0.27
@@ -10698,9 +10698,9 @@
 2020,12,Poland,nuclear,0.0,0.0
 2020,12,Poland,oil,0.12,0.0
 2020,12,Poland,other,0.18,0.91
-2020,12,Poland,renewables,2.41,2.92
+2020,12,Poland,renewables,2.42,2.92
 2020,12,Poland,solar,0.2,0.05
-2020,12,Poland,total,13.69,13.85
+2020,12,Poland,total,13.7,13.85
 2020,12,Poland,wind,1.79,1.71
 2020,12,Portugal,coal,0.01,0.16
 2020,12,Portugal,fossil,0.52,1.31
@@ -32787,7 +32787,7 @@
 2024,12,Latvia,oil,0.0,0.0
 2024,12,Latvia,other,0.04,0.05
 2024,12,Latvia,renewables,0.24,0.24
-2024,12,Latvia,solar,0.0,0.0
+2024,12,Latvia,solar,0.01,0.0
 2024,12,Latvia,total,0.37,0.36
 2024,12,Latvia,wind,0.04,0.04
 2024,12,Lithuania,coal,0.0,0.0
