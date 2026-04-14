@@ -222,13 +222,13 @@
 2019,1,Japan,coal,25.72,29.83
 2019,1,Japan,fossil,68.34,74.84
 2019,1,Japan,gas,35.01,39.68
-2019,1,Japan,hydro,3.47,4.72
+2019,1,Japan,hydro,4.43,4.72
 2019,1,Japan,nuclear,6.81,6.65
 2019,1,Japan,oil,7.61,5.33
 2019,1,Japan,other,0.94,2.75
-2019,1,Japan,renewables,9.28,18.8
+2019,1,Japan,renewables,10.24,18.8
 2019,1,Japan,solar,3.88,3.79
-2019,1,Japan,total,84.43,93.64
+2019,1,Japan,total,85.39,93.64
 2019,1,Japan,wind,0.98,0.89
 2019,1,Latvia,coal,0.0,0.0
 2019,1,Latvia,fossil,0.35,0.39
@@ -673,13 +673,13 @@
 2019,2,Japan,coal,22.19,27.43
 2019,2,Japan,fossil,59.69,65.93
 2019,2,Japan,gas,29.88,34.01
-2019,2,Japan,hydro,3.85,4.67
+2019,2,Japan,hydro,4.47,4.67
 2019,2,Japan,nuclear,6.15,6.01
 2019,2,Japan,oil,7.62,4.49
 2019,2,Japan,other,0.92,2.55
-2019,2,Japan,renewables,9.36,17.99
+2019,2,Japan,renewables,9.97,17.99
 2019,2,Japan,solar,3.86,4.05
-2019,2,Japan,total,75.2,83.92
+2019,2,Japan,total,75.82,83.92
 2019,2,Japan,wind,0.73,0.71
 2019,2,Latvia,coal,0.0,0.0
 2019,2,Latvia,fossil,0.19,0.21
@@ -1124,13 +1124,13 @@
 2019,3,Japan,coal,23.78,26.63
 2019,3,Japan,fossil,55.79,61.64
 2019,3,Japan,gas,28.58,31.66
-2019,3,Japan,hydro,4.66,5.86
+2019,3,Japan,hydro,5.5,5.86
 2019,3,Japan,nuclear,6.81,6.65
 2019,3,Japan,oil,3.43,3.35
 2019,3,Japan,other,0.95,2.94
-2019,3,Japan,renewables,12.04,21.28
+2019,3,Japan,renewables,12.88,21.28
 2019,3,Japan,solar,5.65,5.11
-2019,3,Japan,total,74.64,82.93
+2019,3,Japan,total,75.48,82.93
 2019,3,Japan,wind,0.78,0.73
 2019,3,Latvia,coal,0.0,0.0
 2019,3,Latvia,fossil,0.16,0.19
@@ -1575,13 +1575,13 @@
 2019,4,Japan,coal,20.19,21.93
 2019,4,Japan,fossil,47.67,52.69
 2019,4,Japan,gas,25.54,28.24
-2019,4,Japan,hydro,4.98,6.22
+2019,4,Japan,hydro,5.13,6.22
 2019,4,Japan,nuclear,6.02,5.88
 2019,4,Japan,oil,1.93,2.51
 2019,4,Japan,other,0.77,2.9
-2019,4,Japan,renewables,12.88,22.38
+2019,4,Japan,renewables,13.03,22.38
 2019,4,Japan,solar,6.53,6.8
-2019,4,Japan,total,66.57,75.07
+2019,4,Japan,total,66.72,75.07
 2019,4,Japan,wind,0.6,0.58
 2019,4,Latvia,coal,0.0,0.0
 2019,4,Latvia,fossil,0.09,0.11
@@ -2026,13 +2026,13 @@
 2019,5,Japan,coal,18.68,21.08
 2019,5,Japan,fossil,43.8,47.99
 2019,5,Japan,gas,23.05,25.09
-2019,5,Japan,hydro,6.52,8.0
+2019,5,Japan,hydro,6.69,8.0
 2019,5,Japan,nuclear,5.38,5.25
 2019,5,Japan,oil,2.06,1.82
 2019,5,Japan,other,0.87,3.13
-2019,5,Japan,renewables,15.66,24.82
+2019,5,Japan,renewables,15.83,24.82
 2019,5,Japan,solar,7.76,7.94
-2019,5,Japan,total,64.84,72.81
+2019,5,Japan,total,65.01,72.81
 2019,5,Japan,wind,0.51,0.5
 2019,5,Latvia,coal,0.0,0.0
 2019,5,Latvia,fossil,0.15,0.16
@@ -2477,13 +2477,13 @@
 2019,6,Japan,coal,20.64,22.77
 2019,6,Japan,fossil,47.73,51.79
 2019,6,Japan,gas,24.74,26.98
-2019,6,Japan,hydro,6.87,7.81
+2019,6,Japan,hydro,6.93,7.81
 2019,6,Japan,nuclear,4.91,4.76
 2019,6,Japan,oil,2.35,2.04
 2019,6,Japan,other,0.93,3.03
-2019,6,Japan,renewables,14.29,23.08
+2019,6,Japan,renewables,14.35,23.08
 2019,6,Japan,solar,6.07,7.08
-2019,6,Japan,total,66.93,74.87
+2019,6,Japan,total,66.99,74.87
 2019,6,Japan,wind,0.43,0.4
 2019,6,Latvia,coal,0.0,0.0
 2019,6,Latvia,fossil,0.25,0.24
@@ -2928,13 +2928,13 @@
 2019,7,Japan,coal,22.43,28.51
 2019,7,Japan,fossil,55.99,61.21
 2019,7,Japan,gas,28.38,29.75
-2019,7,Japan,hydro,8.3,9.41
+2019,7,Japan,hydro,8.29,9.41
 2019,7,Japan,nuclear,5.19,5.05
 2019,7,Japan,oil,5.18,2.95
 2019,7,Japan,other,1.09,3.4
-2019,7,Japan,renewables,15.11,23.96
+2019,7,Japan,renewables,15.1,23.96
 2019,7,Japan,solar,5.32,5.71
-2019,7,Japan,total,76.3,85.17
+2019,7,Japan,total,76.28,85.17
 2019,7,Japan,wind,0.4,0.4
 2019,7,Latvia,coal,0.0,0.0
 2019,7,Latvia,fossil,0.21,0.21
@@ -3379,13 +3379,13 @@
 2019,8,Japan,coal,25.36,29.24
 2019,8,Japan,fossil,62.56,68.99
 2019,8,Japan,gas,32.3,35.2
-2019,8,Japan,hydro,7.33,8.61
+2019,8,Japan,hydro,7.31,8.61
 2019,8,Japan,nuclear,4.72,4.59
 2019,8,Japan,oil,4.9,4.55
 2019,8,Japan,other,1.13,3.45
-2019,8,Japan,renewables,14.9,23.77
+2019,8,Japan,renewables,14.89,23.77
 2019,8,Japan,solar,6.0,6.69
-2019,8,Japan,total,82.18,92.76
+2019,8,Japan,total,82.17,92.76
 2019,8,Japan,wind,0.44,0.43
 2019,8,Latvia,coal,0.0,0.0
 2019,8,Latvia,fossil,0.35,0.34
@@ -3830,13 +3830,13 @@
 2019,9,Japan,coal,26.0,25.46
 2019,9,Japan,fossil,56.06,61.63
 2019,9,Japan,gas,27.31,32.23
-2019,9,Japan,hydro,5.76,7.25
+2019,9,Japan,hydro,5.93,7.25
 2019,9,Japan,nuclear,4.3,4.17
 2019,9,Japan,oil,2.76,3.95
 2019,9,Japan,other,1.18,3.45
-2019,9,Japan,renewables,13.08,21.29
+2019,9,Japan,renewables,13.26,21.29
 2019,9,Japan,solar,5.72,5.99
-2019,9,Japan,total,73.45,82.92
+2019,9,Japan,total,73.62,82.92
 2019,9,Japan,wind,0.43,0.43
 2019,9,Latvia,coal,0.0,0.0
 2019,9,Latvia,fossil,0.38,0.37
@@ -4281,13 +4281,13 @@
 2019,10,Japan,coal,22.53,23.88
 2019,10,Japan,fossil,50.38,54.52
 2019,10,Japan,gas,25.95,28.33
-2019,10,Japan,hydro,5.73,6.73
+2019,10,Japan,hydro,5.66,6.73
 2019,10,Japan,nuclear,4.94,4.79
 2019,10,Japan,oil,1.9,2.3
 2019,10,Japan,other,1.1,3.61
-2019,10,Japan,renewables,12.07,21.23
+2019,10,Japan,renewables,12.0,21.23
 2019,10,Japan,solar,4.61,5.48
-2019,10,Japan,total,67.39,75.75
+2019,10,Japan,total,67.32,75.75
 2019,10,Japan,wind,0.63,0.62
 2019,10,Latvia,coal,0.0,0.0
 2019,10,Latvia,fossil,0.25,0.25
@@ -4732,13 +4732,13 @@
 2019,11,Japan,coal,22.4,25.17
 2019,11,Japan,fossil,51.67,55.74
 2019,11,Japan,gas,27.05,28.18
-2019,11,Japan,hydro,4.17,5.28
+2019,11,Japan,hydro,4.32,5.28
 2019,11,Japan,nuclear,5.26,5.13
 2019,11,Japan,oil,2.22,2.39
 2019,11,Japan,other,1.28,3.54
-2019,11,Japan,renewables,10.82,19.81
+2019,11,Japan,renewables,10.96,19.81
 2019,11,Japan,solar,4.57,5.04
-2019,11,Japan,total,67.74,75.54
+2019,11,Japan,total,67.89,75.54
 2019,11,Japan,wind,0.8,0.81
 2019,11,Latvia,coal,0.0,0.0
 2019,11,Latvia,fossil,0.21,0.22
@@ -5183,13 +5183,13 @@
 2019,12,Japan,coal,26.41,29.01
 2019,12,Japan,fossil,62.44,67.57
 2019,12,Japan,gas,32.65,35.31
-2019,12,Japan,hydro,4.35,5.33
+2019,12,Japan,hydro,4.47,5.33
 2019,12,Japan,nuclear,5.39,5.25
 2019,12,Japan,oil,3.37,3.25
 2019,12,Japan,other,1.38,3.81
-2019,12,Japan,renewables,10.16,19.15
+2019,12,Japan,renewables,10.28,19.15
 2019,12,Japan,solar,3.52,3.89
-2019,12,Japan,total,78.0,86.73
+2019,12,Japan,total,78.11,86.73
 2019,12,Japan,wind,0.91,0.86
 2019,12,Latvia,coal,0.0,0.0
 2019,12,Latvia,fossil,0.16,0.18
@@ -5634,13 +5634,13 @@
 2020,1,Japan,coal,25.52,29.21
 2020,1,Japan,fossil,64.03,68.89
 2020,1,Japan,gas,33.95,36.55
-2020,1,Japan,hydro,4.8,5.88
+2020,1,Japan,hydro,4.99,5.88
 2020,1,Japan,nuclear,4.93,4.87
 2020,1,Japan,oil,4.56,3.12
 2020,1,Japan,other,1.4,3.68
-2020,1,Japan,renewables,10.94,19.13
+2020,1,Japan,renewables,11.13,19.13
 2020,1,Japan,solar,3.87,3.86
-2020,1,Japan,total,79.89,88.02
+2020,1,Japan,total,80.08,88.02
 2020,1,Japan,wind,0.86,0.84
 2020,1,Latvia,coal,0.0,0.0
 2020,1,Latvia,fossil,0.11,0.13
@@ -6085,13 +6085,13 @@
 2020,2,Japan,coal,24.21,27.48
 2020,2,Japan,fossil,58.18,62.45
 2020,2,Japan,gas,30.01,32.97
-2020,2,Japan,hydro,4.99,6.07
+2020,2,Japan,hydro,5.1,6.07
 2020,2,Japan,nuclear,5.1,5.03
 2020,2,Japan,oil,3.96,2.0
 2020,2,Japan,other,1.35,3.47
-2020,2,Japan,renewables,12.09,20.08
+2020,2,Japan,renewables,12.21,20.08
 2020,2,Japan,solar,4.93,4.73
-2020,2,Japan,total,75.37,82.54
+2020,2,Japan,total,75.48,82.54
 2020,2,Japan,wind,0.83,0.78
 2020,2,Latvia,coal,0.0,0.0
 2020,2,Latvia,fossil,0.12,0.14
@@ -6536,13 +6536,13 @@
 2020,3,Japan,coal,23.27,25.32
 2020,3,Japan,fossil,53.88,57.14
 2020,3,Japan,gas,27.67,30.32
-2020,3,Japan,hydro,5.64,6.87
+2020,3,Japan,hydro,5.77,6.87
 2020,3,Japan,nuclear,5.13,5.08
 2020,3,Japan,oil,2.93,1.5
 2020,3,Japan,other,1.43,3.99
-2020,3,Japan,renewables,14.25,22.75
+2020,3,Japan,renewables,14.38,22.75
 2020,3,Japan,solar,6.29,6.0
-2020,3,Japan,total,73.26,79.89
+2020,3,Japan,total,73.39,79.89
 2020,3,Japan,wind,0.89,0.81
 2020,3,Latvia,coal,0.0,0.0
 2020,3,Latvia,fossil,0.07,0.09
@@ -6987,13 +6987,13 @@
 2020,4,Japan,coal,18.04,21.39
 2020,4,Japan,fossil,43.34,46.2
 2020,4,Japan,gas,23.23,23.42
-2020,4,Japan,hydro,6.5,8.25
+2020,4,Japan,hydro,6.66,8.25
 2020,4,Japan,nuclear,4.65,4.58
 2020,4,Japan,oil,2.06,1.39
 2020,4,Japan,other,1.23,3.43
-2020,4,Japan,renewables,16.28,24.76
+2020,4,Japan,renewables,16.45,24.76
 2020,4,Japan,solar,7.7,7.68
-2020,4,Japan,total,64.27,70.96
+2020,4,Japan,total,64.43,70.96
 2020,4,Japan,wind,0.85,0.82
 2020,4,Latvia,coal,0.0,0.0
 2020,4,Latvia,fossil,0.05,0.08
@@ -7438,13 +7438,13 @@
 2020,5,Japan,coal,16.74,18.08
 2020,5,Japan,fossil,38.1,40.49
 2020,5,Japan,gas,19.92,20.82
-2020,5,Japan,hydro,6.73,8.61
+2020,5,Japan,hydro,6.93,8.61
 2020,5,Japan,nuclear,4.52,4.47
 2020,5,Japan,oil,1.45,1.6
 2020,5,Japan,other,1.24,3.49
-2020,5,Japan,renewables,16.18,25.66
+2020,5,Japan,renewables,16.37,25.66
 2020,5,Japan,solar,7.59,8.49
-2020,5,Japan,total,58.81,66.16
+2020,5,Japan,total,59.0,66.16
 2020,5,Japan,wind,0.62,0.61
 2020,5,Latvia,coal,0.0,0.0
 2020,5,Latvia,fossil,0.12,0.14
@@ -7889,13 +7889,13 @@
 2020,6,Japan,coal,20.39,21.14
 2020,6,Japan,fossil,46.37,48.99
 2020,6,Japan,gas,24.16,26.24
-2020,6,Japan,hydro,6.93,8.38
+2020,6,Japan,hydro,6.98,8.38
 2020,6,Japan,nuclear,3.96,3.9
 2020,6,Japan,oil,1.83,1.62
 2020,6,Japan,other,1.1,3.24
-2020,6,Japan,renewables,15.11,23.75
+2020,6,Japan,renewables,15.17,23.75
 2020,6,Japan,solar,6.59,7.77
-2020,6,Japan,total,65.44,72.74
+2020,6,Japan,total,65.5,72.74
 2020,6,Japan,wind,0.49,0.46
 2020,6,Latvia,coal,0.0,0.0
 2020,6,Latvia,fossil,0.22,0.24
@@ -8340,13 +8340,13 @@
 2020,7,Japan,coal,24.11,24.18
 2020,7,Japan,fossil,51.76,55.24
 2020,7,Japan,gas,25.16,29.04
-2020,7,Japan,hydro,9.48,10.67
+2020,7,Japan,hydro,8.99,10.67
 2020,7,Japan,nuclear,3.74,3.68
 2020,7,Japan,oil,2.49,2.03
 2020,7,Japan,other,1.28,3.77
-2020,7,Japan,renewables,16.08,24.57
+2020,7,Japan,renewables,15.6,24.57
 2020,7,Japan,solar,4.88,6.01
-2020,7,Japan,total,71.58,79.81
+2020,7,Japan,total,71.09,79.81
 2020,7,Japan,wind,0.45,0.43
 2020,7,Latvia,coal,0.0,0.0
 2020,7,Latvia,fossil,0.11,0.08
@@ -8791,13 +8791,13 @@
 2020,8,Japan,coal,27.18,27.81
 2020,8,Japan,fossil,64.12,67.87
 2020,8,Japan,gas,32.72,37.53
-2020,8,Japan,hydro,6.54,8.7
+2020,8,Japan,hydro,6.87,8.7
 2020,8,Japan,nuclear,3.2,3.13
 2020,8,Japan,oil,4.22,2.52
 2020,8,Japan,other,1.41,3.96
-2020,8,Japan,renewables,16.49,23.98
+2020,8,Japan,renewables,16.82,23.98
 2020,8,Japan,solar,8.12,7.77
-2020,8,Japan,total,83.81,91.84
+2020,8,Japan,total,84.14,91.84
 2020,8,Japan,wind,0.42,0.4
 2020,8,Latvia,coal,0.0,0.0
 2020,8,Latvia,fossil,0.24,0.25
@@ -9242,13 +9242,13 @@
 2020,9,Japan,coal,22.93,24.34
 2020,9,Japan,fossil,55.51,58.74
 2020,9,Japan,gas,29.02,32.67
-2020,9,Japan,hydro,5.4,6.7
+2020,9,Japan,hydro,5.48,6.7
 2020,9,Japan,nuclear,2.73,2.68
 2020,9,Japan,oil,3.56,1.73
 2020,9,Japan,other,1.33,3.89
-2020,9,Japan,renewables,12.76,20.89
+2020,9,Japan,renewables,12.83,20.89
 2020,9,Japan,solar,5.48,7.06
-2020,9,Japan,total,71.0,79.63
+2020,9,Japan,total,71.07,79.63
 2020,9,Japan,wind,0.55,0.56
 2020,9,Latvia,coal,0.0,0.0
 2020,9,Latvia,fossil,0.14,0.15
@@ -9693,13 +9693,13 @@
 2020,10,Japan,coal,22.58,23.14
 2020,10,Japan,fossil,51.53,54.53
 2020,10,Japan,gas,26.78,29.94
-2020,10,Japan,hydro,4.58,5.54
+2020,10,Japan,hydro,4.61,5.54
 2020,10,Japan,nuclear,1.83,1.8
 2020,10,Japan,oil,2.17,1.45
 2020,10,Japan,other,1.36,3.86
-2020,10,Japan,renewables,12.03,17.85
+2020,10,Japan,renewables,12.06,17.85
 2020,10,Japan,solar,5.44,5.99
-2020,10,Japan,total,65.39,72.38
+2020,10,Japan,total,65.42,72.38
 2020,10,Japan,wind,0.65,0.67
 2020,10,Latvia,coal,0.0,0.0
 2020,10,Latvia,fossil,0.12,0.14
@@ -10144,13 +10144,13 @@
 2020,11,Japan,coal,24.7,24.19
 2020,11,Japan,fossil,54.7,57.89
 2020,11,Japan,gas,27.66,31.78
-2020,11,Japan,hydro,3.65,4.56
+2020,11,Japan,hydro,3.82,4.56
 2020,11,Japan,nuclear,1.25,1.21
 2020,11,Japan,oil,2.34,1.91
 2020,11,Japan,other,1.25,3.72
-2020,11,Japan,renewables,10.64,16.18
+2020,11,Japan,renewables,10.8,16.18
 2020,11,Japan,solar,4.88,5.84
-2020,11,Japan,total,66.59,74.07
+2020,11,Japan,total,66.75,74.07
 2020,11,Japan,wind,0.86,0.86
 2020,11,Latvia,coal,0.0,0.0
 2020,11,Latvia,fossil,0.2,0.22
@@ -10595,13 +10595,13 @@
 2020,12,Japan,coal,29.36,28.77
 2020,12,Japan,fossil,68.38,73.68
 2020,12,Japan,gas,35.73,40.4
-2020,12,Japan,hydro,3.39,4.95
+2020,12,Japan,hydro,3.69,4.95
 2020,12,Japan,nuclear,2.14,2.11
 2020,12,Japan,oil,3.29,4.51
 2020,12,Japan,other,1.45,4.35
-2020,12,Japan,renewables,10.45,17.3
+2020,12,Japan,renewables,10.75,17.3
 2020,12,Japan,solar,4.53,4.8
-2020,12,Japan,total,80.97,90.98
+2020,12,Japan,total,81.27,90.98
 2020,12,Japan,wind,1.08,1.09
 2020,12,Latvia,coal,0.0,0.0
 2020,12,Latvia,fossil,0.22,0.24
@@ -11057,13 +11057,13 @@
 2021,1,Japan,coal,30.97,32.38
 2021,1,Japan,fossil,73.03,78.88
 2021,1,Japan,gas,38.75,41.04
-2021,1,Japan,hydro,3.2,4.97
+2021,1,Japan,hydro,3.75,4.97
 2021,1,Japan,nuclear,2.6,2.58
 2021,1,Japan,oil,3.31,5.47
 2021,1,Japan,other,1.45,3.88
-2021,1,Japan,renewables,10.29,17.12
+2021,1,Japan,renewables,10.84,17.12
 2021,1,Japan,solar,4.6,4.58
-2021,1,Japan,total,85.93,96.01
+2021,1,Japan,total,86.47,96.01
 2021,1,Japan,wind,1.05,1.12
 2021,1,Latvia,coal,0.0,0.0
 2021,1,Latvia,fossil,0.3,0.31
@@ -11519,13 +11519,13 @@
 2021,2,Japan,coal,25.62,26.23
 2021,2,Japan,fossil,58.24,62.53
 2021,2,Japan,gas,30.75,33.84
-2021,2,Japan,hydro,3.76,4.85
+2021,2,Japan,hydro,3.97,4.85
 2021,2,Japan,nuclear,2.8,2.79
 2021,2,Japan,oil,1.87,2.46
 2021,2,Japan,other,1.28,3.51
-2021,2,Japan,renewables,12.24,17.86
+2021,2,Japan,renewables,12.46,17.86
 2021,2,Japan,solar,6.11,5.58
-2021,2,Japan,total,73.29,80.4
+2021,2,Japan,total,73.5,80.4
 2021,2,Japan,wind,1.09,1.13
 2021,2,Latvia,coal,0.0,0.0
 2021,2,Latvia,fossil,0.32,0.3
@@ -11981,13 +11981,13 @@
 2021,3,Japan,coal,23.37,24.07
 2021,3,Japan,fossil,52.75,56.48
 2021,3,Japan,gas,27.99,30.16
-2021,3,Japan,hydro,6.2,7.33
+2021,3,Japan,hydro,6.3,7.33
 2021,3,Japan,nuclear,3.83,3.77
 2021,3,Japan,oil,1.38,2.24
 2021,3,Japan,other,1.44,3.99
-2021,3,Japan,renewables,15.9,23.12
+2021,3,Japan,renewables,15.99,23.12
 2021,3,Japan,solar,7.39,7.11
-2021,3,Japan,total,72.48,79.6
+2021,3,Japan,total,72.57,79.6
 2021,3,Japan,wind,0.86,0.92
 2021,3,Latvia,coal,0.0,0.0
 2021,3,Latvia,fossil,0.19,0.21
@@ -12443,13 +12443,13 @@
 2021,4,Japan,coal,19.35,20.09
 2021,4,Japan,fossil,41.8,45.39
 2021,4,Japan,gas,21.19,23.91
-2021,4,Japan,hydro,6.87,8.3
+2021,4,Japan,hydro,7.03,8.3
 2021,4,Japan,nuclear,4.77,4.72
 2021,4,Japan,oil,1.26,1.39
 2021,4,Japan,other,1.36,4.04
-2021,4,Japan,renewables,17.5,26.61
+2021,4,Japan,renewables,17.66,26.61
 2021,4,Japan,solar,8.46,8.72
-2021,4,Japan,total,64.07,71.99
+2021,4,Japan,total,64.23,71.99
 2021,4,Japan,wind,0.8,0.82
 2021,4,Latvia,coal,0.0,0.0
 2021,4,Latvia,fossil,0.04,0.06
@@ -12905,13 +12905,13 @@
 2021,5,Japan,coal,17.58,18.57
 2021,5,Japan,fossil,39.38,42.81
 2021,5,Japan,gas,20.25,22.83
-2021,5,Japan,hydro,8.8,10.23
+2021,5,Japan,hydro,8.93,10.23
 2021,5,Japan,nuclear,5.28,5.25
 2021,5,Japan,oil,1.55,1.41
 2021,5,Japan,other,1.29,3.99
-2021,5,Japan,renewables,18.1,28.83
+2021,5,Japan,renewables,18.23,28.83
 2021,5,Japan,solar,7.29,8.6
-2021,5,Japan,total,62.76,71.64
+2021,5,Japan,total,62.89,71.64
 2021,5,Japan,wind,0.72,0.76
 2021,5,Latvia,coal,0.0,0.0
 2021,5,Latvia,fossil,0.13,0.02
@@ -13367,13 +13367,13 @@
 2021,6,Japan,coal,19.61,20.92
 2021,6,Japan,fossil,45.45,48.84
 2021,6,Japan,gas,24.34,26.09
-2021,6,Japan,hydro,7.28,8.26
+2021,6,Japan,hydro,7.29,8.26
 2021,6,Japan,nuclear,5.1,5.05
 2021,6,Japan,oil,1.5,1.83
 2021,6,Japan,other,1.19,4.01
-2021,6,Japan,renewables,16.54,25.9
+2021,6,Japan,renewables,16.55,25.9
 2021,6,Japan,solar,7.66,8.15
-2021,6,Japan,total,67.08,74.75
+2021,6,Japan,total,67.1,74.75
 2021,6,Japan,wind,0.4,0.42
 2021,6,Latvia,coal,0.0,0.0
 2021,6,Latvia,fossil,0.1,0.1
@@ -13829,13 +13829,13 @@
 2021,7,Japan,coal,24.28,26.57
 2021,7,Japan,fossil,55.47,59.46
 2021,7,Japan,gas,29.16,30.72
-2021,7,Japan,hydro,7.53,8.82
+2021,7,Japan,hydro,7.57,8.82
 2021,7,Japan,nuclear,6.5,6.43
 2021,7,Japan,oil,2.04,2.17
 2021,7,Japan,other,1.36,4.62
-2021,7,Japan,renewables,17.19,28.31
+2021,7,Japan,renewables,17.23,28.31
 2021,7,Japan,solar,7.91,7.99
-2021,7,Japan,total,79.16,87.77
+2021,7,Japan,total,79.2,87.77
 2021,7,Japan,wind,0.4,0.44
 2021,7,Latvia,coal,0.0,0.0
 2021,7,Latvia,fossil,0.16,0.16
@@ -14291,13 +14291,13 @@
 2021,8,Japan,coal,22.8,27.99
 2021,8,Japan,fossil,55.64,59.44
 2021,8,Japan,gas,30.77,29.26
-2021,8,Japan,hydro,8.08,9.49
+2021,8,Japan,hydro,8.05,9.49
 2021,8,Japan,nuclear,6.6,6.56
 2021,8,Japan,oil,2.07,2.19
 2021,8,Japan,other,1.37,4.73
-2021,8,Japan,renewables,16.76,29.6
+2021,8,Japan,renewables,16.74,29.6
 2021,8,Japan,solar,6.75,8.21
-2021,8,Japan,total,79.0,89.04
+2021,8,Japan,total,78.97,89.04
 2021,8,Japan,wind,0.57,0.61
 2021,8,Latvia,coal,0.0,0.0
 2021,8,Latvia,fossil,0.23,0.03
@@ -14753,13 +14753,13 @@
 2021,9,Japan,coal,19.28,25.95
 2021,9,Japan,fossil,46.54,50.21
 2021,9,Japan,gas,25.89,22.4
-2021,9,Japan,hydro,6.95,8.0
+2021,9,Japan,hydro,7.0,8.0
 2021,9,Japan,nuclear,6.46,6.42
 2021,9,Japan,oil,1.37,1.87
 2021,9,Japan,other,1.29,4.54
-2021,9,Japan,renewables,14.87,26.29
+2021,9,Japan,renewables,14.92,26.29
 2021,9,Japan,solar,6.13,6.81
-2021,9,Japan,total,67.87,76.5
+2021,9,Japan,total,67.93,76.5
 2021,9,Japan,wind,0.5,0.51
 2021,9,Latvia,coal,0.0,0.0
 2021,9,Latvia,fossil,0.17,0.17
@@ -15215,13 +15215,13 @@
 2021,10,Japan,coal,20.79,25.07
 2021,10,Japan,fossil,48.98,53.38
 2021,10,Japan,gas,26.9,25.75
-2021,10,Japan,hydro,3.71,5.22
+2021,10,Japan,hydro,4.05,5.22
 2021,10,Japan,nuclear,6.2,6.17
 2021,10,Japan,oil,1.3,2.56
 2021,10,Japan,other,1.34,4.4
-2021,10,Japan,renewables,12.24,23.45
+2021,10,Japan,renewables,12.58,23.45
 2021,10,Japan,solar,6.59,7.04
-2021,10,Japan,total,67.42,76.83
+2021,10,Japan,total,67.76,76.83
 2021,10,Japan,wind,0.6,0.62
 2021,10,Latvia,coal,0.0,0.0
 2021,10,Latvia,fossil,0.09,0.1
@@ -15677,13 +15677,13 @@
 2021,11,Japan,coal,21.62,25.11
 2021,11,Japan,fossil,51.73,56.21
 2021,11,Japan,gas,28.4,27.98
-2021,11,Japan,hydro,3.29,4.53
+2021,11,Japan,hydro,3.61,4.53
 2021,11,Japan,nuclear,5.27,5.25
 2021,11,Japan,oil,1.71,3.12
 2021,11,Japan,other,1.23,3.73
-2021,11,Japan,renewables,10.96,20.69
+2021,11,Japan,renewables,11.28,20.69
 2021,11,Japan,solar,5.56,6.3
-2021,11,Japan,total,67.95,76.9
+2021,11,Japan,total,68.28,76.9
 2021,11,Japan,wind,0.87,0.88
 2021,11,Latvia,coal,0.0,0.0
 2021,11,Latvia,fossil,0.16,0.16
@@ -16139,13 +16139,13 @@
 2021,12,Japan,coal,24.32,29.55
 2021,12,Japan,fossil,62.28,67.23
 2021,12,Japan,gas,34.15,32.69
-2021,12,Japan,hydro,4.92,6.36
+2021,12,Japan,hydro,5.16,6.36
 2021,12,Japan,nuclear,6.16,6.11
 2021,12,Japan,oil,3.82,4.99
 2021,12,Japan,other,1.38,4.89
-2021,12,Japan,renewables,12.14,23.74
+2021,12,Japan,renewables,12.38,23.74
 2021,12,Japan,solar,4.74,5.25
-2021,12,Japan,total,80.58,90.97
+2021,12,Japan,total,80.82,90.97
 2021,12,Japan,wind,1.11,1.13
 2021,12,Latvia,coal,0.0,0.0
 2021,12,Latvia,fossil,0.3,0.29
@@ -16601,13 +16601,13 @@
 2022,1,Japan,coal,28.61,30.69
 2022,1,Japan,fossil,69.69,74.98
 2022,1,Japan,gas,36.26,38.26
-2022,1,Japan,hydro,3.63,5.23
+2022,1,Japan,hydro,4.09,5.23
 2022,1,Japan,nuclear,6.5,6.46
 2022,1,Japan,oil,4.83,6.03
 2022,1,Japan,other,1.45,4.7
-2022,1,Japan,renewables,11.27,22.74
+2022,1,Japan,renewables,11.73,22.74
 2022,1,Japan,solar,5.1,5.2
-2022,1,Japan,total,87.46,97.72
+2022,1,Japan,total,87.92,97.72
 2022,1,Japan,wind,1.09,1.15
 2022,1,Latvia,coal,0.0,0.0
 2022,1,Latvia,fossil,0.18,0.18
@@ -17063,13 +17063,13 @@
 2022,2,Japan,coal,26.63,28.68
 2022,2,Japan,fossil,63.47,68.53
 2022,2,Japan,gas,34.35,34.14
-2022,2,Japan,hydro,3.0,4.08
+2022,2,Japan,hydro,3.27,4.08
 2022,2,Japan,nuclear,5.21,5.17
 2022,2,Japan,oil,2.5,5.7
 2022,2,Japan,other,1.36,4.27
-2022,2,Japan,renewables,11.28,20.41
+2022,2,Japan,renewables,11.54,20.41
 2022,2,Japan,solar,5.84,5.77
-2022,2,Japan,total,79.96,88.94
+2022,2,Japan,total,80.23,88.94
 2022,2,Japan,wind,1.08,1.12
 2022,2,Latvia,coal,0.0,0.0
 2022,2,Latvia,fossil,0.05,0.06
@@ -17525,13 +17525,13 @@
 2022,3,Japan,coal,23.5,25.72
 2022,3,Japan,fossil,55.14,59.47
 2022,3,Japan,gas,29.45,29.04
-2022,3,Japan,hydro,4.78,6.15
+2022,3,Japan,hydro,5.1,6.15
 2022,3,Japan,nuclear,4.02,3.99
 2022,3,Japan,oil,2.19,4.72
 2022,3,Japan,other,1.55,4.68
-2022,3,Japan,renewables,14.87,23.37
+2022,3,Japan,renewables,15.19,23.37
 2022,3,Japan,solar,7.63,7.61
-2022,3,Japan,total,74.02,82.85
+2022,3,Japan,total,74.35,82.85
 2022,3,Japan,wind,0.9,0.94
 2022,3,Latvia,coal,0.0,0.0
 2022,3,Latvia,fossil,0.19,0.02
@@ -17987,13 +17987,13 @@
 2022,4,Japan,coal,18.83,19.42
 2022,4,Japan,fossil,42.54,45.65
 2022,4,Japan,gas,22.41,23.14
-2022,4,Japan,hydro,6.87,8.5
+2022,4,Japan,hydro,7.12,8.5
 2022,4,Japan,nuclear,3.57,3.54
 2022,4,Japan,oil,1.3,3.09
 2022,4,Japan,other,1.46,4.56
-2022,4,Japan,renewables,17.45,26.37
+2022,4,Japan,renewables,17.71,26.37
 2022,4,Japan,solar,8.49,9.09
-2022,4,Japan,total,63.56,72.02
+2022,4,Japan,total,63.82,72.02
 2022,4,Japan,wind,0.64,0.68
 2022,4,Latvia,coal,0.0,0.0
 2022,4,Latvia,fossil,0.04,0.02
@@ -18449,13 +18449,13 @@
 2022,5,Japan,coal,17.73,17.56
 2022,5,Japan,fossil,40.86,43.12
 2022,5,Japan,gas,21.79,23.6
-2022,5,Japan,hydro,7.57,9.25
+2022,5,Japan,hydro,7.88,9.25
 2022,5,Japan,nuclear,2.87,2.84
 2022,5,Japan,oil,1.35,1.95
 2022,5,Japan,other,1.47,4.34
-2022,5,Japan,renewables,18.84,26.67
+2022,5,Japan,renewables,19.15,26.67
 2022,5,Japan,solar,9.21,9.62
-2022,5,Japan,total,62.57,69.79
+2022,5,Japan,total,62.88,69.79
 2022,5,Japan,wind,0.59,0.62
 2022,5,Latvia,coal,0.0,0.0
 2022,5,Latvia,fossil,0.02,0.02
@@ -18911,13 +18911,13 @@
 2022,6,Japan,coal,21.09,20.84
 2022,6,Japan,fossil,49.25,52.06
 2022,6,Japan,gas,26.31,28.57
-2022,6,Japan,hydro,6.65,8.0
+2022,6,Japan,hydro,6.88,8.0
 2022,6,Japan,nuclear,2.62,2.58
 2022,6,Japan,oil,1.85,2.66
 2022,6,Japan,other,1.45,4.35
-2022,6,Japan,renewables,17.27,24.85
+2022,6,Japan,renewables,17.5,24.85
 2022,6,Japan,solar,8.55,9.25
-2022,6,Japan,total,69.14,76.91
+2022,6,Japan,total,69.36,76.91
 2022,6,Japan,wind,0.62,0.67
 2022,6,Latvia,coal,0.0,0.0
 2022,6,Latvia,fossil,0.1,0.0
@@ -19373,13 +19373,13 @@
 2022,7,Japan,coal,26.58,28.06
 2022,7,Japan,fossil,59.48,62.84
 2022,7,Japan,gas,30.73,31.27
-2022,7,Japan,hydro,6.98,8.26
+2022,7,Japan,hydro,7.14,8.26
 2022,7,Japan,nuclear,3.79,3.72
 2022,7,Japan,oil,2.17,3.51
 2022,7,Japan,other,1.59,4.79
-2022,7,Japan,renewables,17.29,26.11
+2022,7,Japan,renewables,17.46,26.11
 2022,7,Japan,solar,8.28,8.87
-2022,7,Japan,total,80.56,88.96
+2022,7,Japan,total,80.73,88.96
 2022,7,Japan,wind,0.44,0.47
 2022,7,Latvia,coal,0.0,0.0
 2022,7,Latvia,fossil,0.16,0.01
@@ -19835,13 +19835,13 @@
 2022,8,Japan,coal,27.6,29.32
 2022,8,Japan,fossil,58.63,62.36
 2022,8,Japan,gas,28.86,29.2
-2022,8,Japan,hydro,7.02,8.42
+2022,8,Japan,hydro,7.15,8.42
 2022,8,Japan,nuclear,4.92,4.87
 2022,8,Japan,oil,2.16,3.84
 2022,8,Japan,other,1.75,5.2
-2022,8,Japan,renewables,17.16,27.82
+2022,8,Japan,renewables,17.29,27.82
 2022,8,Japan,solar,7.88,8.79
-2022,8,Japan,total,80.71,90.18
+2022,8,Japan,total,80.83,90.18
 2022,8,Japan,wind,0.51,0.54
 2022,8,Latvia,coal,0.0,0.0
 2022,8,Latvia,fossil,0.11,0.11
@@ -20297,13 +20297,13 @@
 2022,9,Japan,coal,26.18,26.57
 2022,9,Japan,fossil,50.65,53.99
 2022,9,Japan,gas,22.59,24.35
-2022,9,Japan,hydro,7.11,8.39
+2022,9,Japan,hydro,7.15,8.39
 2022,9,Japan,nuclear,4.22,4.17
 2022,9,Japan,oil,1.88,3.07
 2022,9,Japan,other,1.74,4.97
-2022,9,Japan,renewables,16.44,25.95
+2022,9,Japan,renewables,16.48,25.95
 2022,9,Japan,solar,7.07,7.88
-2022,9,Japan,total,71.31,79.94
+2022,9,Japan,total,71.35,79.94
 2022,9,Japan,wind,0.52,0.54
 2022,9,Latvia,coal,0.0,0.0
 2022,9,Latvia,fossil,0.08,0.07
@@ -20759,13 +20759,13 @@
 2022,10,Japan,coal,22.15,23.66
 2022,10,Japan,fossil,47.16,49.64
 2022,10,Japan,gas,22.75,23.66
-2022,10,Japan,hydro,4.56,5.74
+2022,10,Japan,hydro,4.75,5.74
 2022,10,Japan,nuclear,4.14,4.08
 2022,10,Japan,oil,2.26,2.33
 2022,10,Japan,other,1.7,4.81
-2022,10,Japan,renewables,13.64,22.56
+2022,10,Japan,renewables,13.83,22.56
 2022,10,Japan,solar,6.74,7.28
-2022,10,Japan,total,64.94,72.2
+2022,10,Japan,total,65.13,72.2
 2022,10,Japan,wind,0.65,0.65
 2022,10,Latvia,coal,0.0,0.0
 2022,10,Latvia,fossil,0.09,0.01
@@ -21221,13 +21221,13 @@
 2022,11,Japan,coal,21.95,23.93
 2022,11,Japan,fossil,49.14,51.15
 2022,11,Japan,gas,24.46,24.67
-2022,11,Japan,hydro,3.03,3.87
+2022,11,Japan,hydro,3.23,3.87
 2022,11,Japan,nuclear,4.53,4.47
 2022,11,Japan,oil,2.73,2.55
 2022,11,Japan,other,1.64,4.61
-2022,11,Japan,renewables,11.18,20.48
+2022,11,Japan,renewables,11.37,20.48
 2022,11,Japan,solar,5.72,6.71
-2022,11,Japan,total,64.85,71.62
+2022,11,Japan,total,65.04,71.62
 2022,11,Japan,wind,0.78,0.81
 2022,11,Latvia,coal,0.0,0.0
 2022,11,Latvia,fossil,0.26,0.23
@@ -21683,13 +21683,13 @@
 2022,12,Japan,coal,27.28,28.89
 2022,12,Japan,fossil,62.08,65.62
 2022,12,Japan,gas,30.19,32.24
-2022,12,Japan,hydro,4.03,4.99
+2022,12,Japan,hydro,4.13,4.99
 2022,12,Japan,nuclear,5.69,5.61
 2022,12,Japan,oil,4.61,4.49
 2022,12,Japan,other,1.91,5.27
-2022,12,Japan,renewables,12.06,22.3
+2022,12,Japan,renewables,12.15,22.3
 2022,12,Japan,solar,4.86,5.14
-2022,12,Japan,total,79.83,87.92
+2022,12,Japan,total,79.92,87.92
 2022,12,Japan,wind,1.25,1.28
 2022,12,Latvia,coal,0.0,0.0
 2022,12,Latvia,fossil,0.4,0.35
@@ -22145,13 +22145,13 @@
 2023,1,Japan,coal,26.17,29.28
 2023,1,Japan,fossil,63.92,67.49
 2023,1,Japan,gas,32.62,31.62
-2023,1,Japan,hydro,4.05,5.07
+2023,1,Japan,hydro,4.3,5.07
 2023,1,Japan,nuclear,6.54,6.52
 2023,1,Japan,oil,5.14,6.59
 2023,1,Japan,other,1.87,4.91
-2023,1,Japan,renewables,12.45,23.27
+2023,1,Japan,renewables,12.7,23.27
 2023,1,Japan,solar,5.32,5.51
-2023,1,Japan,total,82.91,90.76
+2023,1,Japan,total,83.16,90.76
 2023,1,Japan,wind,1.21,1.26
 2023,1,Latvia,coal,0.0,0.0
 2023,1,Latvia,fossil,0.17,0.16
@@ -22607,13 +22607,13 @@
 2023,2,Japan,coal,23.13,25.61
 2023,2,Japan,fossil,55.26,59.28
 2023,2,Japan,gas,27.53,28.61
-2023,2,Japan,hydro,4.03,4.87
+2023,2,Japan,hydro,4.21,4.87
 2023,2,Japan,nuclear,5.41,5.37
 2023,2,Japan,oil,4.6,5.06
 2023,2,Japan,other,1.66,4.5
-2023,2,Japan,renewables,12.75,21.7
+2023,2,Japan,renewables,12.92,21.7
 2023,2,Japan,solar,6.09,5.98
-2023,2,Japan,total,73.42,80.98
+2023,2,Japan,total,73.6,80.98
 2023,2,Japan,wind,0.97,0.98
 2023,2,Latvia,coal,0.0,0.0
 2023,2,Latvia,fossil,0.24,0.22
@@ -23069,13 +23069,13 @@
 2023,3,Japan,coal,19.59,20.93
 2023,3,Japan,fossil,45.31,48.03
 2023,3,Japan,gas,22.13,24.42
-2023,3,Japan,hydro,5.87,6.98
+2023,3,Japan,hydro,6.03,6.98
 2023,3,Japan,nuclear,5.55,5.51
 2023,3,Japan,oil,3.59,2.67
 2023,3,Japan,other,1.9,5.1
-2023,3,Japan,renewables,17.19,26.64
+2023,3,Japan,renewables,17.35,26.64
 2023,3,Japan,solar,8.65,8.28
-2023,3,Japan,total,68.06,74.67
+2023,3,Japan,total,68.21,74.67
 2023,3,Japan,wind,0.77,0.77
 2023,3,Latvia,coal,0.0,0.0
 2023,3,Latvia,fossil,0.18,0.17
@@ -23531,13 +23531,13 @@
 2023,4,Japan,coal,15.32,16.11
 2023,4,Japan,fossil,36.01,38.22
 2023,4,Japan,gas,18.25,20.07
-2023,4,Japan,hydro,7.07,8.57
+2023,4,Japan,hydro,7.34,8.57
 2023,4,Japan,nuclear,6.03,5.99
 2023,4,Japan,oil,2.43,2.04
 2023,4,Japan,other,1.69,4.61
-2023,4,Japan,renewables,19.07,29.07
+2023,4,Japan,renewables,19.34,29.07
 2023,4,Japan,solar,9.23,8.91
-2023,4,Japan,total,61.1,67.29
+2023,4,Japan,total,61.37,67.29
 2023,4,Japan,wind,1.08,0.99
 2023,4,Latvia,coal,0.0,0.0
 2023,4,Latvia,fossil,0.01,0.01
@@ -23993,13 +23993,13 @@
 2023,5,Japan,coal,14.13,15.55
 2023,5,Japan,fossil,34.69,36.84
 2023,5,Japan,gas,18.99,19.76
-2023,5,Japan,hydro,7.75,9.57
+2023,5,Japan,hydro,8.05,9.57
 2023,5,Japan,nuclear,6.43,6.4
 2023,5,Japan,oil,1.57,1.53
 2023,5,Japan,other,1.72,4.66
-2023,5,Japan,renewables,20.08,31.05
+2023,5,Japan,renewables,20.38,31.05
 2023,5,Japan,solar,9.93,9.73
-2023,5,Japan,total,61.21,67.88
+2023,5,Japan,total,61.5,67.88
 2023,5,Japan,wind,0.68,0.68
 2023,5,Latvia,coal,0.0,0.0
 2023,5,Latvia,fossil,0.02,0.0
@@ -24455,13 +24455,13 @@
 2023,6,Japan,coal,16.38,18.25
 2023,6,Japan,fossil,40.92,43.7
 2023,6,Japan,gas,22.45,23.56
-2023,6,Japan,hydro,7.66,8.95
+2023,6,Japan,hydro,7.71,8.95
 2023,6,Japan,nuclear,6.48,6.45
 2023,6,Japan,oil,2.09,1.88
 2023,6,Japan,other,1.62,4.6
-2023,6,Japan,renewables,17.75,29.38
+2023,6,Japan,renewables,17.79,29.38
 2023,6,Japan,solar,7.9,8.8
-2023,6,Japan,total,65.15,73.08
+2023,6,Japan,total,65.19,73.08
 2023,6,Japan,wind,0.57,0.57
 2023,6,Latvia,coal,0.0,0.0
 2023,6,Latvia,fossil,0.06,0.06
@@ -24917,13 +24917,13 @@
 2023,7,Japan,coal,23.86,25.41
 2023,7,Japan,fossil,53.44,56.09
 2023,7,Japan,gas,26.6,27.84
-2023,7,Japan,hydro,7.38,8.82
+2023,7,Japan,hydro,7.55,8.82
 2023,7,Japan,nuclear,6.9,6.84
 2023,7,Japan,oil,2.98,2.85
 2023,7,Japan,other,1.87,5.47
-2023,7,Japan,renewables,19.55,31.1
+2023,7,Japan,renewables,19.73,31.1
 2023,7,Japan,solar,9.77,9.4
-2023,7,Japan,total,79.9,87.19
+2023,7,Japan,total,80.08,87.19
 2023,7,Japan,wind,0.53,0.58
 2023,7,Latvia,coal,0.0,0.0
 2023,7,Latvia,fossil,0.0,0.01
@@ -25379,13 +25379,13 @@
 2023,8,Japan,coal,26.78,26.72
 2023,8,Japan,fossil,56.97,59.63
 2023,8,Japan,gas,26.68,30.23
-2023,8,Japan,hydro,5.92,7.3
+2023,8,Japan,hydro,6.05,7.3
 2023,8,Japan,nuclear,7.83,7.79
 2023,8,Japan,oil,3.51,2.68
 2023,8,Japan,other,1.92,5.58
-2023,8,Japan,renewables,18.0,31.51
+2023,8,Japan,renewables,18.13,31.51
 2023,8,Japan,solar,9.56,10.22
-2023,8,Japan,total,82.8,91.14
+2023,8,Japan,total,82.92,91.14
 2023,8,Japan,wind,0.61,0.62
 2023,8,Latvia,coal,0.0,0.0
 2023,8,Latvia,fossil,0.09,0.08
@@ -25841,13 +25841,13 @@
 2023,9,Japan,coal,26.31,25.02
 2023,9,Japan,fossil,53.45,56.45
 2023,9,Japan,gas,24.11,28.63
-2023,9,Japan,hydro,4.0,5.43
+2023,9,Japan,hydro,4.24,5.43
 2023,9,Japan,nuclear,6.72,6.68
 2023,9,Japan,oil,3.04,2.8
 2023,9,Japan,other,1.83,5.34
-2023,9,Japan,renewables,14.04,26.58
+2023,9,Japan,renewables,14.28,26.58
 2023,9,Japan,solar,7.79,8.7
-2023,9,Japan,total,74.21,83.03
+2023,9,Japan,total,74.46,83.03
 2023,9,Japan,wind,0.42,0.43
 2023,9,Latvia,coal,0.0,0.0
 2023,9,Latvia,fossil,0.14,0.13
@@ -26303,13 +26303,13 @@
 2023,10,Japan,coal,19.82,20.66
 2023,10,Japan,fossil,41.6,44.04
 2023,10,Japan,gas,19.83,21.46
-2023,10,Japan,hydro,3.36,4.59
+2023,10,Japan,hydro,3.65,4.59
 2023,10,Japan,nuclear,7.01,6.98
 2023,10,Japan,oil,1.95,1.92
 2023,10,Japan,other,1.84,5.07
-2023,10,Japan,renewables,14.12,25.38
+2023,10,Japan,renewables,14.41,25.38
 2023,10,Japan,solar,8.12,7.98
-2023,10,Japan,total,62.74,69.42
+2023,10,Japan,total,63.02,69.42
 2023,10,Japan,wind,0.79,0.77
 2023,10,Latvia,coal,0.0,0.0
 2023,10,Latvia,fossil,0.1,0.09
@@ -26765,13 +26765,13 @@
 2023,11,Japan,coal,21.71,21.5
 2023,11,Japan,fossil,46.4,48.1
 2023,11,Japan,gas,22.38,24.82
-2023,11,Japan,hydro,3.26,4.41
+2023,11,Japan,hydro,3.55,4.41
 2023,11,Japan,nuclear,6.51,6.5
 2023,11,Japan,oil,2.31,1.78
 2023,11,Japan,other,1.82,4.72
-2023,11,Japan,renewables,12.31,23.81
+2023,11,Japan,renewables,12.61,23.81
 2023,11,Japan,solar,5.99,7.05
-2023,11,Japan,total,65.23,71.91
+2023,11,Japan,total,65.53,71.91
 2023,11,Japan,wind,1.24,1.13
 2023,11,Latvia,coal,0.0,0.0
 2023,11,Latvia,fossil,0.17,0.16
@@ -27227,13 +27227,13 @@
 2023,12,Japan,coal,24.68,27.18
 2023,12,Japan,fossil,56.05,58.68
 2023,12,Japan,gas,27.54,28.64
-2023,12,Japan,hydro,4.55,5.53
+2023,12,Japan,hydro,4.69,5.53
 2023,12,Japan,nuclear,6.28,6.26
 2023,12,Japan,oil,3.83,2.86
 2023,12,Japan,other,2.18,5.64
-2023,12,Japan,renewables,13.28,24.42
+2023,12,Japan,renewables,13.42,24.42
 2023,12,Japan,solar,5.33,5.81
-2023,12,Japan,total,75.62,83.1
+2023,12,Japan,total,75.76,83.1
 2023,12,Japan,wind,1.22,1.18
 2023,12,Latvia,coal,0.0,0.0
 2023,12,Latvia,fossil,0.21,0.17
@@ -27689,13 +27689,13 @@
 2024,1,Japan,coal,25.53,27.29
 2024,1,Japan,fossil,58.86,61.47
 2024,1,Japan,gas,27.57,30.71
-2024,1,Japan,hydro,4.53,5.53
+2024,1,Japan,hydro,4.78,5.53
 2024,1,Japan,nuclear,6.59,6.56
 2024,1,Japan,oil,5.75,3.46
 2024,1,Japan,other,2.26,6.03
-2024,1,Japan,renewables,13.86,25.35
+2024,1,Japan,renewables,14.11,25.35
 2024,1,Japan,solar,5.74,5.92
-2024,1,Japan,total,79.31,86.82
+2024,1,Japan,total,79.56,86.82
 2024,1,Japan,wind,1.33,1.31
 2024,1,Latvia,coal,0.0,0.0
 2024,1,Latvia,fossil,0.41,0.38
@@ -28151,13 +28151,13 @@
 2024,2,Japan,coal,22.7,24.45
 2024,2,Japan,fossil,52.55,55.36
 2024,2,Japan,gas,25.36,28.09
-2024,2,Japan,hydro,5.34,5.98
+2024,2,Japan,hydro,5.21,5.98
 2024,2,Japan,nuclear,6.75,6.72
 2024,2,Japan,oil,4.49,2.82
 2024,2,Japan,other,2.02,5.25
-2024,2,Japan,renewables,14.28,25.23
+2024,2,Japan,renewables,14.14,25.23
 2024,2,Japan,solar,5.83,6.19
-2024,2,Japan,total,73.58,80.59
+2024,2,Japan,total,73.45,80.59
 2024,2,Japan,wind,1.09,1.08
 2024,2,Latvia,coal,0.0,0.0
 2024,2,Latvia,fossil,0.32,0.29
@@ -28613,13 +28613,13 @@
 2024,3,Japan,coal,21.91,21.16
 2024,3,Japan,fossil,50.27,52.94
 2024,3,Japan,gas,25.56,29.8
-2024,3,Japan,hydro,5.91,7.14
+2024,3,Japan,hydro,6.01,7.14
 2024,3,Japan,nuclear,6.96,6.95
 2024,3,Japan,oil,2.79,1.98
 2024,3,Japan,other,2.24,5.59
-2024,3,Japan,renewables,17.57,28.58
+2024,3,Japan,renewables,17.67,28.58
 2024,3,Japan,solar,8.23,7.75
-2024,3,Japan,total,74.8,81.52
+2024,3,Japan,total,74.9,81.52
 2024,3,Japan,wind,1.19,1.15
 2024,3,Latvia,coal,0.0,0.0
 2024,3,Latvia,fossil,0.16,0.15
@@ -29075,13 +29075,13 @@
 2024,4,Japan,coal,14.48,15.36
 2024,4,Japan,fossil,34.36,36.09
 2024,4,Japan,gas,18.04,19.74
-2024,4,Japan,hydro,8.17,9.65
+2024,4,Japan,hydro,8.34,9.65
 2024,4,Japan,nuclear,6.75,6.7
 2024,4,Japan,oil,1.83,0.98
 2024,4,Japan,other,2.01,4.86
-2024,4,Japan,renewables,19.26,30.8
+2024,4,Japan,renewables,19.43,30.8
 2024,4,Japan,solar,8.28,8.77
-2024,4,Japan,total,60.37,66.89
+2024,4,Japan,total,60.54,66.89
 2024,4,Japan,wind,0.81,0.82
 2024,4,Latvia,coal,0.0,0.0
 2024,4,Latvia,fossil,0.04,0.04
@@ -29537,13 +29537,13 @@
 2024,5,Japan,coal,14.14,14.68
 2024,5,Japan,fossil,33.52,34.89
 2024,5,Japan,gas,17.98,19.28
-2024,5,Japan,hydro,6.96,8.78
+2024,5,Japan,hydro,7.24,8.78
 2024,5,Japan,nuclear,7.77,7.75
 2024,5,Japan,oil,1.39,0.92
 2024,5,Japan,other,2.12,4.9
-2024,5,Japan,renewables,19.92,32.12
+2024,5,Japan,renewables,20.19,32.12
 2024,5,Japan,solar,9.9,9.73
-2024,5,Japan,total,61.21,67.01
+2024,5,Japan,total,61.48,67.01
 2024,5,Japan,wind,0.93,0.95
 2024,5,Latvia,coal,0.0,0.0
 2024,5,Latvia,fossil,0.0,0.0
@@ -29999,13 +29999,13 @@
 2024,6,Japan,coal,16.19,16.97
 2024,6,Japan,fossil,38.75,39.5
 2024,6,Japan,gas,20.9,21.17
-2024,6,Japan,hydro,6.63,8.25
+2024,6,Japan,hydro,6.85,8.25
 2024,6,Japan,nuclear,7.27,7.24
 2024,6,Japan,oil,1.67,1.36
 2024,6,Japan,other,2.13,5.01
-2024,6,Japan,renewables,18.68,31.35
+2024,6,Japan,renewables,18.9,31.35
 2024,6,Japan,solar,9.29,10.18
-2024,6,Japan,total,64.7,70.85
+2024,6,Japan,total,64.92,70.85
 2024,6,Japan,wind,0.63,0.67
 2024,6,Latvia,coal,0.0,0.0
 2024,6,Latvia,fossil,0.06,0.0
@@ -30461,13 +30461,13 @@
 2024,7,Japan,coal,24.89,25.96
 2024,7,Japan,fossil,54.96,57.01
 2024,7,Japan,gas,27.27,28.95
-2024,7,Japan,hydro,8.22,9.68
+2024,7,Japan,hydro,8.34,9.68
 2024,7,Japan,nuclear,6.97,6.95
 2024,7,Japan,oil,2.79,2.1
 2024,7,Japan,other,2.2,5.48
-2024,7,Japan,renewables,20.43,32.22
+2024,7,Japan,renewables,20.55,32.22
 2024,7,Japan,solar,9.29,9.35
-2024,7,Japan,total,82.36,89.22
+2024,7,Japan,total,82.47,89.22
 2024,7,Japan,wind,0.72,0.76
 2024,7,Latvia,coal,0.0,0.0
 2024,7,Latvia,fossil,0.05,0.07
@@ -30923,13 +30923,13 @@
 2024,8,Japan,coal,26.11,28.17
 2024,8,Japan,fossil,58.27,60.44
 2024,8,Japan,gas,29.54,30.3
-2024,8,Japan,hydro,5.66,6.96
+2024,8,Japan,hydro,5.81,6.96
 2024,8,Japan,nuclear,6.63,6.57
 2024,8,Japan,oil,2.62,1.97
 2024,8,Japan,other,2.22,5.44
-2024,8,Japan,renewables,17.92,30.02
+2024,8,Japan,renewables,18.07,30.02
 2024,8,Japan,solar,9.57,10.52
-2024,8,Japan,total,82.81,90.46
+2024,8,Japan,total,82.97,90.46
 2024,8,Japan,wind,0.47,0.54
 2024,8,Latvia,coal,0.0,0.0
 2024,8,Latvia,fossil,0.1,0.1
@@ -31385,13 +31385,13 @@
 2024,9,Japan,coal,22.99,24.8
 2024,9,Japan,fossil,51.87,53.67
 2024,9,Japan,gas,26.31,27.29
-2024,9,Japan,hydro,5.16,6.77
+2024,9,Japan,hydro,5.46,6.77
 2024,9,Japan,nuclear,7.22,7.2
 2024,9,Japan,oil,2.58,1.58
 2024,9,Japan,other,2.29,5.43
-2024,9,Japan,renewables,16.5,29.29
+2024,9,Japan,renewables,16.79,29.29
 2024,9,Japan,solar,8.49,9.26
-2024,9,Japan,total,75.59,82.96
+2024,9,Japan,total,75.88,82.96
 2024,9,Japan,wind,0.56,0.63
 2024,9,Latvia,coal,0.0,0.0
 2024,9,Latvia,fossil,0.11,0.13
@@ -31847,13 +31847,13 @@
 2024,10,Japan,coal,20.53,21.52
 2024,10,Japan,fossil,43.77,45.52
 2024,10,Japan,gas,21.33,22.76
-2024,10,Japan,hydro,4.44,5.82
+2024,10,Japan,hydro,4.7,5.82
 2024,10,Japan,nuclear,7.16,7.14
 2024,10,Japan,oil,1.91,1.24
 2024,10,Japan,other,2.25,5.85
-2024,10,Japan,renewables,13.79,26.97
+2024,10,Japan,renewables,14.05,26.97
 2024,10,Japan,solar,6.3,7.28
-2024,10,Japan,total,64.73,72.49
+2024,10,Japan,total,64.99,72.49
 2024,10,Japan,wind,0.81,0.87
 2024,10,Latvia,coal,0.0,0.0
 2024,10,Latvia,fossil,0.06,0.06
@@ -32309,13 +32309,13 @@
 2024,11,Japan,coal,19.39,21.02
 2024,11,Japan,fossil,43.38,44.73
 2024,11,Japan,gas,22.38,22.4
-2024,11,Japan,hydro,4.23,5.53
+2024,11,Japan,hydro,4.43,5.53
 2024,11,Japan,nuclear,6.88,6.85
 2024,11,Japan,oil,1.61,1.31
 2024,11,Japan,other,2.28,5.29
-2024,11,Japan,renewables,13.5,25.11
+2024,11,Japan,renewables,13.7,25.11
 2024,11,Japan,solar,5.9,6.32
-2024,11,Japan,total,63.75,69.84
+2024,11,Japan,total,63.95,69.84
 2024,11,Japan,wind,1.09,1.12
 2024,11,Latvia,coal,0.0,0.0
 2024,11,Latvia,fossil,0.15,0.14
@@ -32771,13 +32771,13 @@
 2024,12,Japan,coal,25.57,25.4
 2024,12,Japan,fossil,55.21,55.78
 2024,12,Japan,gas,26.94,28.4
-2024,12,Japan,hydro,4.05,5.25
+2024,12,Japan,hydro,4.3,5.25
 2024,12,Japan,nuclear,8.12,8.09
 2024,12,Japan,oil,2.69,1.99
 2024,12,Japan,other,2.58,6.19
-2024,12,Japan,renewables,14.04,27.0
+2024,12,Japan,renewables,14.29,27.0
 2024,12,Japan,solar,5.81,5.84
-2024,12,Japan,total,77.36,82.78
+2024,12,Japan,total,77.61,82.78
 2024,12,Japan,wind,1.6,1.63
 2024,12,Latvia,coal,0.0,0.0
 2024,12,Latvia,fossil,0.13,0.12
@@ -33233,13 +33233,13 @@
 2025,1,Japan,coal,26.17,28.41
 2025,1,Japan,fossil,58.93,61.47
 2025,1,Japan,gas,29.45,29.89
-2025,1,Japan,hydro,3.74,4.97
+2025,1,Japan,hydro,4.12,4.97
 2025,1,Japan,nuclear,8.35,8.34
 2025,1,Japan,oil,3.32,3.17
 2025,1,Japan,other,2.7,6.39
-2025,1,Japan,renewables,13.95,27.2
+2025,1,Japan,renewables,14.33,27.2
 2025,1,Japan,solar,6.29,6.22
-2025,1,Japan,total,81.23,88.67
+2025,1,Japan,total,81.61,88.67
 2025,1,Japan,wind,1.22,1.27
 2025,1,Latvia,coal,0.0,0.0
 2025,1,Latvia,fossil,0.19,0.19
@@ -33695,13 +33695,13 @@
 2025,2,Japan,coal,24.11,25.85
 2025,2,Japan,fossil,54.59,57.41
 2025,2,Japan,gas,27.7,28.67
-2025,2,Japan,hydro,3.23,4.18
+2025,2,Japan,hydro,3.44,4.18
 2025,2,Japan,nuclear,7.88,7.85
 2025,2,Japan,oil,2.78,2.89
 2025,2,Japan,other,2.29,5.56
-2025,2,Japan,renewables,13.87,26.09
+2025,2,Japan,renewables,14.08,26.09
 2025,2,Japan,solar,6.85,6.92
-2025,2,Japan,total,76.34,83.5
+2025,2,Japan,total,76.55,83.5
 2025,2,Japan,wind,1.5,1.57
 2025,2,Latvia,coal,0.0,0.0
 2025,2,Latvia,fossil,0.42,0.39
@@ -34157,13 +34157,13 @@
 2025,3,Japan,coal,18.86,22.39
 2025,3,Japan,fossil,47.19,49.26
 2025,3,Japan,gas,26.56,25.18
-2025,3,Japan,hydro,4.63,6.22
+2025,3,Japan,hydro,5.07,6.22
 2025,3,Japan,nuclear,8.47,8.47
 2025,3,Japan,oil,1.77,1.69
 2025,3,Japan,other,2.7,6.06
-2025,3,Japan,renewables,16.73,30.08
+2025,3,Japan,renewables,17.17,30.08
 2025,3,Japan,solar,8.06,7.94
-2025,3,Japan,total,72.38,79.34
+2025,3,Japan,total,72.82,79.34
 2025,3,Japan,wind,1.34,1.38
 2025,3,Latvia,coal,0.0,0.0
 2025,3,Latvia,fossil,0.17,0.16
@@ -34619,13 +34619,13 @@
 2025,4,Japan,coal,14.47,15.14
 2025,4,Japan,fossil,33.99,36.1
 2025,4,Japan,gas,18.6,20.23
-2025,4,Japan,hydro,6.51,8.32
+2025,4,Japan,hydro,6.84,8.32
 2025,4,Japan,nuclear,7.45,7.42
 2025,4,Japan,oil,0.92,0.74
 2025,4,Japan,other,2.58,5.69
-2025,4,Japan,renewables,19.95,32.04
+2025,4,Japan,renewables,20.27,32.04
 2025,4,Japan,solar,9.73,9.5
-2025,4,Japan,total,61.39,68.14
+2025,4,Japan,total,61.72,68.14
 2025,4,Japan,wind,1.12,1.11
 2025,4,Latvia,coal,0.0,0.0
 2025,4,Latvia,fossil,0.04,0.06
@@ -34838,7 +34838,7 @@
 2025,4,United Kingdom,wind,3.88,4.99
 2025,4,United States,coal,46.72,47.98
 2025,4,United States,fossil,153.24,164.39
-2025,4,United States,gas,106.14,114.24
+2025,4,United States,gas,106.13,114.24
 2025,4,United States,hydro,23.47,24.21
 2025,4,United States,nuclear,57.95,57.87
 2025,4,United States,oil,0.38,2.17
@@ -35081,13 +35081,13 @@
 2025,5,Japan,coal,13.34,14.54
 2025,5,Japan,fossil,31.7,33.49
 2025,5,Japan,gas,17.52,18.03
-2025,5,Japan,hydro,8.17,10.04
+2025,5,Japan,hydro,8.46,10.04
 2025,5,Japan,nuclear,7.81,7.76
 2025,5,Japan,oil,0.84,0.92
 2025,5,Japan,other,2.42,5.61
-2025,5,Japan,renewables,20.77,34.72
+2025,5,Japan,renewables,21.06,34.72
 2025,5,Japan,solar,9.2,10.34
-2025,5,Japan,total,60.28,68.21
+2025,5,Japan,total,60.57,68.21
 2025,5,Japan,wind,0.98,0.96
 2025,5,Latvia,coal,0.0,0.0
 2025,5,Latvia,fossil,0.0,0.02
@@ -35300,7 +35300,7 @@
 2025,5,United Kingdom,wind,4.67,5.75
 2025,5,United States,coal,50.14,51.0
 2025,5,United States,fossil,175.91,186.49
-2025,5,United States,gas,125.39,133.24
+2025,5,United States,gas,125.4,133.24
 2025,5,United States,hydro,25.5,26.23
 2025,5,United States,nuclear,61.42,62.12
 2025,5,United States,oil,0.38,2.25
@@ -35543,13 +35543,13 @@
 2025,6,Japan,coal,17.21,18.58
 2025,6,Japan,fossil,40.07,41.93
 2025,6,Japan,gas,21.48,21.75
-2025,6,Japan,hydro,7.81,9.42
+2025,6,Japan,hydro,8.02,9.42
 2025,6,Japan,nuclear,7.81,7.76
 2025,6,Japan,oil,1.38,1.6
 2025,6,Japan,other,2.37,5.63
-2025,6,Japan,renewables,20.24,33.46
+2025,6,Japan,renewables,20.45,33.46
 2025,6,Japan,solar,9.33,9.89
-2025,6,Japan,total,68.12,75.39
+2025,6,Japan,total,68.33,75.39
 2025,6,Japan,wind,0.72,0.76
 2025,6,Latvia,coal,0.0,0.0
 2025,6,Latvia,fossil,0.0,0.01
@@ -35760,16 +35760,16 @@
 2025,6,United Kingdom,solar,2.59,2.65
 2025,6,United Kingdom,total,17.14,21.58
 2025,6,United Kingdom,wind,5.41,7.0
-2025,6,United States,coal,65.03,67.41
-2025,6,United States,fossil,218.75,232.96
+2025,6,United States,coal,65.02,67.41
+2025,6,United States,fossil,218.74,232.96
 2025,6,United States,gas,152.96,162.55
 2025,6,United States,hydro,23.57,24.79
-2025,6,United States,nuclear,65.93,66.2
+2025,6,United States,nuclear,65.92,66.2
 2025,6,United States,oil,0.75,2.99
 2025,6,United States,other,4.14,5.97
-2025,6,United States,renewables,92.44,173.63
+2025,6,United States,renewables,92.45,173.63
 2025,6,United States,solar,28.76,41.03
-2025,6,United States,total,377.12,406.59
+2025,6,United States,total,377.1,406.59
 2025,6,United States,wind,35.98,35.65
 2025,7,Argentina,coal,0.39,0.36
 2025,7,Argentina,fossil,6.55,6.79
@@ -36005,13 +36005,13 @@
 2025,7,Japan,coal,25.02,26.68
 2025,7,Japan,fossil,54.95,57.41
 2025,7,Japan,gas,27.91,28.44
-2025,7,Japan,hydro,6.24,7.86
+2025,7,Japan,hydro,6.48,7.86
 2025,7,Japan,nuclear,8.04,8.01
 2025,7,Japan,oil,2.02,2.3
 2025,7,Japan,other,2.62,6.55
-2025,7,Japan,renewables,20.82,34.49
+2025,7,Japan,renewables,21.06,34.49
 2025,7,Japan,solar,11.31,11.42
-2025,7,Japan,total,83.82,91.9
+2025,7,Japan,total,84.06,91.9
 2025,7,Japan,wind,0.65,0.65
 2025,7,Latvia,coal,0.0,0.0
 2025,7,Latvia,fossil,0.06,0.06
@@ -36222,16 +36222,16 @@
 2025,7,United Kingdom,solar,2.35,2.55
 2025,7,United Kingdom,total,16.72,20.99
 2025,7,United Kingdom,wind,3.32,4.41
-2025,7,United States,coal,82.56,83.59
+2025,7,United States,coal,82.57,83.59
 2025,7,United States,fossil,271.44,286.44
 2025,7,United States,gas,187.73,199.6
-2025,7,United States,hydro,21.34,23.41
+2025,7,United States,hydro,21.33,23.41
 2025,7,United States,nuclear,70.39,70.75
 2025,7,United States,oil,1.15,3.25
 2025,7,United States,other,5.08,6.28
 2025,7,United States,renewables,88.36,175.1
 2025,7,United States,solar,29.88,43.0
-2025,7,United States,total,430.18,461.54
+2025,7,United States,total,430.19,461.54
 2025,7,United States,wind,32.06,31.65
 2025,8,Argentina,coal,0.35,0.3
 2025,8,Argentina,fossil,6.51,6.27
@@ -36467,13 +36467,13 @@
 2025,8,Japan,coal,25.86,28.0
 2025,8,Japan,fossil,55.48,57.58
 2025,8,Japan,gas,27.81,27.56
-2025,8,Japan,hydro,5.81,7.47
+2025,8,Japan,hydro,6.06,7.47
 2025,8,Japan,nuclear,7.46,7.4
 2025,8,Japan,oil,1.81,2.01
 2025,8,Japan,other,2.67,6.7
-2025,8,Japan,renewables,19.11,33.63
+2025,8,Japan,renewables,19.36,33.63
 2025,8,Japan,solar,10.08,11.49
-2025,8,Japan,total,82.05,91.21
+2025,8,Japan,total,82.3,91.21
 2025,8,Japan,wind,0.55,0.57
 2025,8,Latvia,coal,0.0,0.0
 2025,8,Latvia,fossil,0.06,0.06
@@ -36688,12 +36688,12 @@
 2025,8,United States,fossil,255.46,265.58
 2025,8,United States,gas,182.75,190.01
 2025,8,United States,hydro,20.16,22.74
-2025,8,United States,nuclear,70.28,70.68
+2025,8,United States,nuclear,70.27,70.68
 2025,8,United States,oil,0.68,2.71
 2025,8,United States,other,4.37,6.27
 2025,8,United States,renewables,81.2,167.73
 2025,8,United States,solar,28.62,40.9
-2025,8,United States,total,406.95,433.31
+2025,8,United States,total,406.93,433.31
 2025,8,United States,wind,28.05,27.14
 2025,9,Argentina,coal,0.27,0.23
 2025,9,Argentina,fossil,5.03,4.96
@@ -36929,13 +36929,13 @@
 2025,9,Japan,coal,23.01,25.07
 2025,9,Japan,fossil,49.8,51.99
 2025,9,Japan,gas,25.33,24.94
-2025,9,Japan,hydro,5.32,6.82
+2025,9,Japan,hydro,5.52,6.82
 2025,9,Japan,nuclear,7.38,7.32
 2025,9,Japan,oil,1.46,1.98
 2025,9,Japan,other,2.59,6.55
-2025,9,Japan,renewables,16.76,30.97
+2025,9,Japan,renewables,16.96,30.97
 2025,9,Japan,solar,8.16,9.57
-2025,9,Japan,total,73.94,82.96
+2025,9,Japan,total,74.14,82.96
 2025,9,Japan,wind,0.7,0.7
 2025,9,Latvia,coal,0.0,0.0
 2025,9,Latvia,fossil,0.09,0.08
@@ -37146,11 +37146,11 @@
 2025,9,United Kingdom,solar,1.71,1.77
 2025,9,United Kingdom,total,17.38,21.66
 2025,9,United Kingdom,wind,6.37,7.91
-2025,9,United States,coal,59.34,61.34
+2025,9,United States,coal,59.33,61.34
 2025,9,United States,fossil,217.1,229.21
-2025,9,United States,gas,157.25,165.51
+2025,9,United States,gas,157.26,165.51
 2025,9,United States,hydro,15.56,17.65
-2025,9,United States,nuclear,65.51,65.43
+2025,9,United States,nuclear,65.5,65.43
 2025,9,United States,oil,0.51,2.36
 2025,9,United States,other,3.77,5.97
 2025,9,United States,renewables,70.56,150.88
@@ -37391,13 +37391,13 @@
 2025,10,Japan,coal,20.33,19.51
 2025,10,Japan,fossil,43.0,45.34
 2025,10,Japan,gas,21.5,24.35
-2025,10,Japan,hydro,4.03,5.35
+2025,10,Japan,hydro,4.22,5.35
 2025,10,Japan,nuclear,7.36,7.31
 2025,10,Japan,oil,1.17,1.48
 2025,10,Japan,other,2.82,6.42
-2025,10,Japan,renewables,14.15,27.54
+2025,10,Japan,renewables,14.34,27.54
 2025,10,Japan,solar,6.44,7.62
-2025,10,Japan,total,64.52,72.87
+2025,10,Japan,total,64.71,72.87
 2025,10,Japan,wind,0.86,0.84
 2025,10,Latvia,coal,0.0,0.0
 2025,10,Latvia,fossil,0.14,0.13
@@ -37853,13 +37853,13 @@
 2025,11,Japan,coal,20.28,19.05
 2025,11,Japan,fossil,43.15,44.58
 2025,11,Japan,gas,21.6,23.96
-2025,11,Japan,hydro,3.45,5.08
+2025,11,Japan,hydro,3.78,5.08
 2025,11,Japan,nuclear,7.62,7.01
 2025,11,Japan,oil,1.26,1.56
 2025,11,Japan,other,2.62,5.79
-2025,11,Japan,renewables,13.85,25.57
+2025,11,Japan,renewables,14.18,25.57
 2025,11,Japan,solar,6.48,6.61
-2025,11,Japan,total,64.62,70.15
+2025,11,Japan,total,64.95,70.15
 2025,11,Japan,wind,1.3,1.08
 2025,11,Latvia,coal,0.0,0.0
 2025,11,Latvia,fossil,0.2,0.19
@@ -38071,7 +38071,7 @@
 2025,11,United Kingdom,total,21.37,26.44
 2025,11,United Kingdom,wind,7.92,9.9
 2025,11,United States,coal,54.54,57.18
-2025,11,United States,fossil,175.01,189.28
+2025,11,United States,fossil,175.02,189.28
 2025,11,United States,gas,119.98,129.55
 2025,11,United States,hydro,16.7,20.05
 2025,11,United States,nuclear,63.13,63.78
@@ -38315,13 +38315,13 @@
 2025,12,Japan,coal,24.04,23.02
 2025,12,Japan,fossil,52.8,55.77
 2025,12,Japan,gas,26.88,30.38
-2025,12,Japan,hydro,4.21,4.82
+2025,12,Japan,hydro,4.4,4.82
 2025,12,Japan,nuclear,8.72,8.28
 2025,12,Japan,oil,1.88,2.37
 2025,12,Japan,other,2.96,6.78
-2025,12,Japan,renewables,14.31,27.56
+2025,12,Japan,renewables,14.5,27.56
 2025,12,Japan,solar,5.47,6.11
-2025,12,Japan,total,75.82,83.33
+2025,12,Japan,total,76.02,83.33
 2025,12,Japan,wind,1.67,1.57
 2025,12,Latvia,coal,0.0,0.0
 2025,12,Latvia,fossil,0.14,0.13
