@@ -35300,7 +35300,7 @@
 2025,5,United Kingdom,wind,4.67,5.75
 2025,5,United States,coal,50.14,51.0
 2025,5,United States,fossil,175.91,186.49
-2025,5,United States,gas,125.39,133.24
+2025,5,United States,gas,125.4,133.24
 2025,5,United States,hydro,25.5,26.23
 2025,5,United States,nuclear,61.42,62.12
 2025,5,United States,oil,0.38,2.25
@@ -35760,16 +35760,16 @@
 2025,6,United Kingdom,solar,2.59,2.65
 2025,6,United Kingdom,total,17.14,21.58
 2025,6,United Kingdom,wind,5.41,7.0
-2025,6,United States,coal,65.02,67.41
+2025,6,United States,coal,65.03,67.41
 2025,6,United States,fossil,218.74,232.96
 2025,6,United States,gas,152.96,162.55
 2025,6,United States,hydro,23.57,24.79
-2025,6,United States,nuclear,65.93,66.2
+2025,6,United States,nuclear,65.92,66.2
 2025,6,United States,oil,0.75,2.99
 2025,6,United States,other,4.14,5.97
-2025,6,United States,renewables,92.45,173.63
+2025,6,United States,renewables,92.44,173.63
 2025,6,United States,solar,28.76,41.03
-2025,6,United States,total,377.11,406.59
+2025,6,United States,total,377.1,406.59
 2025,6,United States,wind,35.98,35.65
 2025,7,Argentina,coal,0.39,0.36
 2025,7,Argentina,fossil,6.55,6.79
@@ -36222,16 +36222,16 @@
 2025,7,United Kingdom,solar,2.35,2.55
 2025,7,United Kingdom,total,16.72,20.99
 2025,7,United Kingdom,wind,3.32,4.41
-2025,7,United States,coal,82.57,83.59
-2025,7,United States,fossil,271.43,286.44
-2025,7,United States,gas,187.72,199.6
-2025,7,United States,hydro,21.33,23.41
+2025,7,United States,coal,82.56,83.59
+2025,7,United States,fossil,271.44,286.44
+2025,7,United States,gas,187.73,199.6
+2025,7,United States,hydro,21.34,23.41
 2025,7,United States,nuclear,70.39,70.75
 2025,7,United States,oil,1.15,3.25
 2025,7,United States,other,5.08,6.28
 2025,7,United States,renewables,88.36,175.1
 2025,7,United States,solar,29.88,43.0
-2025,7,United States,total,430.19,461.54
+2025,7,United States,total,430.18,461.54
 2025,7,United States,wind,32.06,31.65
 2025,8,Argentina,coal,0.35,0.3
 2025,8,Argentina,fossil,6.51,6.27
@@ -36691,7 +36691,7 @@
 2025,8,United States,nuclear,70.28,70.68
 2025,8,United States,oil,0.68,2.71
 2025,8,United States,other,4.37,6.27
-2025,8,United States,renewables,81.2,167.73
+2025,8,United States,renewables,81.21,167.73
 2025,8,United States,solar,28.62,40.9
 2025,8,United States,total,406.95,433.31
 2025,8,United States,wind,28.05,27.14
@@ -38079,7 +38079,7 @@
 2025,11,United States,other,3.75,5.88
 2025,11,United States,renewables,77.64,154.5
 2025,11,United States,solar,17.04,24.08
-2025,11,United States,total,315.79,343.77
+2025,11,United States,total,315.78,343.77
 2025,11,United States,wind,40.15,40.7
 2025,12,Argentina,coal,0.03,0.37
 2025,12,Argentina,fossil,7.06,7.84
