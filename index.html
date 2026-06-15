@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CM Power</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="static_site/vendor/semantic.min.css">
+  <link rel="stylesheet" href="tools/style.css">
+  <link rel="stylesheet" href="static_site/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <img class="brand-logo" src="tools/logo_edited.png" alt="CM Power">
+
+    <nav class="tab-list" aria-label="Dashboard views">
+      <button class="tab-button is-active" type="button" data-tab="overview">Overview</button>
+      <button class="tab-button" type="button" data-tab="line">Daily Trends</button>
+      <button class="tab-button" type="button" data-tab="stacked">Source Share</button>
+      <button class="tab-button" type="button" data-tab="scatter">IEA Compare</button>
+    </nav>
+
+    <section class="control-group">
+      <label for="energySelect">Energy Type</label>
+      <select id="energySelect"></select>
+    </section>
+
+    <section class="control-group" data-filter="continent">
+      <label for="continentSelect">Region</label>
+      <select id="continentSelect"></select>
+    </section>
+
+    <section class="control-group" data-filter="stacked">
+      <label for="stackedSelect">Sort By</label>
+      <select id="stackedSelect"></select>
+    </section>
+
+    <label class="toggle-row" data-filter="chart-tooltip">
+      <input id="hoverTooltipToggle" type="checkbox">
+      <span>Hover tooltips</span>
+    </label>
+
+    <section class="control-group" data-filter="years">
+      <label>Years</label>
+      <div id="yearButtons" class="year-buttons"></div>
+    </section>
+
+    <label class="toggle-row" data-filter="details">
+      <input id="detailsToggle" type="checkbox">
+      <span>Show details</span>
+    </label>
+
+    <a class="download-link" href="data/data_for_download.csv.gz" download>
+      Download compressed data
+    </a>
+  </aside>
+
+  <main class="workspace">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">CM Power Database</p>
+        <h1 id="pageTitle">Overview</h1>
+      </div>
+      <p id="statusText" class="status-text">Ready</p>
+    </header>
+
+    <section id="overviewPanel" class="panel is-active" data-panel="overview">
+      <div id="scorecardContainer" class="scorecard-shell"></div>
+    </section>
+
+    <section id="linePanel" class="panel chart-panel" data-panel="line">
+      <div id="lineChart" class="chart"></div>
+    </section>
+
+    <section id="stackedPanel" class="panel chart-panel" data-panel="stacked">
+      <div id="stackedChart" class="chart"></div>
+    </section>
+
+    <section id="scatterPanel" class="panel chart-panel" data-panel="scatter">
+      <div id="scatterChart" class="chart"></div>
+    </section>
+  </main>
+
+  <script src="static_site/vendor/echarts.min.js"></script>
+  <script src="static_site/app.js"></script>
+</body>
+</html>
