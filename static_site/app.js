@@ -265,6 +265,21 @@ function isDailyTrendYearSelected(option, year) {
   return !legend || !legend.selected || legend.selected[year] !== false;
 }
 
+function setDailyTrendAllYearsSelected(option) {
+  const legend = getDailyTrendLegend(option);
+  if (!legend || !Array.isArray(legend.data)) {
+    return;
+  }
+
+  legend.selected = legend.selected || {};
+  legend.data.forEach((item) => {
+    const name = typeof item === "string" ? item : item.name;
+    if (name) {
+      legend.selected[name] = true;
+    }
+  });
+}
+
 function styleDailyTrendSeries(option) {
   if (!Array.isArray(option.series)) {
     return;
@@ -348,6 +363,7 @@ function applyDailyTrendTheme(option) {
   });
 
   if (option.legend) {
+    setDailyTrendAllYearsSelected(option);
     option.legend.top = 52;
     option.legend.icon = "roundRect";
     option.legend.itemWidth = 18;
