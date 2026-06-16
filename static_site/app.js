@@ -13,7 +13,15 @@ const PAGE_TITLES = {
   overview: "Overview",
   line: "Daily Trends",
   stacked: "Source Share",
-  scatter: "IEA Compare"
+  scatter: "IEA Compare",
+  map: "Global Map"
+};
+
+const WORLD_MAP_NAME = "cmPowerWorld";
+const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
+const MONTH_INDEX = {
+  Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+  Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
 };
 
 const DAILY_TREND_YEAR_COLORS = {
@@ -32,12 +40,15 @@ const state = {
   energy: "total",
   continent: "World",
   stacked: "Fossil",
-  details: false
+  details: false,
+  mapDateIndex: null
 };
 
 const jsonCache = new Map();
+const mapDataCache = new Map();
 const charts = {};
 let scatterRecords = null;
+let worldMapRegistered = false;
 
 const els = {
   status: document.getElementById("statusText"),
@@ -49,7 +60,13 @@ const els = {
   scorecard: document.getElementById("scorecardContainer"),
   lineChart: document.getElementById("lineChart"),
   stackedChart: document.getElementById("stackedChart"),
-  scatterChart: document.getElementById("scatterChart")
+  scatterChart: document.getElementById("scatterChart"),
+  mapChart: document.getElementById("mapChart"),
+  mapDateSlider: document.getElementById("mapDateSlider"),
+  mapDateLabel: document.getElementById("mapDateLabel"),
+  mapDateValue: document.getElementById("mapDateValue"),
+  mapCountryCount: document.getElementById("mapCountryCount"),
+  mapTotalValue: document.getElementById("mapTotalValue")
 };
 
 function titleCase(value) {
@@ -463,6 +480,260 @@ async function renderStackedChart() {
   }
 }
 
+function dateFromYearDayLabel(year, dayLabel) {
+  const [monthLabel, dayText] = dayLabel.split("-");
+  const month = MONTH_INDEX[monthLabel];
+  const day = Number(dayText);
+  const numericYear = Number(year);
+  if (month === undefined || !day || !numericYear) {
+    return null;
+  }
+
+  const date = new Date(Date.UTC(numericYear, month, day));
+  if (
+    date.getUTCFullYear() !== numericYear ||
+    date.getUTCMonth() !== month ||
+    date.getUTCDate() !== day
+  ) {
+    return null;
+  }
+
+  return date.toISOString().slice(0, 10);
+}
+
+function formatGwh(value) {
+  if (!Number.isFinite(value)) {
+    return "-";
+  }
+  return `${Math.round(value).toLocaleString()} GWh`;
+}
+
+function quantile(values, probability) {
+  const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+  if (!sorted.length) {
+    return 0;
+  }
+  const index = (sorted.length - 1) * probability;
+  const lower = Math.floor(index);
+  const upper = Math.ceil(index);
+  if (lower === upper) {
+    return sorted[lower];
+  }
+  return sorted[lower] + (sorted[upper] - sorted[lower]) * (index - lower);
+}
+
+async function ensureWorldMap() {
+  if (worldMapRegistered) {
+    return;
+  }
+  const geoJson = await fetchJson("static_site/world-countries.geojson");
+  echarts.registerMap(WORLD_MAP_NAME, geoJson);
+  worldMapRegistered = true;
+}
+
+async function loadMapData(energyType) {
+  if (mapDataCache.has(energyType)) {
+    return mapDataCache.get(energyType);
+  }
+
+  const config = await fetchJson(`tools/line_chart/${energyType}.json`);
+  const countries = config.countries.map((country) => country.name);
+  const dayLabels = config.option.xAxis[0].data;
+  const seriesByCountryYear = new Map();
+
+  config.option.series.forEach((series) => {
+    const country = countries[series.xAxisIndex];
+    if (country) {
+      seriesByCountryYear.set(`${country}|${series.name}`, series.data);
+    }
+  });
+
+  const dates = [];
+  config.years.forEach((year) => {
+    dayLabels.forEach((dayLabel, dayIndex) => {
+      const date = dateFromYearDayLabel(year, dayLabel);
+      if (!date) {
+        return;
+      }
+
+      const data = [];
+      const rawValues = [];
+      let total = 0;
+
+      countries.forEach((country) => {
+        if (NON_MAP_COUNTRIES.has(country)) {
+          return;
+        }
+
+        const values = seriesByCountryYear.get(`${country}|${year}`);
+        const rawValue = values ? values[dayIndex] : null;
+        if (!Number.isFinite(rawValue) || rawValue <= 0) {
+          return;
+        }
+
+        data.push({
+          name: country,
+          value: Math.log10(rawValue + 1),
+          rawValue
+        });
+        rawValues.push(rawValue);
+        total += rawValue;
+      });
+
+      if (data.length) {
+        dates.push({
+          date,
+          data,
+          countryCount: data.length,
+          total,
+          visualMax: Math.max(1, Math.log10(quantile(rawValues, 0.95) + 1))
+        });
+      }
+    });
+  });
+
+  const maxCountryCount = Math.max(...dates.map((entry) => entry.countryCount));
+  const minimumDefaultCoverage = Math.max(1, Math.floor(maxCountryCount * 0.75));
+  let defaultIndex = dates.length - 1;
+  for (let index = dates.length - 1; index >= 0; index -= 1) {
+    if (dates[index].countryCount >= minimumDefaultCoverage) {
+      defaultIndex = index;
+      break;
+    }
+  }
+  const mapData = { dates, defaultIndex };
+  mapDataCache.set(energyType, mapData);
+  return mapData;
+}
+
+function mapOptionForDate(entry) {
+  const maxLabel = formatGwh(Math.pow(10, entry.visualMax) - 1);
+
+  return {
+    backgroundColor: "#fbfcfc",
+    tooltip: {
+      trigger: "item",
+      confine: true,
+      borderWidth: 0,
+      backgroundColor: "rgba(30, 39, 38, 0.92)",
+      textStyle: { color: "#ffffff" },
+      formatter: (params) => {
+        if (!params.data || !Number.isFinite(params.data.rawValue)) {
+          return `<strong>${params.name}</strong><br>No CM Power data`;
+        }
+        return [
+          `<strong>${params.name}</strong>`,
+          entry.date,
+          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`
+        ].join("<br>");
+      }
+    },
+    visualMap: {
+      min: 0,
+      max: entry.visualMax,
+      left: 24,
+      bottom: 26,
+      itemWidth: 12,
+      itemHeight: 142,
+      calculable: false,
+      text: [maxLabel, "0 GWh"],
+      textGap: 10,
+      textStyle: {
+        color: "#53625f",
+        fontSize: 11,
+        fontWeight: 700
+      },
+      inRange: {
+        color: ["#d8eee8", "#8dcbbd", "#329487", "#184b60"]
+      },
+      outOfRange: {
+        color: "#edf2f0"
+      }
+    },
+    series: [{
+      name: titleCase(state.energy),
+      type: "map",
+      map: WORLD_MAP_NAME,
+      data: entry.data,
+      roam: true,
+      zoom: 1.12,
+      top: 38,
+      left: 20,
+      right: 20,
+      bottom: 28,
+      selectedMode: false,
+      label: {
+        show: false
+      },
+      itemStyle: {
+        areaColor: "#edf2f0",
+        borderColor: "#ffffff",
+        borderWidth: 0.7
+      },
+      emphasis: {
+        disabled: false,
+        label: { show: false },
+        itemStyle: {
+          areaColor: "#f1c66d",
+          borderColor: "#ffffff",
+          borderWidth: 0.9
+        }
+      }
+    }]
+  };
+}
+
+function updateMapStats(entry) {
+  els.mapDateValue.textContent = entry.date;
+  els.mapCountryCount.textContent = entry.countryCount.toLocaleString();
+  els.mapTotalValue.textContent = formatGwh(entry.total);
+  els.mapDateLabel.textContent = entry.date;
+}
+
+async function updateMapForDate() {
+  const mapData = await loadMapData(state.energy);
+  const entry = mapData.dates[state.mapDateIndex];
+  if (!entry) {
+    return;
+  }
+
+  updateMapStats(entry);
+  els.mapDateSlider.value = String(state.mapDateIndex);
+
+  if (charts.map) {
+    charts.map.setOption(mapOptionForDate(entry), true);
+    setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
+  } else {
+    setChart(els.mapChart, "map", mapOptionForDate(entry), 680);
+  }
+}
+
+async function renderMapChart() {
+  setStatus("Loading global map...");
+  try {
+    await ensureWorldMap();
+    const mapData = await loadMapData(state.energy);
+    if (!mapData.dates.length) {
+      throw new Error(`No map data for ${state.energy}`);
+    }
+
+    const latestIndex = mapData.dates.length - 1;
+    if (state.mapDateIndex === null || state.mapDateIndex > latestIndex) {
+      state.mapDateIndex = mapData.defaultIndex;
+    }
+
+    els.mapDateSlider.max = String(latestIndex);
+    els.mapDateSlider.value = String(state.mapDateIndex);
+    const entry = mapData.dates[state.mapDateIndex];
+    updateMapStats(entry);
+    setChart(els.mapChart, "map", mapOptionForDate(entry), 680);
+    setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
+  } catch (error) {
+    showError(els.mapChart, error);
+    setStatus("Global map failed");
+  }
+}
+
 function parseCsv(text) {
   const lines = text.trim().split(/\r?\n/);
   const headers = lines.shift().split(",").map((header) => header.replace(/^\uFEFF/, ""));
@@ -619,6 +890,8 @@ function render() {
     renderStackedChart();
   } else if (state.tab === "scatter") {
     renderScatterChart();
+  } else if (state.tab === "map") {
+    renderMapChart();
   }
 }
 
@@ -645,6 +918,13 @@ function bindEvents() {
   els.details.addEventListener("change", () => {
     state.details = els.details.checked;
     render();
+  });
+
+  els.mapDateSlider.addEventListener("input", () => {
+    state.mapDateIndex = Number(els.mapDateSlider.value);
+    if (state.tab === "map") {
+      updateMapForDate();
+    }
   });
 
   let resizeTimer = null;
