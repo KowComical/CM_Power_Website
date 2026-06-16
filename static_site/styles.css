@@ -195,6 +195,10 @@ h1 {
   box-shadow: var(--shadow);
 }
 
+#linePanel.chart-panel {
+  background: #f7fafb;
+}
+
 .chart {
   width: 100%;
   min-height: 620px;

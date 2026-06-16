@@ -241,8 +241,8 @@ function reflowDailyTrendLayout(option, containerWidth) {
     grid.height = `${rowHeight - rowGap - titleBand}%`;
     grid.containLabel = true;
     grid.show = true;
-    grid.backgroundColor = "#FFFFFF";
-    grid.borderColor = "#D7E0E5";
+    grid.backgroundColor = "rgba(255, 255, 255, 0)";
+    grid.borderColor = "rgba(49, 90, 125, 0.18)";
     grid.borderWidth = 1;
   });
 
