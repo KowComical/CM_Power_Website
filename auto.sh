@@ -4,21 +4,18 @@
 python_cmd="/opt/miniconda3/bin/python"
 project_dir="/data/xuanrenSong/CM_Power_Website"
 script_file="$project_dir/upload.py"
-log_dir="$project_dir/log/daily_process"
+log_dir="/home/xuanrenSong/.cache/cm_power_website/log/daily_process"
 year_dir="$(date '+%Y')"
 month_dir="$(date '+%m')"
 log_file="nohup-$(date '+%Y-%m-%d').out"
 lock_file="/tmp/cm_power_website_upload.lock"
 
-# Keep runtime cache/config files out of /data/xuanrenSong.
+# Keep runtime cache/config/log files out of /data/xuanrenSong.
 export HOME="/home/xuanrenSong"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
 export MPLCONFIGDIR="$XDG_CACHE_HOME/matplotlib"
-export WANDB_CACHE_DIR="$XDG_CACHE_HOME/wandb"
-export WANDB_CONFIG_DIR="$XDG_CONFIG_HOME/wandb"
-export WANDB_DIR="$project_dir/wandb"
-mkdir -p "$MPLCONFIGDIR" "$WANDB_CACHE_DIR" "$WANDB_CONFIG_DIR" "$WANDB_DIR"
+mkdir -p "$MPLCONFIGDIR"
 
 # Create the year-based and month-based directories if they don't exist
 mkdir -p "$log_dir/$year_dir/$month_dir"
