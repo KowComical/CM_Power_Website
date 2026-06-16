@@ -1,13 +1,13 @@
 :root {
-  --bg: #f5f7f8;
+  --bg: #f3f6f5;
   --panel: #ffffff;
-  --ink: #20272c;
-  --muted: #66727a;
-  --line: #dfe6e8;
-  --teal: #177e89;
-  --blue: #315a7d;
-  --warm: #c98150;
-  --shadow: 0 12px 30px rgba(32, 39, 44, 0.08);
+  --ink: #1e2726;
+  --muted: #66736f;
+  --line: #d9e2df;
+  --teal: #0f766e;
+  --blue: #24495a;
+  --warm: #cf7f3a;
+  --shadow: 0 14px 34px rgba(34, 54, 50, 0.08);
 }
 
 * {
@@ -193,15 +193,21 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
 #linePanel.chart-panel {
-  background: #f7fafb;
+  background: #fbfcfc;
+  border-color: #dce5e2;
 }
 
 .chart {
   width: 100%;
   min-height: 620px;
+}
+
+#lineChart {
+  min-height: 460px;
 }
 
 .error-box {
