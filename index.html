@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="static_site/vendor/semantic.min.css">
   <link rel="stylesheet" href="tools/style.css">
-  <link rel="stylesheet" href="static_site/styles.css?v=20260616-2">
+  <link rel="stylesheet" href="static_site/styles.css?v=20260616-3">
 </head>
 <body>
   <aside class="sidebar">
@@ -33,6 +33,13 @@
     <section class="control-group" data-filter="stacked">
       <label for="stackedSelect">Sort By</label>
       <select id="stackedSelect"></select>
+    </section>
+
+    <section class="control-group" data-filter="history-band">
+      <label>Daily Trends</label>
+      <button id="historyBandToggle" class="mode-toggle is-active" type="button" aria-pressed="true">
+        History band
+      </button>
     </section>
 
     <label class="toggle-row" data-filter="details">
@@ -72,6 +79,6 @@
   </main>
 
   <script src="static_site/vendor/echarts.min.js"></script>
-  <script src="static_site/app.js?v=20260616-2"></script>
+  <script src="static_site/app.js?v=20260616-3"></script>
 </body>
 </html>

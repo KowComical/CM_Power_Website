@@ -21,7 +21,8 @@ const state = {
   energy: "total",
   continent: "World",
   stacked: "Fossil",
-  details: false
+  details: false,
+  historyBand: true
 };
 
 const jsonCache = new Map();
@@ -35,6 +36,7 @@ const els = {
   continent: document.getElementById("continentSelect"),
   stacked: document.getElementById("stackedSelect"),
   details: document.getElementById("detailsToggle"),
+  historyBand: document.getElementById("historyBandToggle"),
   scorecard: document.getElementById("scorecardContainer"),
   lineChart: document.getElementById("lineChart"),
   stackedChart: document.getElementById("stackedChart"),
@@ -91,6 +93,7 @@ function updateVisibleControls() {
   setHidden('[data-filter="continent"]', state.tab !== "overview");
   setHidden('[data-filter="details"]', state.tab !== "overview");
   setHidden('[data-filter="stacked"]', state.tab !== "stacked");
+  setHidden('[data-filter="history-band"]', state.tab !== "line");
   els.energy.closest(".control-group").hidden = state.tab === "stacked" || state.tab === "scatter";
 }
 
@@ -129,6 +132,25 @@ async function renderOverview() {
 
 function chartHeight(config) {
   return Math.max(620, Math.round(config.PLOT_HEIGHT * config.ROWS_PER_GRID * 1.2));
+}
+
+function dailyTrendColumns(width) {
+  if (width < 620) {
+    return 1;
+  }
+  if (width < 980) {
+    return 2;
+  }
+  if (width < 1320) {
+    return 3;
+  }
+  return 4;
+}
+
+function lineChartHeight(option, columns) {
+  const gridCount = Array.isArray(option.grid) ? option.grid.length : 1;
+  const rows = Math.max(1, Math.ceil(gridCount / columns));
+  return Math.max(620, rows * 320 + 120);
 }
 
 function setChart(container, name, option, height) {
@@ -178,6 +200,12 @@ function optimizeChartOption(option, chartName) {
   });
 }
 
+function updateHistoryBandButton() {
+  els.historyBand.classList.toggle("is-active", state.historyBand);
+  els.historyBand.setAttribute("aria-pressed", String(state.historyBand));
+  els.historyBand.textContent = state.historyBand ? "History band: On" : "Year lines";
+}
+
 function formatDailyTrendAxes(option, chartName) {
   if (chartName !== "line" || !Array.isArray(option.xAxis)) {
     return;
@@ -197,12 +225,156 @@ function formatDailyTrendAxes(option, chartName) {
   });
 }
 
+function buildHistoryBandSeries(config) {
+  const ranges = config.history_ranges || [];
+  const series = [];
+
+  ranges.forEach((range) => {
+    const floorData = [];
+    const spanData = [];
+
+    range.min.forEach((minValue, index) => {
+      const maxValue = range.max[index];
+      if (minValue == null || maxValue == null) {
+        floorData.push(null);
+        spanData.push(null);
+      } else {
+        floorData.push(minValue);
+        spanData.push(Math.max(0, maxValue - minValue));
+      }
+    });
+
+    series.push({
+      name: `History floor ${range.gridIndex}`,
+      type: "line",
+      xAxisIndex: range.gridIndex,
+      yAxisIndex: range.gridIndex,
+      data: floorData,
+      stack: `history-band-${range.gridIndex}`,
+      showSymbol: false,
+      connectNulls: false,
+      lineStyle: { opacity: 0 },
+      itemStyle: { opacity: 0 },
+      silent: true,
+      tooltip: { show: false },
+      z: 1
+    });
+
+    series.push({
+      name: "History range",
+      type: "line",
+      xAxisIndex: range.gridIndex,
+      yAxisIndex: range.gridIndex,
+      data: spanData,
+      stack: `history-band-${range.gridIndex}`,
+      showSymbol: false,
+      connectNulls: false,
+      areaStyle: { color: "rgba(49, 90, 125, 0.18)" },
+      lineStyle: { opacity: 0 },
+      itemStyle: { opacity: 0 },
+      silent: true,
+      tooltip: { show: false },
+      z: 1
+    });
+  });
+
+  return series;
+}
+
+function applyHistoryBand(option, config) {
+  const years = config.years || [];
+  const latestYear = config.latest_year || years[years.length - 1];
+  if (!state.historyBand || !latestYear || !Array.isArray(option.series)) {
+    return;
+  }
+
+  const latestColor = (config.year_colors || {})[latestYear] || "#C7352E";
+  const latestSeries = option.series
+    .filter((series) => series.name === latestYear)
+    .map((series) => ({
+      ...series,
+      z: 3,
+      lineStyle: {
+        ...(series.lineStyle || {}),
+        width: 2.8,
+        opacity: 1,
+        color: latestColor
+      },
+      itemStyle: {
+        ...(series.itemStyle || {}),
+        opacity: 1,
+        color: latestColor
+      }
+    }));
+
+  option.series = [...buildHistoryBandSeries(config), ...latestSeries];
+  option.legend = {
+    ...(option.legend || {}),
+    data: [
+      { name: "History range", icon: "roundRect", textStyle: { color: "#315A7D" } },
+      { name: latestYear, icon: "circle", textStyle: { color: latestColor } }
+    ],
+    selected: {
+      "History range": true,
+      [latestYear]: true
+    }
+  };
+}
+
+function reflowDailyTrendLayout(option, containerWidth) {
+  if (!Array.isArray(option.grid)) {
+    return 1;
+  }
+
+  const gridCount = option.grid.length;
+  const columns = dailyTrendColumns(containerWidth);
+  const rows = Math.max(1, Math.ceil(gridCount / columns));
+  const width = 100 / columns;
+  const rowHeight = 92 / rows;
+  const widthAdjustment = columns === 1 ? 1.8 : 0.8;
+  const rowGap = Math.min(1.2, Math.max(0.22, rowHeight * 0.18));
+
+  option.grid.forEach((grid, index) => {
+    const row = Math.floor(index / columns);
+    const column = index % columns;
+    grid.top = `${rowHeight * row + 3.0 + rowGap * 0.65}%`;
+    grid.left = `${width * column + widthAdjustment - 0.2}%`;
+    grid.width = `${width - 2.0 * widthAdjustment}%`;
+    grid.height = `${rowHeight - rowGap}%`;
+    grid.containLabel = true;
+    grid.show = true;
+    grid.backgroundColor = "#FFFFFF";
+    grid.borderColor = "#D7E0E5";
+    grid.borderWidth = 1;
+  });
+
+  if (Array.isArray(option.graphic)) {
+    option.graphic.forEach((graphic, index) => {
+      const row = Math.floor(index / columns);
+      const column = index % columns;
+      const gridCenter = width * column + widthAdjustment - 0.2 + (width - 2.0 * widthAdjustment) / 2;
+      graphic.left = `${gridCenter}%`;
+      graphic.top = `${rowHeight * row + 2.0 + rowGap * 0.2}%`;
+      graphic.style = {
+        ...(graphic.style || {}),
+        align: "center",
+        textAlign: "center"
+      };
+    });
+  }
+
+  return columns;
+}
+
 async function renderLineChart() {
   setStatus("Loading daily trends...");
   try {
     const config = await fetchJson(`tools/line_chart/${state.energy}.json`);
     const option = cloneOption(config.option);
-    setChart(els.lineChart, "line", option, chartHeight(config));
+    applyHistoryBand(option, config);
+    const containerWidth = els.lineChart.clientWidth || els.lineChart.parentElement.clientWidth || window.innerWidth;
+    const columns = reflowDailyTrendLayout(option, containerWidth);
+    setChart(els.lineChart, "line", option, lineChartHeight(option, columns));
     setStatus(`${titleCase(state.energy)} trends`);
   } catch (error) {
     showError(els.lineChart, error);
@@ -406,14 +578,29 @@ function bindEvents() {
     render();
   });
 
+  els.historyBand.addEventListener("click", () => {
+    state.historyBand = !state.historyBand;
+    updateHistoryBandButton();
+    renderLineChart();
+  });
+
+  let resizeTimer = null;
   window.addEventListener("resize", () => {
-    Object.values(charts).forEach((chart) => chart.resize());
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(() => {
+      if (state.tab === "line") {
+        renderLineChart();
+      } else {
+        Object.values(charts).forEach((chart) => chart.resize());
+      }
+    }, 150);
   });
 }
 
 fillSelect(els.energy, ENERGY_TYPES);
 fillSelect(els.continent, CONTINENTS, (value) => value);
 fillSelect(els.stacked, STACKED_TYPES, (value) => value);
+updateHistoryBandButton();
 bindEvents();
 updateVisibleControls();
 render();
