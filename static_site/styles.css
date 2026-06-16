@@ -210,6 +210,68 @@ h1 {
   min-height: 460px;
 }
 
+.map-panel {
+  background: #fbfcfc;
+  border-color: #dce5e2;
+}
+
+.map-toolbar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr)) minmax(260px, 1.6fr);
+  gap: 1px;
+  border-bottom: 1px solid #dce5e2;
+  background: #dce5e2;
+}
+
+.map-stat,
+.map-date-control {
+  min-height: 76px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 14px 16px;
+}
+
+.map-stat {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+}
+
+.map-stat-label,
+.map-date-control span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.map-stat strong {
+  color: var(--ink);
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  line-height: 1.15;
+}
+
+.map-date-control {
+  display: grid;
+  align-content: center;
+  grid-template-columns: 1fr auto;
+  gap: 8px 14px;
+}
+
+.map-date-control input {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--teal);
+}
+
+.map-date-control output {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.map-chart {
+  min-height: 680px;
+}
+
 .error-box {
   padding: 20px;
   border: 1px solid #e5b9a9;
@@ -239,5 +301,14 @@ h1 {
 
   .status-text {
     text-align: left;
+  }
+
+  .map-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .map-stat,
+  .map-date-control {
+    min-height: 64px;
   }
 }
