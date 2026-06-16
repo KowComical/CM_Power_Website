@@ -6,6 +6,10 @@ import math
 import json
 from datetime import datetime
 import base64
+import shutil
+from pathlib import Path
+from html import escape
+from urllib.parse import urlparse
 
 global_path = '/data/xuanrenSong/CM_Power_Website'
 file_path = os.path.join(global_path, 'data')
@@ -22,6 +26,27 @@ categories = {
 }
 
 sub_category = ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables']
+
+GENERATED_OUTPUTS = [
+    '.nojekyll',
+    'index.html',
+    'data/data_for_download.csv.gz',
+    'data/data_for_scatter_plot.csv',
+    'static_site',
+    'tools/data_description',
+    'tools/line_chart',
+    'tools/stacked_area_chart',
+    'tools/logo_base64.txt',
+    'tools/logo_edited.png',
+    'tools/style.css',
+]
+
+REMOVED_OUTPUTS = [
+    'data/data_for_download.csv',
+]
+
+PAGES_BRANCH = 'gh-pages'
+PAGES_WORKTREE = Path('/tmp/cm_power_website_gh_pages_auto')
 
 COLORS = {
     "coal": "#A3A090",
@@ -64,9 +89,13 @@ def process_data():
     df['fossil'] = df[['coal', 'gas', 'oil']].sum(axis=1)
     df['renewables'] = df[['hydro', 'other', 'solar', 'wind']].sum(axis=1)
 
-    df['country'] = df['country'].str.replace('EU27 & UK', 'EU27&UK')
-    df['country'] = df['country'].replace('UK', 'United Kingdom')
-    df['country'] = df['country'].str.replace('US', 'United States')
+    df['country'] = df['country'].replace({
+        'EU27 & UK': 'EU27&UK',
+        'UK': 'United Kingdom',
+        'US': 'United States',
+    })
+    # 上游原始数据里偶尔会把表头/汇总块读成 country=Generation，这不是国家，前端不应展示。
+    df = df[df['country'] != 'Generation'].reset_index(drop=True)
 
     df['year'] = df['date'].dt.year
     df = df.set_index(['date', 'country', 'year']).stack().reset_index().rename(columns={'level_3': 'type', 0: 'value'})
@@ -81,7 +110,12 @@ def process_data():
 
     # 输出阶段
     # 先输出一版给首页data description 用的
-    df.to_csv(os.path.join(file_path, 'data_for_download.csv'), index=False, encoding='utf_8_sig')
+    df.to_csv(
+        os.path.join(file_path, 'data_for_download.csv.gz'),
+        index=False,
+        encoding='utf_8_sig',
+        compression='gzip',
+    )
     process_data_description(df)
 
     # 再输出一版给line图用的
@@ -156,34 +190,85 @@ def process_data_description(dataframe):
                     f.write(html_content)
 
 
-def process_line_data(dataframe):
-    # Format the dates in %b-%d format
-    formatted_dates = dataframe['date'].dt.strftime('%b-%d').drop_duplicates().tolist()
+def build_day_axis_labels():
+    # 使用闰年作为模板，让 Feb-29 保持在正确位置；非闰年数据会在该点留空。
+    dates = pd.date_range("2020-01-01", "2020-12-31", freq="D")
+    return dates.strftime("%b-%d").tolist()
 
-    # Grouping by country and summing the values for the specific type
+
+def nice_axis_bounds(values, split_count=4):
+    clean_values = pd.Series(values).dropna()
+    if clean_values.empty:
+        return 0, 1, 0.25
+
+    raw_min = float(clean_values.min())
+    raw_max = float(clean_values.max())
+    if raw_min == raw_max:
+        raw_min = max(0, raw_min * 0.9)
+        raw_max = raw_max * 1.1 if raw_max else 1
+
+    span = raw_max - raw_min
+    rough_interval = span / split_count
+    interval = nice_number(rough_interval)
+
+    axis_min = math.floor(raw_min / interval) * interval
+    axis_max = math.ceil(raw_max / interval) * interval
+
+    if raw_min >= 0 and axis_min < 0:
+        axis_min = 0
+
+    return round_axis_value(axis_min), round_axis_value(axis_max), round_axis_value(interval)
+
+
+def nice_number(value):
+    if value <= 0 or math.isnan(value):
+        return 1
+
+    exponent = math.floor(math.log10(value))
+    fraction = value / (10 ** exponent)
+
+    if fraction <= 1:
+        nice_fraction = 1
+    elif fraction <= 2:
+        nice_fraction = 2
+    elif fraction <= 2.5:
+        nice_fraction = 2.5
+    elif fraction <= 5:
+        nice_fraction = 5
+    else:
+        nice_fraction = 10
+
+    return nice_fraction * (10 ** exponent)
+
+
+def round_axis_value(value):
+    if abs(value) >= 10:
+        return float(round(value))
+    if abs(value) >= 1:
+        return float(round(value, 1))
+    return float(round(value, 3))
+
+
+def process_line_data(dataframe):
+    # 横轴固定为完整自然年顺序，避免闰年的 Feb-29 被排到年底。
+    formatted_dates = build_day_axis_labels()
+    country_description = pd.read_csv(os.path.join(file_path, 'data_description.csv'))
+    country_continent = dict(zip(country_description['country'], country_description['continent']))
+
     for category_name in sub_category:
         type_sum = dataframe[dataframe['type'] == category_name].groupby('country')['value'].sum()
-
-        # Sorting the values in descending order and getting the country names
         sorted_countries = type_sum.sort_values(ascending=False).index.tolist()
 
         num_countries = len(sorted_countries)
-
-        # 定义全局设置
-        # 动态计算行数和列数
         COLS = 4
-
-        # 计算所需的行数以容纳所有国家，每行4列
         ROWS = int(math.ceil(num_countries / COLS))
         WIDTH = 100 / COLS
         HEIGHT = 92 / ROWS
 
         ROWS_PER_GRID = math.ceil(len(sorted_countries) / COLS)
-        PLOT_HEIGHT = 275  # 根据需要进行调整
-
-        # 调整间距
-        WIDTH_ADJUSTMENT = 0.8  # 增加或减少以调整水平间距
-        HEIGHT_ADJUSTMENT = 0.35  # 增加或减少以调整垂直间距
+        PLOT_HEIGHT = 275
+        WIDTH_ADJUSTMENT = 0.8
+        HEIGHT_ADJUSTMENT = 0.35
 
         option = {
             "title": [{
@@ -197,32 +282,49 @@ def process_line_data(dataframe):
             "xAxis": [],
             "yAxis": [],
             "grid": [],
-            "series": []
+            "series": [],
+            "graphic": [],
         }
 
-        # 创建存储每年颜色的字典
-        unique_years_all = dataframe['year'].unique()
+        unique_years_all = sorted(dataframe['year'].unique())
+        default_years = unique_years_all[-4:]
         colors_for_years = dict(zip(unique_years_all, get_line_colors(unique_years_all)))
 
-        # 创建图表的网格
         for idx, country in enumerate(sorted_countries):
+            row_idx = idx // COLS
+            col_idx = idx % COLS
 
-            # 创建网格并进行间距调整
             option["grid"].append({
-                "top": f"{HEIGHT * (idx // COLS) + HEIGHT_ADJUSTMENT + 2.5}%",
-                "left": f"{WIDTH * (idx % COLS) + WIDTH_ADJUSTMENT - 0.2}%",
+                "top": f"{HEIGHT * row_idx + HEIGHT_ADJUSTMENT + 3.0}%",
+                "left": f"{WIDTH * col_idx + WIDTH_ADJUSTMENT - 0.2}%",
                 "width": f"{WIDTH - 2.0 * WIDTH_ADJUSTMENT}%",
-                "height": f"{HEIGHT - 4.0 * HEIGHT_ADJUSTMENT}%",
-                "containLabel": True
+                "height": f"{HEIGHT - 4.2 * HEIGHT_ADJUSTMENT}%",
+                "containLabel": True,
+                "show": True,
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "borderColor": "rgba(49, 90, 125, 0.18)",
+                "borderWidth": 1,
             })
 
-            # 过滤当前国家的数据
-            country_data = dataframe[dataframe['country'] == country]
-            min_val = float(round(country_data[country_data['type'] == category_name]['value'].min() * 0.95))
-            max_val = float(round(country_data[country_data['type'] == category_name]['value'].max() * 1.05))
+            grid_center = WIDTH * col_idx + WIDTH_ADJUSTMENT - 0.2 + (WIDTH - 2.0 * WIDTH_ADJUSTMENT) / 2
+            option["graphic"].append({
+                "type": "text",
+                "left": f"{grid_center}%",
+                "top": f"{HEIGHT * row_idx + HEIGHT_ADJUSTMENT + 2.0}%",
+                "z": 100,
+                "style": {
+                    "text": country,
+                    "fontSize": 14,
+                    "fontWeight": "bold",
+                    "align": "center",
+                    "textAlign": "center",
+                    "fill": "#333333",
+                }
+            })
 
-            # 为网格创建 x 和 y 轴
-            interval_value = 89
+            country_data = dataframe[dataframe['country'] == country]
+            country_type_data = country_data[country_data['type'] == category_name]
+            min_val, max_val, interval = nice_axis_bounds(country_type_data['value'])
 
             option["xAxis"].append({
                 "gridIndex": idx,
@@ -230,11 +332,19 @@ def process_line_data(dataframe):
                 "data": formatted_dates,
                 "axisTick": {
                     "alignWithLabel": True,
-                    "interval": interval_value
+                    "interval": 91
                 },
                 "axisLabel": {
-                    "interval": interval_value
-                }
+                    "interval": 91,
+                    "fontSize": 10,
+                    "hideOverlap": True,
+                    "margin": 8,
+                },
+                "axisLine": {
+                    "lineStyle": {
+                        "color": "#A8B3BA"
+                    }
+                },
             })
 
             option["yAxis"].append({
@@ -242,29 +352,48 @@ def process_line_data(dataframe):
                 "type": "value",
                 "min": min_val,
                 "max": max_val,
-                "name": country,
-                "nameTextStyle": {
-                    "fontSize": 14,  # 根据需要进行调整
-                    "fontWeight": "bold",
-                    "padding": [0, 0, 0, 100]  # 如果需要，添加一些填充。[上，右，下，左]
+                "interval": interval,
+                "splitNumber": 4,
+                "axisLabel": {
+                    "fontSize": 10,
+                },
+                "splitLine": {
+                    "lineStyle": {
+                        "color": "#E5EAED"
+                    }
+                },
+                "axisLine": {
+                    "lineStyle": {
+                        "color": "#A8B3BA"
+                    }
                 }
             })
 
-            # 为每年生成系列数据
-            unique_years = country_data['year'].unique()
+            unique_years = sorted(country_data['year'].unique())
             for year in unique_years:
-                year_data = country_data[country_data['year'] == year]
+                year_data = country_type_data[country_type_data['year'] == year].copy()
+                year_data['day_label'] = year_data['date'].dt.strftime('%b-%d')
+                values_by_day = dict(zip(year_data['day_label'], year_data['value']))
+                is_default_year = year in default_years
+
                 option["series"].append({
                     "name": str(year),
                     "type": "line",
                     "xAxisIndex": idx,
                     "yAxisIndex": idx,
-                    "data": year_data[year_data['type'] == category_name]['value'].tolist(),
+                    "data": [values_by_day.get(day_label) for day_label in formatted_dates],
+                    "showSymbol": False,
+                    "connectNulls": False,
+                    "lineStyle": {
+                        "width": 2.2 if is_default_year else 1.4,
+                        "color": colors_for_years[year],
+                        "opacity": 1 if is_default_year else 0.45,
+                    },
                     "itemStyle": {
                         "color": colors_for_years[year],
-                        "opacity": 0.2  # default opacity for all lines
+                        "opacity": 1 if is_default_year else 0.45,
                     },
-                    "emphasis": {  # Add this block for emphasis styling
+                    "emphasis": {
                         "lineStyle": {
                             "width": 4
                         },
@@ -272,35 +401,46 @@ def process_line_data(dataframe):
                             "opacity": 1
                         }
                     },
-                    "selectedMode": "single",  # Add this line to allow single line selection
+                    "selectedMode": "single",
                 })
 
         option["legend"] = {
             "data": [{"name": str(year), "icon": "circle", "textStyle": {"color": colors_for_years[year]}} for year in
                      unique_years_all],
+            "selected": {str(year): year in default_years for year in unique_years_all},
             "left": 'center',
             "orient": "horizontal",
             "top": 50,
-            "icon": "circle",  # This will give a filled circle symbol
-            "itemWidth": 12,  # Controls the width of the circle
-            "itemHeight": 12,  # Controls the height of the circle
-            "borderColor": "#333",  # Border color, here it's a dark gray
-            "borderWidth": 1,  # Width of the border
-            "borderRadius": 4,  # Rounded corners, adjust for desired roundness
-            "padding": 10,  # Padding around the legend items
-            "backgroundColor": "#f4f4f4",  # Light gray background for the legend
+            "icon": "circle",
+            "itemWidth": 12,
+            "itemHeight": 12,
+            "borderColor": "#333",
+            "borderWidth": 1,
+            "borderRadius": 4,
+            "padding": 10,
+            "backgroundColor": "#f4f4f4",
             "textStyle": {
                 "fontSize": 16,
-                "color": "#333"  # Font color matching the border color
+                "color": "#333"
             }
         }
 
-        # 输出json
         with open(os.path.join(line_path, f'{category_name}.json'), 'w') as config_file:
             json.dump({
                 "option": option,
                 "ROWS_PER_GRID": ROWS_PER_GRID,
-                "PLOT_HEIGHT": PLOT_HEIGHT
+                "PLOT_HEIGHT": PLOT_HEIGHT,
+                "country_count": len(sorted_countries),
+                "countries": [
+                    {
+                        "name": country,
+                        "continent": country_continent.get(country, "Other"),
+                    }
+                    for country in sorted_countries
+                ],
+                "years": [str(year) for year in unique_years_all],
+                "default_years": [str(year) for year in default_years],
+                "year_colors": {str(year): colors_for_years[year] for year in unique_years_all},
             }, config_file)
 
 
@@ -482,7 +622,7 @@ def load_iea_data():
 
     df_iea['total'] = df_iea[['coal', 'gas', 'oil', 'nuclear', 'hydro', 'solar', 'wind', 'other']].sum(axis=1)
     df_iea['fossil'] = df_iea[['coal', 'gas', 'oil']].sum(axis=1)
-    df_iea['renewables'] = df_iea[['nuclear', 'hydro', 'solar', 'wind', 'other']].sum(axis=1)
+    df_iea['renewables'] = df_iea[['hydro', 'solar', 'wind', 'other']].sum(axis=1)
 
     return df_iea.melt(id_vars=['country', 'year', 'month'], var_name='type', value_name='iea')
 
@@ -494,29 +634,122 @@ def prepare_comparison_data(df, df_iea):
     return df_compare
 
 
-def git_push(repo_path, commit_message="Automated commit"):
-    try:
-        # 切换到 Git 仓库的目录
-        os.chdir(repo_path)
+def run_git(repo_path, args):
+    result = subprocess.run(
+        ['git', '-C', repo_path, *args],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        message = result.stderr.strip() or result.stdout.strip()
+        raise RuntimeError(f"git {' '.join(args)} failed: {message}")
+    return result.stdout.strip()
 
-        # 从远程仓库拉取最新的更改，只抑制标准输出
-        subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL)
 
-        # 添加所有更改的文件到 Git
-        subprocess.run(['git', 'add', '--all'])
+def git_has_staged_changes(repo_path):
+    result = subprocess.run(
+        ['git', '-C', repo_path, 'diff', '--cached', '--quiet'],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if result.returncode not in (0, 1):
+        message = result.stderr.strip()
+        raise RuntimeError(f"git diff --cached --quiet failed: {message}")
+    return result.returncode == 1
 
-        # 提交更改，只抑制标准输出
-        subprocess.run(['git', 'commit', '-m', commit_message], stdout=subprocess.DEVNULL)
 
-        # 获取当前分支的名称
-        current_branch = subprocess.getoutput('git rev-parse --abbrev-ref HEAD')
+def git_tracks_path(repo_path, relative_path):
+    result = subprocess.run(
+        ['git', '-C', repo_path, 'ls-files', '--error-unmatch', relative_path],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+    return result.returncode == 0
 
-        # 推送到远程仓库，只抑制标准输出
-        subprocess.run(['git', 'push', 'origin', current_branch], stdout=subprocess.DEVNULL)
 
-        print("Changes pulled and pushed successfully.")
-    except Exception as e:
-        print(f"Error: {e}")
+def git_add_generated_outputs(repo_path):
+    paths_to_add = [
+        relative_path
+        for relative_path in GENERATED_OUTPUTS + REMOVED_OUTPUTS
+        if (Path(repo_path) / relative_path).exists() or git_tracks_path(repo_path, relative_path)
+    ]
+
+    if paths_to_add:
+        run_git(repo_path, ['add', '-A', *paths_to_add])
+
+
+def remove_path(path):
+    if path.is_dir() and not path.is_symlink():
+        shutil.rmtree(path)
+    elif path.exists():
+        path.unlink()
+
+
+def copy_generated_output(repo_path, pages_path, relative_path):
+    source = Path(repo_path) / relative_path
+    target = Path(pages_path) / relative_path
+
+    remove_path(target)
+
+    if not source.exists():
+        return
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if source.is_dir():
+        shutil.copytree(
+            source,
+            target,
+            ignore=shutil.ignore_patterns('__pycache__', '.ipynb_checkpoints'),
+        )
+    else:
+        shutil.copy2(source, target)
+
+
+def deploy_to_github_pages(repo_path, commit_message):
+    pages_path = PAGES_WORKTREE
+
+    # 使用独立的临时 worktree 发布 gh-pages，避免把自动部署过程混进主工作区。
+    remove_path(pages_path)
+    run_git(repo_path, ['worktree', 'prune'])
+    run_git(repo_path, ['fetch', 'origin', PAGES_BRANCH])
+    run_git(repo_path, ['worktree', 'add', '--detach', str(pages_path), f'origin/{PAGES_BRANCH}'])
+
+    for relative_path in REMOVED_OUTPUTS:
+        remove_path(pages_path / relative_path)
+
+    for relative_path in GENERATED_OUTPUTS:
+        copy_generated_output(repo_path, pages_path, relative_path)
+
+    run_git(str(pages_path), ['add', '-A'])
+    if not git_has_staged_changes(str(pages_path)):
+        print("No GitHub Pages changes to deploy.")
+        return
+
+    run_git(str(pages_path), ['commit', '-m', commit_message])
+    run_git(str(pages_path), ['push', 'origin', f'HEAD:{PAGES_BRANCH}'])
+    print(f"GitHub Pages deployed to {PAGES_BRANCH}.")
+
+
+def git_push(repo_path, commit_message=None):
+    commit_message = commit_message or f"Update website data {datetime.now():%Y-%m-%d}"
+
+    # 只允许快进更新，避免自动任务在冲突时生成合并提交。
+    run_git(repo_path, ['pull', '--ff-only'])
+
+    # 只提交网站需要的生成产物，避免日志、缓存、wandb 等脏文件进入仓库。
+    git_add_generated_outputs(repo_path)
+
+    if git_has_staged_changes(repo_path):
+        run_git(repo_path, ['commit', '-m', commit_message])
+        current_branch = run_git(repo_path, ['rev-parse', '--abbrev-ref', 'HEAD'])
+        run_git(repo_path, ['push', 'origin', current_branch])
+        print("Website data changes pulled, committed, and pushed successfully.")
+    else:
+        print("No website data changes to commit.")
+
+    deploy_to_github_pages(repo_path, commit_message)
 
 
 def map_to_category(type_):
@@ -527,32 +760,26 @@ def map_to_category(type_):
 
 
 def get_line_colors(years_list):
-    # Base colors
-    blue_rgb = (76, 164, 224)  # Macaron Blue
-    orange_rgb = (186, 97, 93)  # Macaron Orange
-    black_color = 'rgb(0, 0, 0)'
-    yellow_color = 'rgb(255, 204, 0)'
-    current_year = datetime.now().year  # Get the current year
-
+    sorted_years = sorted(years_list)
+    latest_year = max(sorted_years)
+    history_palette = [
+        '#315A7D',
+        '#456D8E',
+        '#5B82A0',
+        '#7197B2',
+        '#87ABC2',
+        '#9CBED0',
+        '#B0CEDC',
+    ]
     colors = []
 
     for year in years_list:
-        if year == 2020:
-            factor = -0.2  # Darken by 20% for 2019
-            adjusted_blue = adjust_lightness(blue_rgb, factor)
-            colors.append(f'rgb{adjusted_blue}')
-        elif year == 2019:
-            factor = 0.1  # Lighten by 10% for 2020
-            adjusted_blue = adjust_lightness(blue_rgb, factor)
-            colors.append(f'rgb{adjusted_blue}')
-        elif year == current_year - 1:
-            colors.append(yellow_color)
-        elif year == current_year:  # Latest year
-            colors.append(black_color)
+        distance_from_latest = latest_year - year
+        if distance_from_latest == 0:
+            colors.append('#C7352E')
         else:
-            factor = (current_year - year) * 0.4  # Lighten by 40% for each year away from the current year
-            adjusted_orange = adjust_lightness(orange_rgb, factor)
-            colors.append(f'rgb{adjusted_orange}')
+            palette_index = min(distance_from_latest - 1, len(history_palette) - 1)
+            colors.append(history_palette[palette_index])
 
     return colors
 
@@ -605,10 +832,17 @@ def last_year_ytd_sum(group):
 
 
 def get_scorecard(df, view_details):
+    if df.empty:
+        return """
+        <div class="ui warning message">
+            No data available for the selected filters.
+        </div>
+        """
+
     n_countries = len(df)
     latest_date = min(df['max_date'].dt.strftime('%Y-%b'))
     # Example additional statisti
-    selected_energy = df['type'].tolist()[0]
+    selected_energy = safe_html(df['type'].tolist()[0])
 
     table_scorecard = f"""
     <style>
@@ -669,11 +903,20 @@ def get_scorecard(df, view_details):
     # <div class="content" style="background-color: {header_bg(row['type'])};">
 
     for index, row in df.iterrows():
+        country = safe_html(row['country'])
+        continent = safe_html(row['continent'])
+        source = safe_html(row['source'])
+        source_url = safe_url(row['source_url'])
+        resolution = safe_html(row['resolution'])
+        starting_date = safe_html(row['starting_date'])
+        update_frequency = safe_html(row['update_frequency'])
+        region_data = safe_html(row['region_data'])
+
         table_scorecard += f"""
             <div class="card">
                 <div class="content" style="background-color: {header_bg(row['continent'])};">
-                    <div class="header smallheader">{row['country']}</div>
-                    <div class="meta smallheader">{row['continent']}</div>
+                    <div class="header smallheader">{country}</div>
+                    <div class="meta smallheader">{continent}</div>
                 </div>
                 <div class="content">
                     <div class="column kpi number">
@@ -686,18 +929,36 @@ def get_scorecard(df, view_details):
                     </div>
                 </div>
                 <div class="extra content">
-                    <div class="meta"><i class="user icon"></i>Source: <a href="{row['source_url']}" target="_blank">{row['source']}</a></div>
+                    <div class="meta"><i class="user icon"></i>Source: <a href="{source_url}" target="_blank" rel="noopener noreferrer">{source}</a></div>
                     <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
                 </div>
                 <div class="extra content" {view_details}> 
-                    <div class="meta"><i class="history icon"></i> Time Resolution: {row['resolution']}</div>
-                    <div class="meta"><i class="edit icon"></i> Data Starts: {row['starting_date']}</div>
-                    <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {row['update_frequency']}</div>
-                    <div class="meta"><i class="th icon"></i> Region Data Aviability: {row['region_data']}</div>
+                    <div class="meta"><i class="history icon"></i> Time Resolution: {resolution}</div>
+                    <div class="meta"><i class="edit icon"></i> Data Starts: {starting_date}</div>
+                    <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {update_frequency}</div>
+                    <div class="meta"><i class="th icon"></i> Region Data Aviability: {region_data}</div>
                 </div>
             </div>"""
 
     return table_scorecard
+
+
+def safe_html(value):
+    if pd.isna(value):
+        return ""
+    return escape(str(value), quote=True)
+
+
+def safe_url(value):
+    if pd.isna(value):
+        return "#"
+
+    url = str(value).strip()
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"}:
+        return "#"
+
+    return escape(url, quote=True)
 
 
 def color_percentage(value):
