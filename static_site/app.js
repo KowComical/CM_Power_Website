@@ -26,10 +26,10 @@ const MONTH_INDEX = {
 };
 
 const DAILY_TREND_YEAR_COLORS = {
-  2019: "#aeb8bd",
-  2020: "#96a3aa",
-  2021: "#7d9099",
-  2022: "#627d89",
+  2019: "#8f6bb3",
+  2020: "#ba8a2d",
+  2021: "#4f9a68",
+  2022: "#5a8fb6",
   2023: "#2f80c0",
   2024: "#146a8f",
   2025: "#083f60",
@@ -205,6 +205,11 @@ function setChart(container, name, option, height) {
   charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
   optimizeChartOption(option, name);
   charts[name].setOption(option, true);
+  if (name === "line") {
+    charts[name].on("legendselectchanged", () => refreshDailyTrendYearStyles(charts[name]));
+    charts[name].on("legendselected", () => refreshDailyTrendYearStyles(charts[name]));
+    charts[name].on("legendunselected", () => refreshDailyTrendYearStyles(charts[name]));
+  }
 }
 
 function optimizeChartOption(option, chartName) {
@@ -237,24 +242,6 @@ function optimizeChartOption(option, chartName) {
       series.showSymbol = false;
       series.hoverAnimation = false;
       series.sampling = series.sampling || "lttb";
-      if (chartName === "line") {
-        const color = DAILY_TREND_YEAR_COLORS[series.name];
-        const isLatest = series.name === "2026";
-        const isSelected = !option.legend?.selected || option.legend.selected[series.name] !== false;
-        if (color) {
-          series.lineStyle = {
-            ...(series.lineStyle || {}),
-            color,
-            width: isLatest ? 2.6 : isSelected ? 2.15 : 1.35,
-            opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
-          };
-          series.itemStyle = {
-            ...(series.itemStyle || {}),
-            color,
-            opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
-          };
-        }
-      }
     }
 
     if (series.type === "scatter") {
@@ -263,6 +250,82 @@ function optimizeChartOption(option, chartName) {
       series.largeThreshold = 600;
     }
   });
+
+  if (chartName === "line") {
+    styleDailyTrendSeries(option);
+  }
+}
+
+function getDailyTrendLegend(option) {
+  return Array.isArray(option.legend) ? option.legend[0] : option.legend;
+}
+
+function isDailyTrendYearSelected(option, year) {
+  const legend = getDailyTrendLegend(option);
+  return !legend || !legend.selected || legend.selected[year] !== false;
+}
+
+function styleDailyTrendSeries(option) {
+  if (!Array.isArray(option.series)) {
+    return;
+  }
+
+  option.series.forEach((series) => {
+    if (series.type !== "line") {
+      return;
+    }
+
+    const color = DAILY_TREND_YEAR_COLORS[series.name];
+    if (!color) {
+      return;
+    }
+
+    const isLatest = series.name === "2026";
+    const isSelected = isDailyTrendYearSelected(option, series.name);
+    series.lineStyle = {
+      ...(series.lineStyle || {}),
+      color,
+      width: isLatest ? 2.6 : isSelected ? 2.15 : 1.35,
+      opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+    };
+    series.itemStyle = {
+      ...(series.itemStyle || {}),
+      color,
+      opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+    };
+  });
+}
+
+function styleDailyTrendLegendItems(option) {
+  const legend = getDailyTrendLegend(option);
+  if (!legend || !Array.isArray(legend.data)) {
+    return;
+  }
+
+  legend.data = legend.data.map((item) => {
+    const name = typeof item === "string" ? item : item.name;
+    const color = DAILY_TREND_YEAR_COLORS[name];
+    const isSelected = isDailyTrendYearSelected(option, name);
+    return {
+      ...(typeof item === "string" ? { name } : item),
+      icon: "roundRect",
+      textStyle: {
+        ...((typeof item === "string" ? {} : item.textStyle) || {}),
+        color: isSelected ? color || "#50605d" : DAILY_TREND_INACTIVE_COLOR,
+        opacity: isSelected ? 1 : 0.85
+      }
+    };
+  });
+}
+
+function refreshDailyTrendYearStyles(chart) {
+  const option = chart.getOption();
+  styleDailyTrendLegendItems(option);
+  styleDailyTrendSeries(option);
+  chart.setOption({
+    legend: option.legend,
+    series: option.series
+  }, false);
 }
 
 function applyDailyTrendTheme(option) {
@@ -303,22 +366,7 @@ function applyDailyTrendTheme(option) {
       fontWeight: 700
     };
 
-    if (Array.isArray(option.legend.data)) {
-      option.legend.data = option.legend.data.map((item) => {
-        const name = typeof item === "string" ? item : item.name;
-        const color = DAILY_TREND_YEAR_COLORS[name];
-        const isSelected = !option.legend.selected || option.legend.selected[name] !== false;
-        return {
-          ...(typeof item === "string" ? { name } : item),
-          icon: "roundRect",
-          textStyle: {
-            ...((typeof item === "string" ? {} : item.textStyle) || {}),
-            color: isSelected ? color || "#50605d" : DAILY_TREND_INACTIVE_COLOR,
-            opacity: isSelected ? 1 : 0.85
-          }
-        };
-      });
-    }
+    styleDailyTrendLegendItems(option);
   }
 }
 
