@@ -399,8 +399,11 @@ function reflowDailyTrendLayout(option, layout) {
       const left = sideGap + column * (gridWidth + columnGap);
       const top = topBand + row * (rowHeight + rowGap);
 
-      graphic.left = left + gridWidth / 2;
-      graphic.top = top + titleOffset;
+      delete graphic.left;
+      delete graphic.top;
+      delete graphic.width;
+      graphic.x = left + gridWidth / 2;
+      graphic.y = top + titleOffset;
       graphic.style = {
         ...(graphic.style || {}),
         align: "center",
