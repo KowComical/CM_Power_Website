@@ -26,14 +26,14 @@ const MONTH_INDEX = {
 };
 
 const DAILY_TREND_YEAR_COLORS = {
-  2019: "#8f6bb3",
-  2020: "#ba8a2d",
-  2021: "#4f9a68",
-  2022: "#5a8fb6",
-  2023: "#2f80c0",
-  2024: "#146a8f",
-  2025: "#083f60",
-  2026: "#d84a3a"
+  2019: "#b6d0f5",
+  2020: "#8ab2ea",
+  2021: "#5e95df",
+  2022: "#3377c8",
+  2023: "#f5b4a4",
+  2024: "#e88a70",
+  2025: "#da5a46",
+  2026: "#cc2e2e"
 };
 
 const DAILY_TREND_INACTIVE_COLOR = "#d6dde0";
