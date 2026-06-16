@@ -26,15 +26,17 @@ const MONTH_INDEX = {
 };
 
 const DAILY_TREND_YEAR_COLORS = {
-  2019: "#c8d5dc",
-  2020: "#b2c4ce",
-  2021: "#98afbc",
-  2022: "#7897a8",
-  2023: "#587f93",
-  2024: "#34657c",
-  2025: "#184b60",
+  2019: "#aeb8bd",
+  2020: "#96a3aa",
+  2021: "#7d9099",
+  2022: "#627d89",
+  2023: "#2f80c0",
+  2024: "#146a8f",
+  2025: "#083f60",
   2026: "#d84a3a"
 };
+
+const DAILY_TREND_INACTIVE_COLOR = "#d6dde0";
 
 const state = {
   tab: "overview",
@@ -238,17 +240,18 @@ function optimizeChartOption(option, chartName) {
       if (chartName === "line") {
         const color = DAILY_TREND_YEAR_COLORS[series.name];
         const isLatest = series.name === "2026";
+        const isSelected = !option.legend?.selected || option.legend.selected[series.name] !== false;
         if (color) {
           series.lineStyle = {
             ...(series.lineStyle || {}),
             color,
-            width: isLatest ? 2.4 : 1.8,
-            opacity: isLatest ? 1 : 0.78
+            width: isLatest ? 2.6 : isSelected ? 2.15 : 1.35,
+            opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
           };
           series.itemStyle = {
             ...(series.itemStyle || {}),
             color,
-            opacity: isLatest ? 1 : 0.78
+            opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
           };
         }
       }
@@ -291,6 +294,8 @@ function applyDailyTrendTheme(option) {
     option.legend.borderRadius = 0;
     option.legend.backgroundColor = "transparent";
     option.legend.padding = 0;
+    option.legend.inactiveColor = DAILY_TREND_INACTIVE_COLOR;
+    option.legend.inactiveBorderColor = DAILY_TREND_INACTIVE_COLOR;
     option.legend.textStyle = {
       ...(option.legend.textStyle || {}),
       color: "#50605d",
@@ -302,12 +307,14 @@ function applyDailyTrendTheme(option) {
       option.legend.data = option.legend.data.map((item) => {
         const name = typeof item === "string" ? item : item.name;
         const color = DAILY_TREND_YEAR_COLORS[name];
+        const isSelected = !option.legend.selected || option.legend.selected[name] !== false;
         return {
           ...(typeof item === "string" ? { name } : item),
           icon: "roundRect",
           textStyle: {
             ...((typeof item === "string" ? {} : item.textStyle) || {}),
-            color: color || "#50605d"
+            color: isSelected ? color || "#50605d" : DAILY_TREND_INACTIVE_COLOR,
+            opacity: isSelected ? 1 : 0.85
           }
         };
       });
