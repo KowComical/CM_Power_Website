@@ -21,8 +21,7 @@ const state = {
   energy: "total",
   continent: "World",
   stacked: "Fossil",
-  details: false,
-  historyBand: true
+  details: false
 };
 
 const jsonCache = new Map();
@@ -36,7 +35,6 @@ const els = {
   continent: document.getElementById("continentSelect"),
   stacked: document.getElementById("stackedSelect"),
   details: document.getElementById("detailsToggle"),
-  historyBand: document.getElementById("historyBandToggle"),
   scorecard: document.getElementById("scorecardContainer"),
   lineChart: document.getElementById("lineChart"),
   stackedChart: document.getElementById("stackedChart"),
@@ -90,10 +88,9 @@ function cloneOption(option) {
 }
 
 function updateVisibleControls() {
-  setHidden('[data-filter="continent"]', state.tab !== "overview");
+  setHidden('[data-filter="continent"]', !["overview", "line"].includes(state.tab));
   setHidden('[data-filter="details"]', state.tab !== "overview");
   setHidden('[data-filter="stacked"]', state.tab !== "stacked");
-  setHidden('[data-filter="history-band"]', state.tab !== "line");
   els.energy.closest(".control-group").hidden = state.tab === "stacked" || state.tab === "scatter";
 }
 
@@ -200,12 +197,6 @@ function optimizeChartOption(option, chartName) {
   });
 }
 
-function updateHistoryBandButton() {
-  els.historyBand.classList.toggle("is-active", state.historyBand);
-  els.historyBand.setAttribute("aria-pressed", String(state.historyBand));
-  els.historyBand.textContent = state.historyBand ? "History band: On" : "Year lines";
-}
-
 function formatDailyTrendAxes(option, chartName) {
   if (chartName !== "line" || !Array.isArray(option.xAxis)) {
     return;
@@ -225,102 +216,6 @@ function formatDailyTrendAxes(option, chartName) {
   });
 }
 
-function buildHistoryBandSeries(config) {
-  const ranges = config.history_ranges || [];
-  const series = [];
-
-  ranges.forEach((range) => {
-    const floorData = [];
-    const spanData = [];
-
-    range.min.forEach((minValue, index) => {
-      const maxValue = range.max[index];
-      if (minValue == null || maxValue == null) {
-        floorData.push(null);
-        spanData.push(null);
-      } else {
-        floorData.push(minValue);
-        spanData.push(Math.max(0, maxValue - minValue));
-      }
-    });
-
-    series.push({
-      name: `History floor ${range.gridIndex}`,
-      type: "line",
-      xAxisIndex: range.gridIndex,
-      yAxisIndex: range.gridIndex,
-      data: floorData,
-      stack: `history-band-${range.gridIndex}`,
-      showSymbol: false,
-      connectNulls: false,
-      lineStyle: { opacity: 0 },
-      itemStyle: { opacity: 0 },
-      silent: true,
-      tooltip: { show: false },
-      z: 1
-    });
-
-    series.push({
-      name: "History range",
-      type: "line",
-      xAxisIndex: range.gridIndex,
-      yAxisIndex: range.gridIndex,
-      data: spanData,
-      stack: `history-band-${range.gridIndex}`,
-      showSymbol: false,
-      connectNulls: false,
-      areaStyle: { color: "rgba(49, 90, 125, 0.18)" },
-      lineStyle: { opacity: 0 },
-      itemStyle: { opacity: 0 },
-      silent: true,
-      tooltip: { show: false },
-      z: 1
-    });
-  });
-
-  return series;
-}
-
-function applyHistoryBand(option, config) {
-  const years = config.years || [];
-  const latestYear = config.latest_year || years[years.length - 1];
-  if (!state.historyBand || !latestYear || !Array.isArray(option.series)) {
-    return;
-  }
-
-  const latestColor = (config.year_colors || {})[latestYear] || "#C7352E";
-  const latestSeries = option.series
-    .filter((series) => series.name === latestYear)
-    .map((series) => ({
-      ...series,
-      z: 3,
-      lineStyle: {
-        ...(series.lineStyle || {}),
-        width: 2.8,
-        opacity: 1,
-        color: latestColor
-      },
-      itemStyle: {
-        ...(series.itemStyle || {}),
-        opacity: 1,
-        color: latestColor
-      }
-    }));
-
-  option.series = [...buildHistoryBandSeries(config), ...latestSeries];
-  option.legend = {
-    ...(option.legend || {}),
-    data: [
-      { name: "History range", icon: "roundRect", textStyle: { color: "#315A7D" } },
-      { name: latestYear, icon: "circle", textStyle: { color: latestColor } }
-    ],
-    selected: {
-      "History range": true,
-      [latestYear]: true
-    }
-  };
-}
-
 function reflowDailyTrendLayout(option, containerWidth) {
   if (!Array.isArray(option.grid)) {
     return 1;
@@ -333,14 +228,17 @@ function reflowDailyTrendLayout(option, containerWidth) {
   const rowHeight = 92 / rows;
   const widthAdjustment = columns === 1 ? 1.8 : 0.8;
   const rowGap = Math.min(1.2, Math.max(0.22, rowHeight * 0.18));
+  const titleBand = Math.min(0.95, Math.max(0.32, rowHeight * 0.12));
 
   option.grid.forEach((grid, index) => {
     const row = Math.floor(index / columns);
     const column = index % columns;
-    grid.top = `${rowHeight * row + 3.0 + rowGap * 0.65}%`;
+    const itemTop = rowHeight * row + 3.0 + rowGap * 0.65;
+    const gridTop = itemTop + titleBand;
+    grid.top = `${gridTop}%`;
     grid.left = `${width * column + widthAdjustment - 0.2}%`;
     grid.width = `${width - 2.0 * widthAdjustment}%`;
-    grid.height = `${rowHeight - rowGap}%`;
+    grid.height = `${rowHeight - rowGap - titleBand}%`;
     grid.containLabel = true;
     grid.show = true;
     grid.backgroundColor = "#FFFFFF";
@@ -353,12 +251,14 @@ function reflowDailyTrendLayout(option, containerWidth) {
       const row = Math.floor(index / columns);
       const column = index % columns;
       const gridCenter = width * column + widthAdjustment - 0.2 + (width - 2.0 * widthAdjustment) / 2;
+      const itemTop = rowHeight * row + 3.0 + rowGap * 0.65;
       graphic.left = `${gridCenter}%`;
-      graphic.top = `${rowHeight * row + 2.0 + rowGap * 0.2}%`;
+      graphic.top = `${itemTop + 0.18}%`;
       graphic.style = {
         ...(graphic.style || {}),
         align: "center",
-        textAlign: "center"
+        textAlign: "center",
+        textVerticalAlign: "top"
       };
     });
   }
@@ -366,16 +266,54 @@ function reflowDailyTrendLayout(option, containerWidth) {
   return columns;
 }
 
+function filterDailyTrendOption(option, config) {
+  const countries = config.countries || [];
+  if (state.continent === "World" || !countries.length) {
+    return 0;
+  }
+
+  const selectedIndexes = countries
+    .map((country, index) => ({ ...country, index }))
+    .filter((country) => country.continent === state.continent)
+    .map((country) => country.index);
+  const selectedSet = new Set(selectedIndexes);
+  const indexMap = new Map(selectedIndexes.map((oldIndex, newIndex) => [oldIndex, newIndex]));
+
+  option.grid = selectedIndexes.map((index) => option.grid[index]);
+  option.xAxis = selectedIndexes.map((index, newIndex) => ({
+    ...option.xAxis[index],
+    gridIndex: newIndex
+  }));
+  option.yAxis = selectedIndexes.map((index, newIndex) => ({
+    ...option.yAxis[index],
+    gridIndex: newIndex
+  }));
+  option.graphic = selectedIndexes.map((index) => option.graphic[index]);
+  option.series = option.series
+    .filter((series) => selectedSet.has(series.xAxisIndex))
+    .map((series) => {
+      const nextIndex = indexMap.get(series.xAxisIndex);
+      return {
+        ...series,
+        xAxisIndex: nextIndex,
+        yAxisIndex: nextIndex
+      };
+    });
+
+  return selectedIndexes.length;
+}
+
 async function renderLineChart() {
   setStatus("Loading daily trends...");
   try {
     const config = await fetchJson(`tools/line_chart/${state.energy}.json`);
     const option = cloneOption(config.option);
-    applyHistoryBand(option, config);
+    const selectedCountryCount = filterDailyTrendOption(option, config);
     const containerWidth = els.lineChart.clientWidth || els.lineChart.parentElement.clientWidth || window.innerWidth;
     const columns = reflowDailyTrendLayout(option, containerWidth);
     setChart(els.lineChart, "line", option, lineChartHeight(option, columns));
-    setStatus(`${titleCase(state.energy)} trends`);
+    const regionLabel = state.continent === "World" ? "World" : `${state.continent} (${selectedCountryCount})`;
+    setStatus(`${titleCase(state.energy)} trends / ${regionLabel}`);
   } catch (error) {
     showError(els.lineChart, error);
     setStatus("Daily trends failed");
@@ -578,12 +516,6 @@ function bindEvents() {
     render();
   });
 
-  els.historyBand.addEventListener("click", () => {
-    state.historyBand = !state.historyBand;
-    updateHistoryBandButton();
-    renderLineChart();
-  });
-
   let resizeTimer = null;
   window.addEventListener("resize", () => {
     window.clearTimeout(resizeTimer);
@@ -600,7 +532,6 @@ function bindEvents() {
 fillSelect(els.energy, ENERGY_TYPES);
 fillSelect(els.continent, CONTINENTS, (value) => value);
 fillSelect(els.stacked, STACKED_TYPES, (value) => value);
-updateHistoryBandButton();
 bindEvents();
 updateVisibleControls();
 render();

@@ -96,28 +96,6 @@ select {
   font: inherit;
 }
 
-.mode-toggle {
-  width: 100%;
-  min-height: 42px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--ink);
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.mode-toggle.is-active {
-  background: var(--teal);
-  border-color: var(--teal);
-  color: #ffffff;
-}
-
-.mode-toggle:hover {
-  filter: brightness(0.97);
-}
-
 .toggle-row {
   display: flex;
   align-items: center;
