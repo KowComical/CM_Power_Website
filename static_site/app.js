@@ -18,6 +18,7 @@ const PAGE_TITLES = {
 };
 
 const WORLD_MAP_NAME = "cmPowerWorld";
+const MAP_CHART_HEIGHT = 560;
 const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
 const MONTH_INDEX = {
   Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
@@ -593,15 +594,18 @@ async function loadMapData(energyType) {
   });
 
   const maxCountryCount = Math.max(...dates.map((entry) => entry.countryCount));
-  const minimumDefaultCoverage = Math.max(1, Math.floor(maxCountryCount * 0.75));
-  let defaultIndex = dates.length - 1;
+  let maxCompleteIndex = dates.length - 1;
   for (let index = dates.length - 1; index >= 0; index -= 1) {
-    if (dates[index].countryCount >= minimumDefaultCoverage) {
-      defaultIndex = index;
+    if (dates[index].countryCount === maxCountryCount) {
+      maxCompleteIndex = index;
       break;
     }
   }
-  const mapData = { dates, defaultIndex };
+  const completeDates = dates.slice(0, maxCompleteIndex + 1);
+  const mapData = {
+    dates: completeDates,
+    defaultIndex: completeDates.length - 1
+  };
   mapDataCache.set(energyType, mapData);
   return mapData;
 }
@@ -634,7 +638,7 @@ function mapOptionForDate(entry) {
       left: 24,
       bottom: 26,
       itemWidth: 12,
-      itemHeight: 142,
+      itemHeight: 118,
       calculable: false,
       text: [maxLabel, "0 GWh"],
       textGap: 10,
@@ -644,7 +648,7 @@ function mapOptionForDate(entry) {
         fontWeight: 700
       },
       inRange: {
-        color: ["#d8eee8", "#8dcbbd", "#329487", "#184b60"]
+        color: ["#fbfdff", "#d8e8f6", "#88b7dc", "#f0b6ad", "#c86464"]
       },
       outOfRange: {
         color: "#edf2f0"
@@ -656,11 +660,11 @@ function mapOptionForDate(entry) {
       map: WORLD_MAP_NAME,
       data: entry.data,
       roam: true,
-      zoom: 1.12,
-      top: 38,
-      left: 20,
-      right: 20,
-      bottom: 28,
+      zoom: 1,
+      top: 18,
+      left: 28,
+      right: 28,
+      bottom: 18,
       selectedMode: false,
       label: {
         show: false
@@ -704,7 +708,7 @@ async function updateMapForDate() {
     charts.map.setOption(mapOptionForDate(entry), true);
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
   } else {
-    setChart(els.mapChart, "map", mapOptionForDate(entry), 680);
+    setChart(els.mapChart, "map", mapOptionForDate(entry), MAP_CHART_HEIGHT);
   }
 }
 
@@ -726,7 +730,7 @@ async function renderMapChart() {
     els.mapDateSlider.value = String(state.mapDateIndex);
     const entry = mapData.dates[state.mapDateIndex];
     updateMapStats(entry);
-    setChart(els.mapChart, "map", mapOptionForDate(entry), 680);
+    setChart(els.mapChart, "map", mapOptionForDate(entry), MAP_CHART_HEIGHT);
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
   } catch (error) {
     showError(els.mapChart, error);
