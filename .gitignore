@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+.ipynb_checkpoints/
+
+*.log
+streamlit_*.log
+log/
+
+data/data_for_download.csv
+
+wandb/
+
+.cache/
+.config/
+.DS_Store

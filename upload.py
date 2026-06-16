@@ -5,7 +5,6 @@ import ast
 import math
 import json
 from datetime import datetime
-import base64
 import shutil
 from pathlib import Path
 from html import escape
@@ -36,7 +35,6 @@ GENERATED_OUTPUTS = [
     'tools/data_description',
     'tools/line_chart',
     'tools/stacked_area_chart',
-    'tools/logo_base64.txt',
     'tools/logo_edited.png',
     'tools/style.css',
 ]
@@ -72,8 +70,6 @@ CONTINENT_COLORS = {
 def main():
     # 先更新数据
     process_data()
-    # 更新图
-    save_image_as_base64('logo_edited.png')
     # 上传
     git_push(global_path)
 
@@ -794,17 +790,6 @@ def adjust_lightness(rgb, factor):
     g = min(max(0, g + int(g * factor)), 255)
     b = min(max(0, b + int(b * factor)), 255)
     return r, g, b
-
-
-def save_image_as_base64(image_name):
-    # Open the image file
-    with open(os.path.join(tools_path, image_name), "rb") as img_file:
-        # Encode the image as Base64
-        b64_string = base64.b64encode(img_file.read()).decode()
-
-    # Save the base64 string to the output file
-    with open(os.path.join(tools_path, 'logo_base64.txt'), "w") as f:
-        f.write(b64_string)
 
 
 def current_year_sum(group):
