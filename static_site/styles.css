@@ -110,32 +110,6 @@ select {
   accent-color: var(--teal);
 }
 
-.year-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.year-button {
-  min-width: 58px;
-  min-height: 34px;
-  border: 1px solid var(--year-color, var(--line));
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--year-color, var(--ink));
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.year-button.is-active {
-  background: var(--year-color, var(--blue));
-  color: #ffffff;
-}
-
-.year-button:hover {
-  filter: brightness(0.96);
-}
-
 .download-link {
   display: flex;
   align-items: center;

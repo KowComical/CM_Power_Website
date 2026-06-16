@@ -21,9 +21,7 @@ const state = {
   energy: "total",
   continent: "World",
   stacked: "Fossil",
-  details: false,
-  hoverTooltips: true,
-  selectedYears: []
+  details: false
 };
 
 const jsonCache = new Map();
@@ -37,8 +35,6 @@ const els = {
   continent: document.getElementById("continentSelect"),
   stacked: document.getElementById("stackedSelect"),
   details: document.getElementById("detailsToggle"),
-  hoverTooltips: document.getElementById("hoverTooltipToggle"),
-  yearButtons: document.getElementById("yearButtons"),
   scorecard: document.getElementById("scorecardContainer"),
   lineChart: document.getElementById("lineChart"),
   stackedChart: document.getElementById("stackedChart"),
@@ -94,8 +90,6 @@ function cloneOption(option) {
 function updateVisibleControls() {
   setHidden('[data-filter="continent"]', state.tab !== "overview");
   setHidden('[data-filter="details"]', state.tab !== "overview");
-  setHidden('[data-filter="chart-tooltip"]', !["line", "stacked"].includes(state.tab));
-  setHidden('[data-filter="years"]', state.tab !== "line");
   setHidden('[data-filter="stacked"]', state.tab !== "stacked");
   els.energy.closest(".control-group").hidden = state.tab === "stacked" || state.tab === "scatter";
 }
@@ -155,12 +149,9 @@ function optimizeChartOption(option, chartName) {
   if (option.tooltip) {
     option.tooltip.transitionDuration = 0;
     option.tooltip.confine = true;
-    option.tooltip.triggerOn = state.hoverTooltips || chartName === "scatter" ? "mousemove|click" : "click";
+    option.tooltip.triggerOn = "mousemove|click";
     option.tooltip.axisPointer = option.tooltip.axisPointer || {};
     option.tooltip.axisPointer.animation = false;
-    if (!state.hoverTooltips && chartName !== "scatter") {
-      option.tooltip.trigger = "item";
-    }
   }
 
   if (!Array.isArray(option.series)) {
@@ -192,72 +183,17 @@ function formatDailyTrendAxes(option, chartName) {
     return;
   }
 
-  const monthLabels = new Map([
-    ["Jan-01", "Jan"], ["Feb-01", "Feb"], ["Mar-01", "Mar"],
-    ["Apr-01", "Apr"], ["May-01", "May"], ["Jun-01", "Jun"],
-    ["Jul-01", "Jul"], ["Aug-01", "Aug"], ["Sep-01", "Sep"],
-    ["Oct-01", "Oct"], ["Nov-01", "Nov"], ["Dec-01", "Dec"]
+  const quarterLabels = new Map([
+    ["Jan-01", "Jan"], ["Apr-01", "Apr"],
+    ["Jul-01", "Jul"], ["Oct-01", "Oct"]
   ]);
 
   option.xAxis.forEach((axis) => {
     axis.axisLabel = axis.axisLabel || {};
     axis.axisTick = axis.axisTick || {};
-    axis.axisLabel.interval = (index, value) => monthLabels.has(value);
-    axis.axisLabel.formatter = (value) => monthLabels.get(value) || "";
-    axis.axisTick.interval = (index, value) => monthLabels.has(value);
-  });
-}
-
-function ensureSelectedYears(config) {
-  const years = config.years || [];
-  const availableYears = new Set(years);
-  state.selectedYears = state.selectedYears.filter((year) => availableYears.has(year));
-
-  if (!state.selectedYears.length) {
-    state.selectedYears = [...(config.default_years || years.slice(-3))];
-  }
-}
-
-function renderYearButtons(config) {
-  const years = config.years || [];
-  const colors = config.year_colors || {};
-
-  els.yearButtons.innerHTML = "";
-  years.forEach((year) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "year-button";
-    button.dataset.year = year;
-    button.textContent = year;
-    button.style.setProperty("--year-color", colors[year] || "#315A7D");
-    button.classList.toggle("is-active", state.selectedYears.includes(year));
-    button.addEventListener("click", () => toggleYear(year, config));
-    els.yearButtons.appendChild(button);
-  });
-}
-
-function toggleYear(year, config) {
-  if (state.selectedYears.includes(year)) {
-    if (state.selectedYears.length === 1) {
-      return;
-    }
-    state.selectedYears = state.selectedYears.filter((item) => item !== year);
-  } else {
-    state.selectedYears = [...state.selectedYears, year].sort();
-  }
-
-  renderYearButtons(config);
-  renderLineChart();
-}
-
-function applySelectedYears(option) {
-  option.legend = option.legend || {};
-  option.legend.selected = {};
-  const selectedYears = new Set(state.selectedYears);
-
-  (option.legend.data || []).forEach((item) => {
-    const year = typeof item === "string" ? item : item.name;
-    option.legend.selected[year] = selectedYears.has(year);
+    axis.axisLabel.interval = (index, value) => quarterLabels.has(value);
+    axis.axisLabel.formatter = (value) => quarterLabels.get(value) || "";
+    axis.axisTick.interval = (index, value) => quarterLabels.has(value);
   });
 }
 
@@ -265,10 +201,7 @@ async function renderLineChart() {
   setStatus("Loading daily trends...");
   try {
     const config = await fetchJson(`tools/line_chart/${state.energy}.json`);
-    ensureSelectedYears(config);
-    renderYearButtons(config);
     const option = cloneOption(config.option);
-    applySelectedYears(option);
     setChart(els.lineChart, "line", option, chartHeight(config));
     setStatus(`${titleCase(state.energy)} trends`);
   } catch (error) {
@@ -473,11 +406,6 @@ function bindEvents() {
     render();
   });
 
-  els.hoverTooltips.addEventListener("change", () => {
-    state.hoverTooltips = els.hoverTooltips.checked;
-    render();
-  });
-
   window.addEventListener("resize", () => {
     Object.values(charts).forEach((chart) => chart.resize());
   });
@@ -486,7 +414,6 @@ function bindEvents() {
 fillSelect(els.energy, ENERGY_TYPES);
 fillSelect(els.continent, CONTINENTS, (value) => value);
 fillSelect(els.stacked, STACKED_TYPES, (value) => value);
-els.hoverTooltips.checked = state.hoverTooltips;
 bindEvents();
 updateVisibleControls();
 render();
