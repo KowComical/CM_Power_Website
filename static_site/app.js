@@ -709,8 +709,7 @@ function mapOptionForDate(entry) {
         return [
           `<strong>${params.name}</strong>`,
           entry.date,
-          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`,
-          `Color scale: ${Math.round(params.data.mapScale)}%`
+          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`
         ].join("<br>");
       }
     },
