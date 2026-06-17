@@ -20,14 +20,18 @@ const PAGE_TITLES = {
 const WORLD_MAP_NAME = "cmPowerWorld";
 const MAP_CHART_HEIGHT = 560;
 const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
-const MAP_QUANTILE_STOPS = [0, 0.2, 0.4, 0.6, 0.8, 0.92, 1];
-const MAP_QUANTILE_COLORS = [
-  "#d9edf7",
-  "#8fc5d9",
-  "#d7e8cf",
+const MAP_SCALE_COLORS = [
+  "#f7fbff",
+  "#d8eef5",
+  "#9ed2e1",
+  "#61abc5",
+  "#c9dfbb",
   "#fff0a8",
-  "#e89b5f",
-  "#c95757"
+  "#f3c369",
+  "#e58a4f",
+  "#d85b4f",
+  "#b93643",
+  "#7f1f2d"
 ];
 const MONTH_INDEX = {
   Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
@@ -592,91 +596,16 @@ function formatGwh(value) {
   return `${Math.round(value).toLocaleString()} GWh`;
 }
 
-function formatMapGwh(value) {
-  if (!Number.isFinite(value)) {
-    return "-";
-  }
-  if (value < 10) {
-    return `${value.toFixed(1)} GWh`;
-  }
-  return formatGwh(value);
-}
-
-function quantile(values, probability) {
-  const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
-  if (!sorted.length) {
-    return 0;
-  }
-  const index = (sorted.length - 1) * probability;
-  const lower = Math.floor(index);
-  const upper = Math.ceil(index);
-  if (lower === upper) {
-    return sorted[lower];
-  }
-  return sorted[lower] + (sorted[upper] - sorted[lower]) * (index - lower);
-}
-
-function mapColorForPiece(index, count) {
-  if (count <= 1) {
-    return MAP_QUANTILE_COLORS[Math.floor(MAP_QUANTILE_COLORS.length / 2)];
-  }
-  const colorIndex = Math.round(index * (MAP_QUANTILE_COLORS.length - 1) / (count - 1));
-  return MAP_QUANTILE_COLORS[colorIndex];
-}
-
-function mapQuantilePieces(rawValues) {
-  const values = rawValues.filter(Number.isFinite).sort((a, b) => a - b);
-  if (!values.length) {
-    return [];
-  }
-
-  const min = values[0];
-  const max = values[values.length - 1];
-  if (min === max) {
-    return [{
-      min,
-      max,
-      label: formatMapGwh(max),
-      color: mapColorForPiece(0, 1)
-    }];
-  }
-
-  const thresholds = MAP_QUANTILE_STOPS
-    .slice(1, -1)
-    .map((stop) => quantile(values, stop))
-    .filter((value, index, list) => (
-      value > min &&
-      value < max &&
-      (index === 0 || Math.abs(value - list[index - 1]) > 1e-9)
-    ));
-
-  const boundaries = [min, ...thresholds, max];
-  const lowToHighPieces = boundaries.slice(0, -1).map((lower, index) => {
-    const upper = boundaries[index + 1];
-    const isFirst = index === 0;
-    const isLast = index === boundaries.length - 2;
-    const piece = {
-      color: mapColorForPiece(index, boundaries.length - 1)
-    };
-
-    if (isFirst) {
-      piece.gte = min;
-      piece.lte = upper;
-      piece.label = `<= ${formatMapGwh(upper)}`;
-    } else if (isLast) {
-      piece.gt = lower;
-      piece.lte = max;
-      piece.label = `> ${formatMapGwh(lower)}`;
-    } else {
-      piece.gt = lower;
-      piece.lte = upper;
-      piece.label = `${formatMapGwh(lower)} - ${formatMapGwh(upper)}`;
-    }
-
-    return piece;
+function applyMapScaleValues(data) {
+  const maxRawValue = Math.max(...data.map((item) => item.rawValue));
+  const maxLogValue = Math.log10(maxRawValue + 1);
+  data.forEach((item) => {
+    const score = maxLogValue > 0
+      ? (Math.log10(item.rawValue + 1) / maxLogValue) * 100
+      : 100;
+    item.value = score;
+    item.mapScale = score;
   });
-
-  return lowToHighPieces.reverse();
 }
 
 async function ensureWorldMap() {
@@ -714,7 +643,6 @@ async function loadMapData(energyType) {
       }
 
       const data = [];
-      const rawValues = [];
       let total = 0;
 
       countries.forEach((country) => {
@@ -730,20 +658,19 @@ async function loadMapData(energyType) {
 
         data.push({
           name: country,
-          value: rawValue,
+          value: 0,
           rawValue
         });
-        rawValues.push(rawValue);
         total += rawValue;
       });
 
       if (data.length) {
+        applyMapScaleValues(data);
         dates.push({
           date,
           data,
           countryCount: data.length,
-          total,
-          visualPieces: mapQuantilePieces(rawValues)
+          total
         });
       }
     });
@@ -782,25 +709,29 @@ function mapOptionForDate(entry) {
         return [
           `<strong>${params.name}</strong>`,
           entry.date,
-          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`
+          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`,
+          `Color scale: ${Math.round(params.data.mapScale)}%`
         ].join("<br>");
       }
     },
     visualMap: {
-      type: "piecewise",
-      pieces: entry.visualPieces,
+      type: "continuous",
+      min: 0,
+      max: 100,
       left: 24,
       bottom: 26,
-      itemWidth: 13,
-      itemHeight: 12,
-      itemGap: 6,
+      itemWidth: 12,
+      itemHeight: 128,
       calculable: false,
-      text: ["GWh/day", ""],
-      textGap: 8,
+      text: ["High", "Low"],
+      textGap: 10,
       textStyle: {
         color: "#53625f",
         fontSize: 11,
         fontWeight: 700
+      },
+      inRange: {
+        color: MAP_SCALE_COLORS
       },
       outOfRange: {
         color: "#edf2f0"
