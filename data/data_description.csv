@@ -1,4 +1,4 @@
-country,source,source_url,continent,resolution,update_frequency,region_data,starting_date
+﻿country,source,source_url,continent,resolution,update_frequency,region_data,starting_date
 China,中国电力企业联合会,https://cec.org.cn/menu/index.html?170,Asia,Monthly,Monthly,Not Available,2016-01-01
 India,POSOCO,https://posoco.in/reports/daily-reports/,Asia,Daily,Daily,Available,2015-01-01
 Japan,OCCTO,https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login#,Asia,Hourly,Monthly,Not Available,2016-01-01
@@ -13,6 +13,7 @@ United Kingdom,BMRS,https://www.bmreports.com/bmrs,Europe,Hourly,Hourly,Not Avai
 Russia,EMRES,https://emres.cn,Europe,Hourly,Hourly,Not Available,2015-01-01
 United States,EIA,https://www.eia.gov/electricity/,North America,Hourly,Hourly,Available,2016-01-01
 Mexico,Gobierno de Mexico,https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx,North America,Hourly,Monthly,Not Available,2016-04-01
+Canada,Statistics Canada,https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2510001501,North America,Daily,Monthly,Available,2016-01-01
 Brazil,ONS,http://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao,South America,Hourly,Hourly,Not Available,2016-01-01
 Chile,Coordinador Eléctrico Nacional,https://www.coordinador.cl/operacion/graficos/operacion-real/generacion-real/,South America,Hourly,Daily,Available,2012-01-01
 Australia,Opennem,https://opennem.org.au/energy/nem/?range=7d&interval=30m,Oceania,Hourly,Hourly,Available,1999-01-01
