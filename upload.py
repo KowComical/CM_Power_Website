@@ -25,6 +25,7 @@ categories = {
 }
 
 sub_category = ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables']
+NON_COUNTRY_AGGREGATES = {'EU27&UK'}
 
 GENERATED_OUTPUTS = [
     '.nojekyll',
@@ -824,7 +825,8 @@ def get_scorecard(df, view_details):
         </div>
         """
 
-    n_countries = len(df)
+    country_rows = df[~df['country'].isin(NON_COUNTRY_AGGREGATES)]
+    n_countries = len(country_rows)
     latest_date = min(df['max_date'].dt.strftime('%Y-%b'))
     # Example additional statisti
     selected_energy = safe_html(df['type'].tolist()[0])
