@@ -649,16 +649,18 @@ async function loadMapData(energyType) {
       }
 
       const data = [];
+      let countryCount = 0;
       let total = 0;
 
       countries.forEach((country) => {
-        if (NON_MAP_COUNTRIES.has(country)) {
-          return;
-        }
-
         const values = seriesByCountryYear.get(`${country}|${year}`);
         const rawValue = values ? values[dayIndex] : null;
         if (!Number.isFinite(rawValue) || rawValue <= 0) {
+          return;
+        }
+
+        countryCount += 1;
+        if (NON_MAP_COUNTRIES.has(country)) {
           return;
         }
 
@@ -675,7 +677,7 @@ async function loadMapData(energyType) {
         dates.push({
           date,
           data,
-          countryCount: data.length,
+          countryCount,
           total
         });
       }
