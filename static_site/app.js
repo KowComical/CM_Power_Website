@@ -20,6 +20,15 @@ const PAGE_TITLES = {
 const WORLD_MAP_NAME = "cmPowerWorld";
 const MAP_CHART_HEIGHT = 560;
 const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
+const MAP_QUANTILE_STOPS = [0, 0.2, 0.4, 0.6, 0.8, 0.92, 1];
+const MAP_QUANTILE_COLORS = [
+  "#d9edf7",
+  "#8fc5d9",
+  "#d7e8cf",
+  "#fff0a8",
+  "#e89b5f",
+  "#c95757"
+];
 const MONTH_INDEX = {
   Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
   Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
@@ -583,6 +592,16 @@ function formatGwh(value) {
   return `${Math.round(value).toLocaleString()} GWh`;
 }
 
+function formatMapGwh(value) {
+  if (!Number.isFinite(value)) {
+    return "-";
+  }
+  if (value < 10) {
+    return `${value.toFixed(1)} GWh`;
+  }
+  return formatGwh(value);
+}
+
 function quantile(values, probability) {
   const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
   if (!sorted.length) {
@@ -595,6 +614,69 @@ function quantile(values, probability) {
     return sorted[lower];
   }
   return sorted[lower] + (sorted[upper] - sorted[lower]) * (index - lower);
+}
+
+function mapColorForPiece(index, count) {
+  if (count <= 1) {
+    return MAP_QUANTILE_COLORS[Math.floor(MAP_QUANTILE_COLORS.length / 2)];
+  }
+  const colorIndex = Math.round(index * (MAP_QUANTILE_COLORS.length - 1) / (count - 1));
+  return MAP_QUANTILE_COLORS[colorIndex];
+}
+
+function mapQuantilePieces(rawValues) {
+  const values = rawValues.filter(Number.isFinite).sort((a, b) => a - b);
+  if (!values.length) {
+    return [];
+  }
+
+  const min = values[0];
+  const max = values[values.length - 1];
+  if (min === max) {
+    return [{
+      min,
+      max,
+      label: formatMapGwh(max),
+      color: mapColorForPiece(0, 1)
+    }];
+  }
+
+  const thresholds = MAP_QUANTILE_STOPS
+    .slice(1, -1)
+    .map((stop) => quantile(values, stop))
+    .filter((value, index, list) => (
+      value > min &&
+      value < max &&
+      (index === 0 || Math.abs(value - list[index - 1]) > 1e-9)
+    ));
+
+  const boundaries = [min, ...thresholds, max];
+  const lowToHighPieces = boundaries.slice(0, -1).map((lower, index) => {
+    const upper = boundaries[index + 1];
+    const isFirst = index === 0;
+    const isLast = index === boundaries.length - 2;
+    const piece = {
+      color: mapColorForPiece(index, boundaries.length - 1)
+    };
+
+    if (isFirst) {
+      piece.gte = min;
+      piece.lte = upper;
+      piece.label = `<= ${formatMapGwh(upper)}`;
+    } else if (isLast) {
+      piece.gt = lower;
+      piece.lte = max;
+      piece.label = `> ${formatMapGwh(lower)}`;
+    } else {
+      piece.gt = lower;
+      piece.lte = upper;
+      piece.label = `${formatMapGwh(lower)} - ${formatMapGwh(upper)}`;
+    }
+
+    return piece;
+  });
+
+  return lowToHighPieces.reverse();
 }
 
 async function ensureWorldMap() {
@@ -648,7 +730,7 @@ async function loadMapData(energyType) {
 
         data.push({
           name: country,
-          value: Math.log10(rawValue + 1),
+          value: rawValue,
           rawValue
         });
         rawValues.push(rawValue);
@@ -661,7 +743,7 @@ async function loadMapData(energyType) {
           data,
           countryCount: data.length,
           total,
-          visualMax: Math.max(1, Math.log10(quantile(rawValues, 0.95) + 1))
+          visualPieces: mapQuantilePieces(rawValues)
         });
       }
     });
@@ -685,8 +767,6 @@ async function loadMapData(energyType) {
 }
 
 function mapOptionForDate(entry) {
-  const maxLabel = formatGwh(Math.pow(10, entry.visualMax) - 1);
-
   return {
     backgroundColor: "#fbfcfc",
     tooltip: {
@@ -707,22 +787,20 @@ function mapOptionForDate(entry) {
       }
     },
     visualMap: {
-      min: 0,
-      max: entry.visualMax,
+      type: "piecewise",
+      pieces: entry.visualPieces,
       left: 24,
       bottom: 26,
-      itemWidth: 12,
-      itemHeight: 118,
+      itemWidth: 13,
+      itemHeight: 12,
+      itemGap: 6,
       calculable: false,
-      text: [maxLabel, "0 GWh"],
-      textGap: 10,
+      text: ["GWh/day", ""],
+      textGap: 8,
       textStyle: {
         color: "#53625f",
         fontSize: 11,
         fontWeight: 700
-      },
-      inRange: {
-        color: ["#fbfdff", "#d8e8f6", "#88b7dc", "#f0b6ad", "#c86464"]
       },
       outOfRange: {
         color: "#edf2f0"
