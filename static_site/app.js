@@ -79,6 +79,7 @@ const charts = {};
 let scatterRecords = null;
 let scatterMetadata = null;
 let countryContinentMap = null;
+let scatterGridLabels = [];
 let worldMapRegistered = false;
 
 const els = {
@@ -238,6 +239,11 @@ function setChart(container, name, option, height) {
     charts[name].on("legendselectchanged", () => refreshDailyTrendYearStyles(charts[name]));
     charts[name].on("legendselected", () => refreshDailyTrendYearStyles(charts[name]));
     charts[name].on("legendunselected", () => refreshDailyTrendYearStyles(charts[name]));
+  } else if (name === "scatter") {
+    charts[name].on("legendselectchanged", () => refreshScatterSelection(charts[name]));
+    charts[name].on("legendselected", () => refreshScatterSelection(charts[name]));
+    charts[name].on("legendunselected", () => refreshScatterSelection(charts[name]));
+    refreshScatterSelection(charts[name]);
   }
 }
 
@@ -980,6 +986,84 @@ function formatR2(value) {
   return Number.isFinite(value) ? value.toFixed(3) : "n/a";
 }
 
+function firstOptionItem(value) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function getScatterSelectedContinents(option) {
+  const legend = firstOptionItem(option.legend);
+  return legend?.selected || {};
+}
+
+function scatterSeriesGridIndex(series) {
+  return Number(firstOptionItem(series.xAxisIndex) ?? 0);
+}
+
+function scatterSeriesValues(series) {
+  return (series.data || [])
+    .map((point) => (point && point.value !== undefined ? point.value : point))
+    .filter((value) => Array.isArray(value) && value.length >= 2)
+    .map((value) => ({ value: Number(value[0]), iea: Number(value[1]) }))
+    .filter((point) => Number.isFinite(point.value) && Number.isFinite(point.iea));
+}
+
+function refreshScatterSelection(chart) {
+  if (!chart || !scatterGridLabels.length) {
+    return;
+  }
+
+  const option = chart.getOption();
+  const selected = getScatterSelectedContinents(option);
+  const rowsByGrid = scatterGridLabels.map(() => []);
+
+  (option.series || []).forEach((series) => {
+    const seriesType = firstOptionItem(series.type);
+    const seriesName = firstOptionItem(series.name);
+    if (seriesType !== "scatter" || selected[seriesName] === false) {
+      return;
+    }
+
+    const gridIndex = scatterSeriesGridIndex(series);
+    if (rowsByGrid[gridIndex]) {
+      rowsByGrid[gridIndex].push(...scatterSeriesValues(series));
+    }
+  });
+
+  const titles = [];
+  const xAxis = [];
+  const yAxis = [];
+  const referenceSeries = [];
+
+  rowsByGrid.forEach((rows, index) => {
+    const stats = scatterFitStats(rows);
+    const maxValue = rows.length ? Math.max(...rows.flatMap((row) => [row.value, row.iea])) : 1;
+    const axis = niceScatterAxis(maxValue);
+
+    titles.push({
+      id: `scatter-title-${index}`,
+      text: `${scatterGridLabels[index]} · R2 ${formatR2(stats.r2)}`
+    });
+    xAxis.push({
+      id: `scatter-x-${index}`,
+      max: axis.max,
+      interval: axis.interval,
+      splitNumber: 4
+    });
+    yAxis.push({
+      id: `scatter-y-${index}`,
+      max: axis.max,
+      interval: axis.interval,
+      splitNumber: 4
+    });
+    referenceSeries.push({
+      id: `scatter-reference-${index}`,
+      data: [[0, 0], [axis.max, axis.max]]
+    });
+  });
+
+  chart.setOption({ title: titles, xAxis, yAxis, series: referenceSeries }, false);
+}
+
 async function renderScatterChart() {
   setStatus("Loading IEA comparison...");
   try {
@@ -988,6 +1072,7 @@ async function renderScatterChart() {
     updateScatterMetadata(metadata);
     const continentsByCountry = await loadCountryContinents();
     const types = ENERGY_TYPES.filter((type) => records.some((row) => row.type === type));
+    scatterGridLabels = types.map((type) => titleCase(type));
     const countries = [...new Set(records.map((row) => row.country))];
     const continents = SCATTER_CONTINENTS.filter((continent) => (
       continent === "Other"
@@ -1032,6 +1117,7 @@ async function renderScatterChart() {
       });
 
       xAxis.push({
+        id: `scatter-x-${index}`,
         gridIndex: index,
         min: 0,
         max: maxVal,
@@ -1046,6 +1132,7 @@ async function renderScatterChart() {
       });
 
       yAxis.push({
+        id: `scatter-y-${index}`,
         gridIndex: index,
         min: 0,
         max: maxVal,
@@ -1060,6 +1147,7 @@ async function renderScatterChart() {
       });
 
       titles.push({
+        id: `scatter-title-${index}`,
         text: `${titleCase(type)} · R2 ${formatR2(stats.r2)}`,
         textAlign: "center",
         left: `${left + gridWidth / 2}%`,
@@ -1068,6 +1156,7 @@ async function renderScatterChart() {
       });
 
       series.push({
+        id: `scatter-reference-${index}`,
         name: `${titleCase(type)} 1:1`,
         type: "line",
         xAxisIndex: index,
