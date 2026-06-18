@@ -51,13 +51,13 @@ const DAILY_TREND_YEAR_COLORS = {
 
 const DAILY_TREND_INACTIVE_COLOR = "#dbe3e4";
 const CONTINENT_SCATTER_COLORS = {
-  Africa: "#c95d5d",
-  Asia: "#c6922f",
-  Europe: "#567aa3",
-  "North America": "#92565b",
-  Oceania: "#549487",
-  "South America": "#9866a8",
-  Other: "#7f8c8d"
+  Africa: "#b73535",
+  Asia: "#b47600",
+  Europe: "#245f9c",
+  "North America": "#81363f",
+  Oceania: "#087968",
+  "South America": "#7a3f99",
+  Other: "#526166"
 };
 const SCATTER_CONTINENTS = [
   "Africa", "Asia", "Europe",
@@ -79,7 +79,7 @@ const charts = {};
 let scatterRecords = null;
 let scatterMetadata = null;
 let countryContinentMap = null;
-let scatterGridLabels = [];
+let scatterRuntime = null;
 let worldMapRegistered = false;
 
 const els = {
@@ -240,9 +240,9 @@ function setChart(container, name, option, height) {
     charts[name].on("legendselected", () => refreshDailyTrendYearStyles(charts[name]));
     charts[name].on("legendunselected", () => refreshDailyTrendYearStyles(charts[name]));
   } else if (name === "scatter") {
-    charts[name].on("legendselectchanged", () => refreshScatterSelection(charts[name]));
-    charts[name].on("legendselected", () => refreshScatterSelection(charts[name]));
-    charts[name].on("legendunselected", () => refreshScatterSelection(charts[name]));
+    charts[name].on("legendselectchanged", (params) => refreshScatterSelection(charts[name], params.selected));
+    charts[name].on("legendselected", (params) => refreshScatterSelection(charts[name], params.selected));
+    charts[name].on("legendunselected", (params) => refreshScatterSelection(charts[name], params.selected));
     refreshScatterSelection(charts[name]);
   }
 }
@@ -986,48 +986,16 @@ function formatR2(value) {
   return Number.isFinite(value) ? value.toFixed(3) : "n/a";
 }
 
-function firstOptionItem(value) {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function getScatterSelectedContinents(option) {
-  const legend = firstOptionItem(option.legend);
-  return legend?.selected || {};
-}
-
-function scatterSeriesGridIndex(series) {
-  return Number(firstOptionItem(series.xAxisIndex) ?? 0);
-}
-
-function scatterSeriesValues(series) {
-  return (series.data || [])
-    .map((point) => (point && point.value !== undefined ? point.value : point))
-    .filter((value) => Array.isArray(value) && value.length >= 2)
-    .map((value) => ({ value: Number(value[0]), iea: Number(value[1]) }))
-    .filter((point) => Number.isFinite(point.value) && Number.isFinite(point.iea));
-}
-
-function refreshScatterSelection(chart) {
-  if (!chart || !scatterGridLabels.length) {
+function refreshScatterSelection(chart, selected = {}) {
+  if (!chart || !scatterRuntime) {
     return;
   }
 
-  const option = chart.getOption();
-  const selected = getScatterSelectedContinents(option);
-  const rowsByGrid = scatterGridLabels.map(() => []);
-
-  (option.series || []).forEach((series) => {
-    const seriesType = firstOptionItem(series.type);
-    const seriesName = firstOptionItem(series.name);
-    if (seriesType !== "scatter" || selected[seriesName] === false) {
-      return;
-    }
-
-    const gridIndex = scatterSeriesGridIndex(series);
-    if (rowsByGrid[gridIndex]) {
-      rowsByGrid[gridIndex].push(...scatterSeriesValues(series));
-    }
-  });
+  const rowsByGrid = scatterRuntime.rowsByGrid.map((rowsByContinent) => (
+    scatterRuntime.continents.flatMap((continent) => (
+      selected[continent] === false ? [] : rowsByContinent.get(continent) || []
+    ))
+  ));
 
   const titles = [];
   const xAxis = [];
@@ -1041,7 +1009,7 @@ function refreshScatterSelection(chart) {
 
     titles.push({
       id: `scatter-title-${index}`,
-      text: `${scatterGridLabels[index]} · R2 ${formatR2(stats.r2)}`
+      text: `${scatterRuntime.gridLabels[index]} · R2 ${formatR2(stats.r2)}`
     });
     xAxis.push({
       id: `scatter-x-${index}`,
@@ -1072,7 +1040,12 @@ async function renderScatterChart() {
     updateScatterMetadata(metadata);
     const continentsByCountry = await loadCountryContinents();
     const types = ENERGY_TYPES.filter((type) => records.some((row) => row.type === type));
-    scatterGridLabels = types.map((type) => titleCase(type));
+    const recordsByType = new Map(types.map((type) => [type, []]));
+    records.forEach((row) => {
+      if (recordsByType.has(row.type)) {
+        recordsByType.get(row.type).push(row);
+      }
+    });
     const countries = [...new Set(records.map((row) => row.country))];
     const continents = SCATTER_CONTINENTS.filter((continent) => (
       continent === "Other"
@@ -1091,6 +1064,7 @@ async function renderScatterChart() {
     const xAxis = [];
     const yAxis = [];
     const series = [];
+    const rowsByGrid = [];
     const titles = [{
       text: "Comparison of CM_Power and IEA by Energy Source for Key Countries (TWh)",
       left: "center",
@@ -1098,7 +1072,7 @@ async function renderScatterChart() {
     }];
 
     types.forEach((type, index) => {
-      const group = records.filter((row) => row.type === type);
+      const group = recordsByType.get(type) || [];
       const stats = scatterFitStats(group);
       const axis = niceScatterAxis(Math.max(...group.flatMap((row) => [row.value, row.iea])));
       const maxVal = axis.max;
@@ -1169,11 +1143,17 @@ async function renderScatterChart() {
         legendHoverLink: false
       });
 
-      continents.forEach((continent) => {
-        const continentRows = group
-          .filter((item) => countryContinent(item.country, continentsByCountry) === continent)
-          .sort((a, b) => (a.year - b.year) || (a.month - b.month));
+      const rowsByContinent = new Map(continents.map((continent) => [continent, []]));
+      group.forEach((item) => {
+        const continent = countryContinent(item.country, continentsByCountry);
+        if (rowsByContinent.has(continent)) {
+          rowsByContinent.get(continent).push(item);
+        }
+      });
 
+      continents.forEach((continent) => {
+        const continentRows = rowsByContinent.get(continent)
+          .sort((a, b) => (a.year - b.year) || (a.month - b.month));
         if (!continentRows.length) {
           return;
         }
@@ -1184,24 +1164,30 @@ async function renderScatterChart() {
           xAxisIndex: index,
           yAxisIndex: index,
           symbol: "circle",
-          symbolSize: 5.5,
+          symbolSize: 6.2,
           large: false,
+          progressive: 3000,
+          progressiveThreshold: 5000,
           itemStyle: {
             color: CONTINENT_SCATTER_COLORS[continent],
-            borderColor: "#ffffff",
-            borderWidth: 0.7,
-            opacity: 0.72
+            borderColor: "rgba(255, 255, 255, 0.88)",
+            borderWidth: 0.6,
+            opacity: 0.9
           },
           data: continentRows.map((item) => ({
             value: [item.value, item.iea],
-            name: `${titleCase(type)} - ${item.country} ${item.year}-${String(item.month).padStart(2, "0")}\nContinent: ${continent}\nCM_Power: ${item.value.toFixed(2)}\nIEA: ${item.iea.toFixed(2)}`,
-            itemStyle: {
-              opacity: 0.52 + 0.36 * Math.min(1, Math.max(0, (item.year + item.month / 12 - 2019) / 7))
-            }
+            name: `${titleCase(type)} - ${item.country} ${item.year}-${String(item.month).padStart(2, "0")}\nContinent: ${continent}\nCM_Power: ${item.value.toFixed(2)}\nIEA: ${item.iea.toFixed(2)}`
           }))
         });
       });
+      rowsByGrid[index] = rowsByContinent;
     });
+
+    scatterRuntime = {
+      continents,
+      gridLabels: types.map((type) => titleCase(type)),
+      rowsByGrid
+    };
 
     const option = {
       title: titles,
