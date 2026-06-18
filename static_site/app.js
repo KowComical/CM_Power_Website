@@ -707,7 +707,7 @@ async function loadMapData(energyType) {
 
 function mapOptionForDate(entry) {
   return {
-    backgroundColor: "#fbfcfc",
+    backgroundColor: "#edf5f7",
     tooltip: {
       trigger: "item",
       confine: true,
@@ -745,7 +745,7 @@ function mapOptionForDate(entry) {
         color: MAP_SCALE_COLORS
       },
       outOfRange: {
-        color: "#edf2f0"
+        color: "#e7e2da"
       }
     },
     series: [{
@@ -764,9 +764,12 @@ function mapOptionForDate(entry) {
         show: false
       },
       itemStyle: {
-        areaColor: "#edf2f0",
-        borderColor: "#ffffff",
-        borderWidth: 0.7
+        areaColor: "#e7e2da",
+        borderColor: "rgba(255, 255, 255, 0.94)",
+        borderWidth: 0.75,
+        shadowBlur: 3,
+        shadowColor: "rgba(88, 111, 113, 0.13)",
+        shadowOffsetY: 1
       },
       emphasis: {
         disabled: false,
