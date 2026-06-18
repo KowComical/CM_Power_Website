@@ -892,8 +892,6 @@ def get_scorecard(df, view_details):
     for index, row in df.iterrows():
         country = safe_html(row['country'])
         continent = safe_html(row['continent'])
-        source = safe_html(row['source'])
-        source_url = safe_url(row['source_url'])
         resolution = safe_html(row['resolution'])
         starting_date = safe_html(row['starting_date'])
         update_frequency = safe_html(row['update_frequency'])
@@ -916,14 +914,13 @@ def get_scorecard(df, view_details):
                     </div>
                 </div>
                 <div class="extra content">
-                    <div class="meta"><i class="user icon"></i>Source: <a href="{source_url}" target="_blank" rel="noopener noreferrer">{source}</a></div>
                     <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
+                    <div class="meta"><i class="edit icon"></i> Data Since: {starting_date}</div>
                 </div>
                 <div class="extra content" {view_details}> 
                     <div class="meta"><i class="history icon"></i> Time Resolution: {resolution}</div>
-                    <div class="meta"><i class="edit icon"></i> Data Starts: {starting_date}</div>
                     <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {update_frequency}</div>
-                    <div class="meta"><i class="th icon"></i> Region Data Aviability: {region_data}</div>
+                    <div class="meta"><i class="th icon"></i> Region Data Availability: {region_data}</div>
                 </div>
             </div>"""
 

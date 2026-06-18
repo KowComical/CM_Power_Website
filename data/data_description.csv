@@ -1,5 +1,5 @@
 ﻿country,source,source_url,continent,resolution,update_frequency,region_data,starting_date
-China,中国电力企业联合会,https://cec.org.cn/menu/index.html?170,Asia,Monthly,Monthly,Not Available,2016-01-01
+China,中国电力企业联合会,https://cec.org.cn/menu/index.html?170,Asia,Daily,Monthly,Not Available,2016-01-01
 India,POSOCO,https://posoco.in/reports/daily-reports/,Asia,Daily,Daily,Available,2015-01-01
 Japan,OCCTO,https://occtonet3.occto.or.jp/public/dfw/RP11/OCCTO/SD/LOGIN_login#,Asia,Hourly,Monthly,Not Available,2016-01-01
 Turkey,YTBS,https://ytbsbilgi.teias.gov.tr/ytbsbilgi/frm_istatistikler.jsf,Asia,Hourly,Daily,Not Available,2018-01-01
