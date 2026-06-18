@@ -30,6 +30,7 @@ NON_COUNTRY_AGGREGATES = {'EU27&UK'}
 GENERATED_OUTPUTS = [
     '.nojekyll',
     'index.html',
+    'data/data_description.csv',
     'data/data_for_download.csv.gz',
     'data/data_for_scatter_plot.csv',
     'static_site',
