@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="static_site/vendor/semantic.min.css">
   <link rel="stylesheet" href="tools/style.css">
-  <link rel="stylesheet" href="static_site/styles.css?v=20260618-2">
+  <link rel="stylesheet" href="static_site/styles.css?v=20260619-1">
 </head>
 <body>
   <aside class="sidebar">
@@ -16,7 +16,7 @@
     <nav class="tab-list" aria-label="Dashboard views">
       <button class="tab-button is-active" type="button" data-tab="overview">Overview</button>
       <button class="tab-button" type="button" data-tab="line">Daily Trends</button>
-      <button class="tab-button" type="button" data-tab="stacked">Generation Mix</button>
+      <button class="tab-button" type="button" data-tab="stacked" hidden>Generation Mix</button>
       <button class="tab-button" type="button" data-tab="scatter">IEA Compare</button>
       <button class="tab-button" type="button" data-tab="map">Global Map</button>
     </nav>
@@ -63,7 +63,7 @@
       <div id="lineChart" class="chart"></div>
     </section>
 
-    <section id="stackedPanel" class="panel chart-panel" data-panel="stacked">
+    <section id="stackedPanel" class="panel chart-panel" data-panel="stacked" hidden>
       <div id="stackedChart" class="chart"></div>
     </section>
 
@@ -97,6 +97,6 @@
   </main>
 
   <script src="static_site/vendor/echarts.min.js"></script>
-  <script src="static_site/app.js?v=20260619-4"></script>
+  <script src="static_site/app.js?v=20260619-5"></script>
 </body>
 </html>
