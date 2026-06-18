@@ -12,7 +12,7 @@ const STACKED_TYPES = ["Fossil", "Nuclear", "Renewables"];
 const PAGE_TITLES = {
   overview: "Overview",
   line: "Daily Trends",
-  stacked: "Source Share",
+  stacked: "Generation Mix",
   scatter: "IEA Compare",
   map: "Global Map"
 };
@@ -585,7 +585,7 @@ async function renderLineChart() {
 }
 
 async function renderStackedChart() {
-  setStatus("Loading source share...");
+  setStatus("Loading generation mix...");
   try {
     const config = await fetchJson(`tools/stacked_area_chart/${state.stacked}.json`);
     setChart(els.stackedChart, "stacked", cloneOption(config.option), chartHeight(config));
@@ -1060,7 +1060,7 @@ async function renderScatterChart() {
       });
 
       titles.push({
-        text: `${titleCase(type)} · R2 ${formatR2(stats.r2)} · n ${stats.n}`,
+        text: `${titleCase(type)} · R2 ${formatR2(stats.r2)}`,
         textAlign: "center",
         left: `${left + gridWidth / 2}%`,
         top: titleTop,
