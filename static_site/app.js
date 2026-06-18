@@ -77,6 +77,7 @@ const jsonCache = new Map();
 const mapDataCache = new Map();
 const charts = {};
 let scatterRecords = null;
+let scatterMetadata = null;
 let countryContinentMap = null;
 let worldMapRegistered = false;
 
@@ -90,6 +91,7 @@ const els = {
   scorecard: document.getElementById("scorecardContainer"),
   lineChart: document.getElementById("lineChart"),
   stackedChart: document.getElementById("stackedChart"),
+  scatterMeta: document.getElementById("scatterMeta"),
   scatterChart: document.getElementById("scatterChart"),
   mapChart: document.getElementById("mapChart"),
   mapDateSlider: document.getElementById("mapDateSlider"),
@@ -875,6 +877,13 @@ async function loadScatterRecords() {
   return scatterRecords;
 }
 
+async function loadScatterMetadata() {
+  if (!scatterMetadata) {
+    scatterMetadata = fetchJson("data/iea_compare_metadata.json").catch(() => null);
+  }
+  return scatterMetadata;
+}
+
 async function loadCountryContinents() {
   if (!countryContinentMap) {
     const rows = parseCsv(await fetchText("data/data_description.csv"));
@@ -897,10 +906,52 @@ function scatterColumns(width, gridCount) {
   return Math.min(3, gridCount);
 }
 
+function niceScatterAxis(maxValue, splitCount = 4) {
+  if (!Number.isFinite(maxValue) || maxValue <= 0) {
+    return { max: 1, interval: 0.25 };
+  }
+
+  const roughStep = maxValue / splitCount;
+  const magnitude = 10 ** Math.floor(Math.log10(roughStep));
+  const bases = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10];
+
+  for (const scale of [magnitude, magnitude * 10]) {
+    for (const base of bases) {
+      const interval = base * scale;
+      const axisMax = interval * splitCount;
+      if (axisMax >= maxValue) {
+        return { max: axisMax, interval };
+      }
+    }
+  }
+
+  const fallbackInterval = 10 * magnitude;
+  return { max: fallbackInterval * splitCount, interval: fallbackInterval };
+}
+
+function updateScatterMetadata(metadata) {
+  if (!els.scatterMeta) {
+    return;
+  }
+
+  if (!metadata) {
+    els.scatterMeta.textContent = "";
+    return;
+  }
+
+  els.scatterMeta.innerHTML = `
+    <span>CM_Power data through <strong>${metadata.cm_power_latest_date || "-"}</strong></span>
+    <span>IEA monthly data through <strong>${metadata.iea_latest_month || "-"}</strong></span>
+    <span>Compared months through <strong>${metadata.comparison_latest_month || "-"}</strong></span>
+  `;
+}
+
 async function renderScatterChart() {
   setStatus("Loading IEA comparison...");
   try {
     const records = await loadScatterRecords();
+    const metadata = await loadScatterMetadata();
+    updateScatterMetadata(metadata);
     const continentsByCountry = await loadCountryContinents();
     const types = ENERGY_TYPES.filter((type) => records.some((row) => row.type === type));
     const countries = [...new Set(records.map((row) => row.country))];
@@ -929,7 +980,8 @@ async function renderScatterChart() {
 
     types.forEach((type, index) => {
       const group = records.filter((row) => row.type === type);
-      const maxVal = Math.ceil(Math.max(...group.flatMap((row) => [row.value, row.iea])) * 1.04);
+      const axis = niceScatterAxis(Math.max(...group.flatMap((row) => [row.value, row.iea])));
+      const maxVal = axis.max;
       const col = index % columns;
       const row = Math.floor(index / columns);
       const left = sideGap + col * (gridWidth + columnGap);
@@ -948,6 +1000,8 @@ async function renderScatterChart() {
         gridIndex: index,
         min: 0,
         max: maxVal,
+        interval: axis.interval,
+        splitNumber: 4,
         name: "CM_Power",
         nameLocation: "center",
         nameGap: 25,
@@ -960,6 +1014,8 @@ async function renderScatterChart() {
         gridIndex: index,
         min: 0,
         max: maxVal,
+        interval: axis.interval,
+        splitNumber: 4,
         name: "IEA",
         nameLocation: "center",
         nameGap: 30,

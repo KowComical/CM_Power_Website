@@ -33,6 +33,7 @@ GENERATED_OUTPUTS = [
     'data/data_description.csv',
     'data/data_for_download.csv.gz',
     'data/data_for_scatter_plot.csv',
+    'data/iea_compare_metadata.json',
     'static_site',
     'tools/data_description',
     'tools/line_chart',
@@ -123,11 +124,13 @@ def process_data():
     process_stacked_area_data(df_7mean)
 
     # 再计算一版散点图用的
+    df_daily = df.copy()
     df = load_power_data(df)
     df_iea = load_iea_data()
     df_filtered = prepare_comparison_data(df, df_iea)
 
     df_filtered.to_csv(os.path.join(file_path, 'data_for_scatter_plot.csv'), index=False, encoding='utf_8_sig')
+    write_iea_compare_metadata(df_daily, df_iea, df_filtered)
 
 
 def process_data_description(dataframe):
@@ -630,6 +633,25 @@ def prepare_comparison_data(df, df_iea):
     df_compare['value'] = round(df_compare['value'] / 1000, 2)
     df_compare['iea'] = round(df_compare['iea'] / 1000, 2)
     return df_compare
+
+
+def latest_month_label(dataframe):
+    if dataframe.empty:
+        return ""
+    latest = dataframe[['year', 'month']].drop_duplicates().sort_values(['year', 'month']).iloc[-1]
+    return f"{int(latest['year']):04d}-{int(latest['month']):02d}"
+
+
+def write_iea_compare_metadata(df_power_daily, df_iea, df_compare):
+    metadata = {
+        'cm_power_latest_date': pd.to_datetime(df_power_daily['date']).max().strftime('%Y-%m-%d'),
+        'iea_latest_month': latest_month_label(df_iea),
+        'comparison_latest_month': latest_month_label(df_compare),
+        'unit': 'TWh'
+    }
+
+    with open(os.path.join(file_path, 'iea_compare_metadata.json'), 'w', encoding='utf-8') as file:
+        json.dump(metadata, file, ensure_ascii=False, indent=2)
 
 
 def run_git(repo_path, args):
