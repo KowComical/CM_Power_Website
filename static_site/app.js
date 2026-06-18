@@ -986,6 +986,22 @@ function formatR2(value) {
   return Number.isFinite(value) ? value.toFixed(3) : "n/a";
 }
 
+function scatterTooltip(params) {
+  const value = params.value || params.data || [];
+  if (!Array.isArray(value) || value.length < 6) {
+    return "";
+  }
+
+  const [cmPower, iea, country, year, month, typeTitle] = value;
+  const monthLabel = String(month).padStart(2, "0");
+  return [
+    `${typeTitle} - ${country} ${year}-${monthLabel}`,
+    `Continent: ${params.seriesName}`,
+    `CM_Power: ${Number(cmPower).toFixed(2)}`,
+    `IEA: ${Number(iea).toFixed(2)}`
+  ].join("<br>");
+}
+
 function refreshScatterSelection(chart, selected = {}) {
   if (!chart || !scatterRuntime) {
     return;
@@ -1073,6 +1089,7 @@ async function renderScatterChart() {
 
     types.forEach((type, index) => {
       const group = recordsByType.get(type) || [];
+      const typeTitle = titleCase(type);
       const stats = scatterFitStats(group);
       const axis = niceScatterAxis(Math.max(...group.flatMap((row) => [row.value, row.iea])));
       const maxVal = axis.max;
@@ -1122,7 +1139,7 @@ async function renderScatterChart() {
 
       titles.push({
         id: `scatter-title-${index}`,
-        text: `${titleCase(type)} · R2 ${formatR2(stats.r2)}`,
+        text: `${typeTitle} · R2 ${formatR2(stats.r2)}`,
         textAlign: "center",
         left: `${left + gridWidth / 2}%`,
         top: titleTop,
@@ -1131,7 +1148,7 @@ async function renderScatterChart() {
 
       series.push({
         id: `scatter-reference-${index}`,
-        name: `${titleCase(type)} 1:1`,
+        name: `${typeTitle} 1:1`,
         type: "line",
         xAxisIndex: index,
         yAxisIndex: index,
@@ -1163,6 +1180,8 @@ async function renderScatterChart() {
           type: "scatter",
           xAxisIndex: index,
           yAxisIndex: index,
+          dimensions: ["CM_Power", "IEA", "country", "year", "month", "type"],
+          encode: { x: 0, y: 1 },
           symbol: "circle",
           symbolSize: 6.2,
           large: false,
@@ -1174,10 +1193,14 @@ async function renderScatterChart() {
             borderWidth: 0.6,
             opacity: 0.9
           },
-          data: continentRows.map((item) => ({
-            value: [item.value, item.iea],
-            name: `${titleCase(type)} - ${item.country} ${item.year}-${String(item.month).padStart(2, "0")}\nContinent: ${continent}\nCM_Power: ${item.value.toFixed(2)}\nIEA: ${item.iea.toFixed(2)}`
-          }))
+          data: continentRows.map((item) => [
+            item.value,
+            item.iea,
+            item.country,
+            item.year,
+            item.month,
+            typeTitle
+          ])
         });
       });
       rowsByGrid[index] = rowsByContinent;
@@ -1197,7 +1220,7 @@ async function renderScatterChart() {
       series,
       tooltip: {
         trigger: "item",
-        formatter: (params) => String(params.data.name).replace(/\n/g, "<br>")
+        formatter: scatterTooltip
       },
       legend: {
         data: continents.map((continent) => ({
