@@ -57,6 +57,11 @@ body {
   cursor: pointer;
 }
 
+.tab-button[hidden],
+.panel[hidden] {
+  display: none !important;
+}
+
 .tab-button:hover {
   border-color: var(--teal);
 }

@@ -439,7 +439,7 @@ function formatDailyTrendAxes(option, chartName) {
   }
 
   const quarterLabels = new Map([
-    ["Jan-01", "Jan"], ["Apr-01", "Apr"],
+    ["Apr-01", "Apr"],
     ["Jul-01", "Jul"], ["Oct-01", "Oct"]
   ]);
 
