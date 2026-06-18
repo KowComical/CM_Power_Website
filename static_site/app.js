@@ -939,11 +939,45 @@ function updateScatterMetadata(metadata) {
     return;
   }
 
+  const comparisonMonth = metadata.comparison_latest_month || metadata.iea_latest_month || "-";
   els.scatterMeta.innerHTML = `
-    <span>CM_Power data through <strong>${metadata.cm_power_latest_date || "-"}</strong></span>
-    <span>IEA monthly data through <strong>${metadata.iea_latest_month || "-"}</strong></span>
-    <span>Compared months through <strong>${metadata.comparison_latest_month || "-"}</strong></span>
+    <span>IEA monthly comparison through <strong>${comparisonMonth}</strong></span>
   `;
+}
+
+function scatterFitStats(rows) {
+  const pairs = rows
+    .map((row) => [row.value, row.iea])
+    .filter(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
+  const n = pairs.length;
+
+  if (n < 2) {
+    return { n, r2: null };
+  }
+
+  const meanX = pairs.reduce((sum, [x]) => sum + x, 0) / n;
+  const meanY = pairs.reduce((sum, [, y]) => sum + y, 0) / n;
+  let sxx = 0;
+  let syy = 0;
+  let sxy = 0;
+
+  pairs.forEach(([x, y]) => {
+    const dx = x - meanX;
+    const dy = y - meanY;
+    sxx += dx * dx;
+    syy += dy * dy;
+    sxy += dx * dy;
+  });
+
+  if (!sxx || !syy) {
+    return { n, r2: null };
+  }
+
+  return { n, r2: (sxy * sxy) / (sxx * syy) };
+}
+
+function formatR2(value) {
+  return Number.isFinite(value) ? value.toFixed(3) : "n/a";
 }
 
 async function renderScatterChart() {
@@ -980,6 +1014,7 @@ async function renderScatterChart() {
 
     types.forEach((type, index) => {
       const group = records.filter((row) => row.type === type);
+      const stats = scatterFitStats(group);
       const axis = niceScatterAxis(Math.max(...group.flatMap((row) => [row.value, row.iea])));
       const maxVal = axis.max;
       const col = index % columns;
@@ -1025,11 +1060,11 @@ async function renderScatterChart() {
       });
 
       titles.push({
-        text: titleCase(type),
+        text: `${titleCase(type)} · R2 ${formatR2(stats.r2)} · n ${stats.n}`,
         textAlign: "center",
         left: `${left + gridWidth / 2}%`,
         top: titleTop,
-        textStyle: { color: "#546160", fontSize: 15, fontWeight: 700 }
+        textStyle: { color: "#546160", fontSize: 13, fontWeight: 700 }
       });
 
       series.push({
