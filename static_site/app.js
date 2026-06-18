@@ -39,12 +39,12 @@ const MONTH_INDEX = {
 };
 
 const DAILY_TREND_YEAR_COLORS = {
-  2019: "#78bd70",
-  2020: "#55a95a",
-  2021: "#2f8e46",
+  2019: "#b4dd9f",
+  2020: "#70c268",
+  2021: "#35994b",
   2022: "#176f34",
-  2023: "#5c9dcc",
-  2024: "#3f86bd",
+  2023: "#b0d2ea",
+  2024: "#68a5d3",
   2025: "#246fa8",
   2026: "#d73027"
 };
@@ -346,8 +346,13 @@ function styleDailyTrendLegendItems(option) {
       textStyle: {
         ...((typeof item === "string" ? {} : item.textStyle) || {}),
         color: isSelected ? color || "#50605d" : DAILY_TREND_INACTIVE_COLOR,
+        backgroundColor: isSelected ? "#ffffff" : "transparent",
+        borderColor: isSelected ? color || "#50605d" : "transparent",
+        borderWidth: isSelected ? 1 : 0,
+        borderRadius: 4,
         fontWeight: isSelected ? 800 : 650,
-        opacity: isSelected ? 1 : 0.45
+        opacity: isSelected ? 1 : 0.45,
+        padding: [3, 6, 3, 6]
       }
     };
   });
