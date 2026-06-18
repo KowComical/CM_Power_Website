@@ -50,6 +50,19 @@ const DAILY_TREND_YEAR_COLORS = {
 };
 
 const DAILY_TREND_INACTIVE_COLOR = "#dbe3e4";
+const CONTINENT_SCATTER_COLORS = {
+  Africa: "#c95d5d",
+  Asia: "#c6922f",
+  Europe: "#567aa3",
+  "North America": "#92565b",
+  Oceania: "#549487",
+  "South America": "#9866a8",
+  Other: "#7f8c8d"
+};
+const SCATTER_CONTINENTS = [
+  "Africa", "Asia", "Europe",
+  "North America", "Oceania", "South America", "Other"
+];
 
 const state = {
   tab: "overview",
@@ -64,6 +77,7 @@ const jsonCache = new Map();
 const mapDataCache = new Map();
 const charts = {};
 let scatterRecords = null;
+let countryContinentMap = null;
 let worldMapRegistered = false;
 
 const els = {
@@ -259,7 +273,7 @@ function optimizeChartOption(option, chartName) {
 
     if (series.type === "scatter") {
       series.symbolSize = series.symbolSize || 4;
-      series.large = true;
+      series.large = series.large ?? true;
       series.largeThreshold = 600;
     }
   });
@@ -835,7 +849,7 @@ async function renderMapChart() {
   }
 }
 
-function parseCsv(text) {
+function parseCsv(text, numericColumns = []) {
   const lines = text.trim().split(/\r?\n/);
   const headers = lines.shift().split(",").map((header) => header.replace(/^\uFEFF/, ""));
   return lines.map((line) => {
@@ -844,36 +858,64 @@ function parseCsv(text) {
     headers.forEach((header, index) => {
       row[header] = cells[index];
     });
-    row.year = Number(row.year);
-    row.month = Number(row.month);
-    row.value = Number(row.value);
-    row.iea = Number(row.iea);
+    numericColumns.forEach((column) => {
+      row[column] = Number(row[column]);
+    });
     return row;
   });
 }
 
-function colorForIndex(index, total) {
-  const hue = Math.round((index * 360) / Math.max(total, 1));
-  return `hsl(${hue}, 58%, 48%)`;
-}
-
 async function loadScatterRecords() {
   if (!scatterRecords) {
-    scatterRecords = parseCsv(await fetchText("data/data_for_scatter_plot.csv"));
+    scatterRecords = parseCsv(
+      await fetchText("data/data_for_scatter_plot.csv"),
+      ["year", "month", "value", "iea"]
+    );
   }
   return scatterRecords;
+}
+
+async function loadCountryContinents() {
+  if (!countryContinentMap) {
+    const rows = parseCsv(await fetchText("data/data_description.csv"));
+    countryContinentMap = new Map(rows.map((row) => [row.country, row.continent]));
+  }
+  return countryContinentMap;
+}
+
+function countryContinent(country, continentsByCountry) {
+  return continentsByCountry.get(country) || "Other";
+}
+
+function scatterColumns(width, gridCount) {
+  if (width < 720) {
+    return 1;
+  }
+  if (width < 1180) {
+    return Math.min(2, gridCount);
+  }
+  return Math.min(3, gridCount);
 }
 
 async function renderScatterChart() {
   setStatus("Loading IEA comparison...");
   try {
     const records = await loadScatterRecords();
+    const continentsByCountry = await loadCountryContinents();
     const types = ENERGY_TYPES.filter((type) => records.some((row) => row.type === type));
-    const countries = [...new Set(records.map((row) => row.country))].sort();
-    const countryColors = new Map(countries.map((country, index) => [
-      country,
-      colorForIndex(index, countries.length)
-    ]));
+    const countries = [...new Set(records.map((row) => row.country))];
+    const continents = SCATTER_CONTINENTS.filter((continent) => (
+      continent === "Other"
+        ? countries.some((country) => countryContinent(country, continentsByCountry) === "Other")
+        : countries.some((country) => continentsByCountry.get(country) === continent)
+    ));
+    const containerWidth = els.scatterChart.clientWidth || els.scatterChart.parentElement.clientWidth || window.innerWidth;
+    const columns = scatterColumns(containerWidth, types.length);
+    const rows = Math.max(1, Math.ceil(types.length / columns));
+    const chartHeightValue = 122 + rows * 320 + 38;
+    const sideGap = columns === 1 ? 8 : 4.5;
+    const columnGap = columns === 1 ? 0 : 3.5;
+    const gridWidth = (100 - sideGap * 2 - columnGap * (columns - 1)) / columns;
 
     const grid = [];
     const xAxis = [];
@@ -887,15 +929,18 @@ async function renderScatterChart() {
 
     types.forEach((type, index) => {
       const group = records.filter((row) => row.type === type);
-      const maxVal = Math.max(...group.flatMap((row) => [row.value, row.iea]));
-      const col = index % 4;
-      const row = Math.floor(index / 4);
+      const maxVal = Math.ceil(Math.max(...group.flatMap((row) => [row.value, row.iea])) * 1.04);
+      const col = index % columns;
+      const row = Math.floor(index / columns);
+      const left = sideGap + col * (gridWidth + columnGap);
+      const titleTop = 92 + row * 320;
+      const gridTop = titleTop + 28;
 
       grid.push({
-        left: `${col * 25 + 3}%`,
-        top: `${row * 25 + 10}%`,
-        width: "20.5%",
-        height: "20.5%",
+        left: `${left}%`,
+        top: gridTop,
+        width: `${gridWidth}%`,
+        height: 230,
         containLabel: true
       });
 
@@ -905,7 +950,10 @@ async function renderScatterChart() {
         max: maxVal,
         name: "CM_Power",
         nameLocation: "center",
-        nameGap: 25
+        nameGap: 25,
+        axisLabel: { color: "#5d6969", fontSize: 10 },
+        axisLine: { lineStyle: { color: "#b7c7c5" } },
+        splitLine: { lineStyle: { color: "#e6eeec" } }
       });
 
       yAxis.push({
@@ -914,37 +962,61 @@ async function renderScatterChart() {
         max: maxVal,
         name: "IEA",
         nameLocation: "center",
-        nameGap: 30
+        nameGap: 30,
+        axisLabel: { color: "#5d6969", fontSize: 10 },
+        axisLine: { lineStyle: { color: "#b7c7c5" } },
+        splitLine: { lineStyle: { color: "#e6eeec" } }
       });
 
       titles.push({
         text: titleCase(type),
         textAlign: "center",
-        left: `${col * 25 + 13}%`,
-        top: `${row * 25 + 8}%`,
-        textStyle: { color: "#666", fontSize: 15 }
+        left: `${left + gridWidth / 2}%`,
+        top: titleTop,
+        textStyle: { color: "#546160", fontSize: 15, fontWeight: 700 }
       });
 
-      countries.forEach((country) => {
-        const countryRows = group
-          .filter((item) => item.country === country)
+      series.push({
+        name: `${titleCase(type)} 1:1`,
+        type: "line",
+        xAxisIndex: index,
+        yAxisIndex: index,
+        data: [[0, 0], [maxVal, maxVal]],
+        symbol: "none",
+        silent: true,
+        lineStyle: { color: "#98a7a5", width: 1.2, type: "dashed", opacity: 0.75 },
+        tooltip: { show: false },
+        legendHoverLink: false
+      });
+
+      continents.forEach((continent) => {
+        const continentRows = group
+          .filter((item) => countryContinent(item.country, continentsByCountry) === continent)
           .sort((a, b) => (a.year - b.year) || (a.month - b.month));
 
-        if (!countryRows.length) {
+        if (!continentRows.length) {
           return;
         }
 
         series.push({
-          name: country,
+          name: continent,
           type: "scatter",
           xAxisIndex: index,
           yAxisIndex: index,
-          data: countryRows.map((item) => ({
+          symbol: "circle",
+          symbolSize: 5.5,
+          large: false,
+          itemStyle: {
+            color: CONTINENT_SCATTER_COLORS[continent],
+            borderColor: "#ffffff",
+            borderWidth: 0.7,
+            opacity: 0.72
+          },
+          data: continentRows.map((item) => ({
             value: [item.value, item.iea],
-            name: `${titleCase(type)} - ${country} ${item.year}-${String(item.month).padStart(2, "0")}\nCM_Power: ${item.value.toFixed(2)}\nIEA: ${item.iea.toFixed(2)}`,
+            name: `${titleCase(type)} - ${item.country} ${item.year}-${String(item.month).padStart(2, "0")}\nContinent: ${continent}\nCM_Power: ${item.value.toFixed(2)}\nIEA: ${item.iea.toFixed(2)}`,
             itemStyle: {
-              color: countryColors.get(country),
-              opacity: 0.5 + 0.5 * (item.year + item.month / 12 - 2019) / 7
+              opacity: 0.52 + 0.36 * Math.min(1, Math.max(0, (item.year + item.month / 12 - 2019) / 7))
             }
           }))
         });
@@ -962,19 +1034,31 @@ async function renderScatterChart() {
         formatter: (params) => String(params.data.name).replace(/\n/g, "<br>")
       },
       legend: {
-        data: countries,
+        data: continents.map((continent) => ({
+          name: continent,
+          icon: "roundRect",
+          textStyle: {
+            color: CONTINENT_SCATTER_COLORS[continent],
+            fontWeight: 800,
+            backgroundColor: "#f8fbfa",
+            borderColor: CONTINENT_SCATTER_COLORS[continent],
+            borderWidth: 1,
+            borderRadius: 4,
+            padding: [4, 7, 4, 7]
+          }
+        })),
         orient: "horizontal",
         left: "center",
-        top: 50,
-        icon: "circle",
-        itemWidth: 12,
-        itemHeight: 12,
-        textStyle: { fontSize: 14, color: "#333" }
+        top: 46,
+        itemWidth: 22,
+        itemHeight: 7,
+        itemGap: 13,
+        inactiveColor: "#aebaba",
+        textStyle: { fontSize: 13, color: "#4b5656" }
       }
     };
 
-    const height = Math.max(760, 500 * Math.ceil(types.length / 4));
-    setChart(els.scatterChart, "scatter", option, height);
+    setChart(els.scatterChart, "scatter", option, Math.max(760, chartHeightValue));
     setStatus("IEA comparison");
   } catch (error) {
     showError(els.scatterChart, error);
@@ -1034,6 +1118,8 @@ function bindEvents() {
     resizeTimer = window.setTimeout(() => {
       if (state.tab === "line") {
         renderLineChart();
+      } else if (state.tab === "scatter") {
+        renderScatterChart();
       } else {
         Object.values(charts).forEach((chart) => chart.resize());
       }
