@@ -84,6 +84,8 @@ let scatterMetadata = null;
 let countryContinentMap = null;
 let scatterRuntime = null;
 let worldMapRegistered = false;
+let renderSerial = 0;
+let mapUpdateSerial = 0;
 
 const els = {
   status: document.getElementById("statusText"),
@@ -102,7 +104,8 @@ const els = {
   mapDateLabel: document.getElementById("mapDateLabel"),
   mapDateValue: document.getElementById("mapDateValue"),
   mapCountryCount: document.getElementById("mapCountryCount"),
-  mapTotalValue: document.getElementById("mapTotalValue")
+  mapTotalValue: document.getElementById("mapTotalValue"),
+  mapCoverageNote: document.getElementById("mapCoverageNote")
 };
 
 function titleCase(value) {
@@ -124,12 +127,15 @@ function setStatus(message) {
 }
 
 function showError(container, error) {
-  container.innerHTML = `
-    <div class="error-box">
-      Failed to load this view. Start a local web server from the project root if you opened the file directly.
-      <br>${error.message}
-    </div>
-  `;
+  container.replaceChildren();
+  const errorBox = document.createElement("div");
+  errorBox.className = "error-box";
+  errorBox.append(
+    "Failed to load this view. Start a local web server from the project root if you opened the file directly.",
+    document.createElement("br"),
+    error.message
+  );
+  container.appendChild(errorBox);
 }
 
 async function fetchText(path) {
@@ -142,7 +148,13 @@ async function fetchText(path) {
 
 async function fetchJson(path) {
   if (!jsonCache.has(path)) {
-    jsonCache.set(path, fetchText(path).then((text) => JSON.parse(text)));
+    const request = fetchText(path)
+      .then((text) => JSON.parse(text))
+      .catch((error) => {
+        jsonCache.delete(path);
+        throw error;
+      });
+    jsonCache.set(path, request);
   }
   return jsonCache.get(path);
 }
@@ -178,14 +190,25 @@ function activateTab(nextTab) {
   render();
 }
 
-async function renderOverview() {
+function isCurrentRender(renderId) {
+  return renderId === renderSerial;
+}
+
+async function renderOverview(renderId) {
   setStatus("Loading overview...");
   const detailName = state.details ? "none" : "visible";
   const path = `tools/data_description/${state.energy}_${state.continent}_${detailName}.html`;
   try {
-    els.scorecard.innerHTML = await fetchText(path);
+    const html = await fetchText(path);
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
+    els.scorecard.innerHTML = html;
     setStatus(`${titleCase(state.energy)} / ${state.continent}`);
   } catch (error) {
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     showError(els.scorecard, error);
     setStatus("Overview failed");
   }
@@ -575,10 +598,13 @@ function filterDailyTrendOption(option, config) {
   return selectedIndexes.length;
 }
 
-async function renderLineChart() {
+async function renderLineChart(renderId) {
   setStatus("Loading daily trends...");
   try {
     const config = await fetchJson(`tools/line_chart/${state.energy}.json`);
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     const option = cloneOption(config.option);
     const selectedCountryCount = filterDailyTrendOption(option, config);
     const containerWidth = els.lineChart.clientWidth || els.lineChart.parentElement.clientWidth || window.innerWidth;
@@ -588,18 +614,27 @@ async function renderLineChart() {
     const regionLabel = state.continent === "World" ? "World" : `${state.continent} (${selectedCountryCount})`;
     setStatus(`${titleCase(state.energy)} trends / ${regionLabel}`);
   } catch (error) {
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     showError(els.lineChart, error);
     setStatus("Daily trends failed");
   }
 }
 
-async function renderStackedChart() {
+async function renderStackedChart(renderId) {
   setStatus("Loading generation mix...");
   try {
     const config = await fetchJson(`tools/stacked_area_chart/${state.stacked}.json`);
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     setChart(els.stackedChart, "stacked", cloneOption(config.option), chartHeight(config));
     setStatus(`${state.stacked} share`);
   } catch (error) {
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     showError(els.stackedChart, error);
     setStatus("Source share failed");
   }
@@ -633,14 +668,13 @@ function formatGwh(value) {
   return `${Math.round(value).toLocaleString()} GWh`;
 }
 
-function applyMapScaleValues(data) {
-  const maxRawValue = Math.max(...data.map((item) => item.rawValue));
+function applyMapScaleValues(data, maxRawValue) {
   const maxLogValue = Math.log10(maxRawValue + 1);
   data.forEach((item) => {
     const score = maxLogValue > 0
       ? (Math.log10(item.rawValue + 1) / maxLogValue) * 100
       : 100;
-    item.value = score;
+    item.value = item.rawValue;
     item.mapScale = score;
   });
 }
@@ -663,6 +697,7 @@ async function loadMapData(energyType) {
   const countries = config.countries.map((country) => country.name);
   const dayLabels = config.option.xAxis[0].data;
   const seriesByCountryYear = new Map();
+  let maxRawValue = 0;
 
   config.option.series.forEach((series) => {
     const country = countries[series.xAxisIndex];
@@ -698,11 +733,11 @@ async function loadMapData(energyType) {
           value: 0,
           rawValue
         });
+        maxRawValue = Math.max(maxRawValue, rawValue);
         total += rawValue;
       });
 
       if (data.length) {
-        applyMapScaleValues(data);
         dates.push({
           date,
           data,
@@ -713,24 +748,29 @@ async function loadMapData(energyType) {
     });
   });
 
-  const maxCountryCount = Math.max(...dates.map((entry) => entry.countryCount));
-  let maxCompleteIndex = dates.length - 1;
+  dates.forEach((entry) => applyMapScaleValues(entry.data, maxRawValue));
+
+  const maxCountryCount = dates.length ? Math.max(...dates.map((entry) => entry.countryCount)) : 0;
+  let latestCompleteCoverageDate = null;
   for (let index = dates.length - 1; index >= 0; index -= 1) {
     if (dates[index].countryCount === maxCountryCount) {
-      maxCompleteIndex = index;
+      latestCompleteCoverageDate = dates[index].date;
       break;
     }
   }
-  const completeDates = dates.slice(0, maxCompleteIndex + 1);
+
   const mapData = {
-    dates: completeDates,
-    defaultIndex: completeDates.length - 1
+    dates,
+    defaultIndex: dates.length - 1,
+    maxRawValue,
+    maxCountryCount,
+    latestCompleteCoverageDate
   };
   mapDataCache.set(energyType, mapData);
   return mapData;
 }
 
-function mapOptionForDate(entry) {
+function mapOptionForDate(entry, mapData) {
   const pointMarkers = MAP_POINT_MARKERS
     .map((marker) => {
       const countryData = entry.data.find((item) => item.name === marker.name);
@@ -760,21 +800,23 @@ function mapOptionForDate(entry) {
         return [
           `<strong>${params.name}</strong>`,
           entry.date,
-          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`
+          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`,
+          `Coverage: ${entry.countryCount} countries`
         ].join("<br>");
       }
     },
     visualMap: {
       type: "continuous",
       min: 0,
-      max: 100,
+      max: mapData.maxRawValue,
       left: 24,
       bottom: 26,
       itemWidth: 12,
       itemHeight: 128,
       calculable: false,
-      text: ["High", "Low"],
+      text: ["High GWh", "Low"],
       textGap: 10,
+      formatter: (value) => formatGwh(value),
       textStyle: {
         color: "#53625f",
         fontSize: 11,
@@ -853,7 +895,11 @@ function updateMapStats(entry) {
 }
 
 async function updateMapForDate() {
+  const updateId = ++mapUpdateSerial;
   const mapData = await loadMapData(state.energy);
+  if (updateId !== mapUpdateSerial) {
+    return;
+  }
   const entry = mapData.dates[state.mapDateIndex];
   if (!entry) {
     return;
@@ -863,18 +909,21 @@ async function updateMapForDate() {
   els.mapDateSlider.value = String(state.mapDateIndex);
 
   if (charts.map) {
-    charts.map.setOption(mapOptionForDate(entry), true);
+    charts.map.setOption(mapOptionForDate(entry, mapData), true);
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
   } else {
-    setChart(els.mapChart, "map", mapOptionForDate(entry), MAP_CHART_HEIGHT);
+    setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT);
   }
 }
 
-async function renderMapChart() {
+async function renderMapChart(renderId) {
   setStatus("Loading global map...");
   try {
     await ensureWorldMap();
     const mapData = await loadMapData(state.energy);
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     if (!mapData.dates.length) {
       throw new Error(`No map data for ${state.energy}`);
     }
@@ -888,22 +937,70 @@ async function renderMapChart() {
     els.mapDateSlider.value = String(state.mapDateIndex);
     const entry = mapData.dates[state.mapDateIndex];
     updateMapStats(entry);
-    setChart(els.mapChart, "map", mapOptionForDate(entry), MAP_CHART_HEIGHT);
+    if (els.mapCoverageNote) {
+      els.mapCoverageNote.textContent = `Color scale is fixed across dates for this energy type. Latest complete coverage: ${mapData.latestCompleteCoverageDate || "-"}.`;
+    }
+    setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT);
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
   } catch (error) {
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     showError(els.mapChart, error);
     setStatus("Global map failed");
   }
 }
 
+function parseCsvRows(text) {
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let inQuotes = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const next = text[index + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        cell += '"';
+        index += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === "," && !inQuotes) {
+      row.push(cell);
+      cell = "";
+    } else if ((char === "\n" || char === "\r") && !inQuotes) {
+      if (char === "\r" && next === "\n") {
+        index += 1;
+      }
+      row.push(cell);
+      if (row.some((value) => value !== "")) {
+        rows.push(row);
+      }
+      row = [];
+      cell = "";
+    } else {
+      cell += char;
+    }
+  }
+
+  row.push(cell);
+  if (row.some((value) => value !== "")) {
+    rows.push(row);
+  }
+
+  return rows;
+}
+
 function parseCsv(text, numericColumns = []) {
-  const lines = text.trim().split(/\r?\n/);
-  const headers = lines.shift().split(",").map((header) => header.replace(/^\uFEFF/, ""));
-  return lines.map((line) => {
-    const cells = line.split(",");
+  const rows = parseCsvRows(text);
+  const headers = rows.shift().map((header) => header.replace(/^\uFEFF/, ""));
+  return rows.map((cells) => {
     const row = {};
     headers.forEach((header, index) => {
-      row[header] = cells[index];
+      row[header] = cells[index] ?? "";
     });
     numericColumns.forEach((column) => {
       row[column] = Number(row[column]);
@@ -1087,13 +1184,19 @@ function refreshScatterSelection(chart, selected = {}) {
   chart.setOption({ title: titles, xAxis, yAxis, series: referenceSeries }, false);
 }
 
-async function renderScatterChart() {
+async function renderScatterChart(renderId) {
   setStatus("Loading IEA comparison...");
   try {
     const records = await loadScatterRecords();
     const metadata = await loadScatterMetadata();
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     updateScatterMetadata(metadata);
     const continentsByCountry = await loadCountryContinents();
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     const types = ENERGY_TYPES.filter((type) => records.some((row) => row.type === type));
     const recordsByType = new Map(types.map((type) => [type, []]));
     records.forEach((row) => {
@@ -1289,22 +1392,26 @@ async function renderScatterChart() {
     setChart(els.scatterChart, "scatter", option, Math.max(760, chartHeightValue));
     setStatus("IEA comparison");
   } catch (error) {
+    if (!isCurrentRender(renderId)) {
+      return;
+    }
     showError(els.scatterChart, error);
     setStatus("IEA comparison failed");
   }
 }
 
 function render() {
+  const renderId = ++renderSerial;
   if (state.tab === "overview") {
-    renderOverview();
+    renderOverview(renderId);
   } else if (state.tab === "line") {
-    renderLineChart();
+    renderLineChart(renderId);
   } else if (state.tab === "stacked") {
-    renderStackedChart();
+    renderStackedChart(renderId);
   } else if (state.tab === "scatter") {
-    renderScatterChart();
+    renderScatterChart(renderId);
   } else if (state.tab === "map") {
-    renderMapChart();
+    renderMapChart(renderId);
   }
 }
 
@@ -1345,9 +1452,9 @@ function bindEvents() {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       if (state.tab === "line") {
-        renderLineChart();
+        render();
       } else if (state.tab === "scatter") {
-        renderScatterChart();
+        render();
       } else {
         Object.values(charts).forEach((chart) => chart.resize());
       }

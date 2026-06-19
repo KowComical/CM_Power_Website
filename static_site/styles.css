@@ -295,6 +295,16 @@ h1 {
   font-weight: 800;
 }
 
+.map-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .map-chart {
   min-height: 560px;
 }
