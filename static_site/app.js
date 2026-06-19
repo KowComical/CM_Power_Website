@@ -292,7 +292,9 @@ function optimizeChartOption(option, chartName) {
 
   option.series.forEach((series) => {
     series.animation = false;
-    series.emphasis = { disabled: true };
+    if (series.type !== "map") {
+      series.emphasis = { disabled: true };
+    }
     series.select = { disabled: true };
     series.selectedMode = false;
 
@@ -747,16 +749,18 @@ async function loadMapData(energyType) {
 
   const maxCountryCount = dates.length ? Math.max(...dates.map((entry) => entry.countryCount)) : 0;
   let latestCompleteCoverageDate = null;
+  let latestCompleteCoverageIndex = dates.length - 1;
   for (let index = dates.length - 1; index >= 0; index -= 1) {
     if (dates[index].countryCount === maxCountryCount) {
       latestCompleteCoverageDate = dates[index].date;
+      latestCompleteCoverageIndex = index;
       break;
     }
   }
 
   const mapData = {
     dates,
-    defaultIndex: dates.length - 1,
+    defaultIndex: latestCompleteCoverageIndex,
     maxCountryCount,
     latestCompleteCoverageDate
   };
@@ -765,8 +769,13 @@ async function loadMapData(energyType) {
 }
 
 function mapOptionForDate(entry, mapData) {
+  const coverageLabel = `${entry.countryCount} / ${mapData.maxCountryCount} countries`;
+  const coveragePrefix = entry.countryCount < mapData.maxCountryCount
+    ? "Partial coverage"
+    : "Coverage";
+
   return {
-    backgroundColor: "#edf5f7",
+    backgroundColor: "#f7faf9",
     tooltip: {
       trigger: "item",
       confine: true,
@@ -775,13 +784,19 @@ function mapOptionForDate(entry, mapData) {
       textStyle: { color: "#ffffff" },
       formatter: (params) => {
         if (!params.data || !Number.isFinite(params.data.rawValue)) {
-          return `<strong>${params.name}</strong><br>No CM Power data`;
+          return [
+            `<strong>${params.name}</strong>`,
+            entry.date,
+            "No CM Power data for this date",
+            `${coveragePrefix}: ${coverageLabel}`
+          ].join("<br>");
         }
         return [
           `<strong>${params.name}</strong>`,
           entry.date,
           `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`,
-          `Coverage: ${entry.countryCount} countries`
+          `${coveragePrefix}: ${coverageLabel}`,
+          "Scale: relative within selected date"
         ].join("<br>");
       }
     },
@@ -805,7 +820,7 @@ function mapOptionForDate(entry, mapData) {
         color: MAP_SCALE_COLORS
       },
       outOfRange: {
-        color: "#e7e2da"
+        color: "#d9dfdc"
       }
     },
     series: [{
@@ -824,20 +839,17 @@ function mapOptionForDate(entry, mapData) {
         show: false
       },
       itemStyle: {
-        areaColor: "#e7e2da",
-        borderColor: "rgba(255, 255, 255, 0.94)",
-        borderWidth: 0.75,
-        shadowBlur: 3,
-        shadowColor: "rgba(88, 111, 113, 0.13)",
-        shadowOffsetY: 1
+        areaColor: "#d9dfdc",
+        borderColor: "rgba(0, 0, 0, 0.28)",
+        borderWidth: 0.45
       },
       emphasis: {
         disabled: false,
         label: { show: false },
         itemStyle: {
           areaColor: "#f1c66d",
-          borderColor: "#ffffff",
-          borderWidth: 0.9
+          borderColor: "rgba(0, 0, 0, 0.62)",
+          borderWidth: 0.8
         }
       }
     }]
@@ -895,7 +907,7 @@ async function renderMapChart(renderId) {
     const entry = mapData.dates[state.mapDateIndex];
     updateMapStats(entry);
     if (els.mapCoverageNote) {
-      els.mapCoverageNote.textContent = `Color scale is relative within the selected date. Latest complete coverage: ${mapData.latestCompleteCoverageDate || "-"}.`;
+      els.mapCoverageNote.textContent = `Relative color scale within the selected date. No-data countries are gray. Latest complete coverage: ${mapData.latestCompleteCoverageDate || "-"}.`;
     }
     setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT);
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
