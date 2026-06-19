@@ -832,16 +832,16 @@ function mapOptionForDate(entry, mapData) {
       },
       itemStyle: {
         areaColor: "#d9dfdc",
-        borderColor: "rgba(0, 0, 0, 0.28)",
-        borderWidth: 0.45
+        borderColor: "rgba(24, 32, 30, 0.42)",
+        borderWidth: 0.58
       },
       emphasis: {
         disabled: false,
         label: { show: false },
         itemStyle: {
           areaColor: "#f1c66d",
-          borderColor: "rgba(0, 0, 0, 0.62)",
-          borderWidth: 0.8
+          borderColor: "rgba(24, 32, 30, 0.7)",
+          borderWidth: 0.85
         }
       }
     }]
