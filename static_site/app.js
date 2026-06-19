@@ -769,11 +769,6 @@ async function loadMapData(energyType) {
 }
 
 function mapOptionForDate(entry, mapData) {
-  const coverageLabel = `${entry.countryCount} / ${mapData.maxCountryCount} countries`;
-  const coveragePrefix = entry.countryCount < mapData.maxCountryCount
-    ? "Partial coverage"
-    : "Coverage";
-
   return {
     backgroundColor: "#f7faf9",
     tooltip: {
@@ -787,16 +782,13 @@ function mapOptionForDate(entry, mapData) {
           return [
             `<strong>${params.name}</strong>`,
             entry.date,
-            "No CM Power data for this date",
-            `${coveragePrefix}: ${coverageLabel}`
+            "No CM Power data for this date"
           ].join("<br>");
         }
         return [
           `<strong>${params.name}</strong>`,
           entry.date,
-          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`,
-          `${coveragePrefix}: ${coverageLabel}`,
-          "Scale: relative within selected date"
+          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`
         ].join("<br>");
       }
     },
