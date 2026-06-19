@@ -855,7 +855,24 @@ def get_scorecard(df, view_details):
     selected_energy = safe_html(df['type'].tolist()[0])
 
     table_scorecard = f"""
-    <div class="overview-summary ui four small statistics">
+    <style>
+        .ui.statistics .statistic .label {{
+            margin-top: 10px !important; 
+        }}
+
+        .extra.content .meta {{
+            font-size: 1.2rem;
+            text-align: left;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 5px;
+        }}
+    </style>
+
+    <div class="ui four small statistics">
         <div class="grey statistic">
             <div class="value">
                 {selected_energy}
@@ -877,12 +894,12 @@ def get_scorecard(df, view_details):
                 {latest_date}
             </div>
             <div class="label">
-                latest common date
+                latest date for all countries
             </div>
         </div>
         <div class="grey statistic">
             <div class="value">
-                TWh
+                Twh
             </div>
             <div class="label">
                 Unit
@@ -891,7 +908,7 @@ def get_scorecard(df, view_details):
     </div>
     """
 
-    table_scorecard += "<div id='mydiv' class='ui centered cards overview-card-grid'>"
+    table_scorecard += "<br><br><br><div id='mydiv' class='ui centered cards'>"
 
     # <div class="content" style="background-color: {header_bg(row['type'])};">
 
@@ -902,38 +919,31 @@ def get_scorecard(df, view_details):
         starting_date = safe_html(row['starting_date'])
         update_frequency = safe_html(row['update_frequency'])
         region_data = safe_html(row['region_data'])
-        source = safe_html(row.get('source', ''))
-        source_url = safe_url(row.get('source_url', ''))
-        if source_url != "#":
-            source_markup = f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">{source}</a>'
-        else:
-            source_markup = source
         yoy_value = format_percentage(row['percentage_change'])
         yoy_color = color_percentage(row['percentage_change'])
         ytd_value = format_number(row['year_to_date_sum'])
 
         table_scorecard += f"""
             <div class="card">
-                <div class="content cm-card-header" style="background-color: {header_bg(row['continent'])};">
+                <div class="content" style="background-color: {header_bg(row['continent'])};">
                     <div class="header smallheader">{country}</div>
                     <div class="meta smallheader">{continent}</div>
                 </div>
-                <div class="content cm-kpi-grid">
-                    <div class="kpi number">
-                        {ytd_value}
+                <div class="content">
+                    <div class="column kpi number">
+                        {ytd_value}<br>
                         <p class="kpi text">Year-to-Date (YTD)</p>
                     </div>
-                    <div class="kpi number" style="color: {yoy_color};">
-                        {yoy_value}
+                    <div class="column kpi number" style="color: {yoy_color};">
+                        {yoy_value}<br>
                         <p class="kpi text">YTD YoY Change</p>
                     </div>
                 </div>
-                <div class="extra content cm-card-meta">
+                <div class="extra content">
                     <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
                     <div class="meta"><i class="edit icon"></i> Data Since: {starting_date}</div>
-                    <div class="meta"><i class="external alternate icon"></i> Source: {source_markup}</div>
                 </div>
-                <div class="extra content cm-card-meta" {view_details}> 
+                <div class="extra content" {view_details}> 
                     <div class="meta"><i class="history icon"></i> Time Resolution: {resolution}</div>
                     <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {update_frequency}</div>
                     <div class="meta"><i class="th icon"></i> Region Data Availability: {region_data}</div>
@@ -964,7 +974,7 @@ def safe_url(value):
 def format_number(value):
     if pd.isna(value) or not math.isfinite(float(value)):
         return "n/a"
-    return f"{float(value):,.2f}"
+    return str(round(float(value), 2))
 
 
 def format_percentage(value):

@@ -665,13 +665,14 @@ function formatGwh(value) {
   return `${Math.round(value).toLocaleString()} GWh`;
 }
 
-function applyMapScaleValues(data, maxRawValue) {
+function applyMapScaleValues(data) {
+  const maxRawValue = Math.max(...data.map((item) => item.rawValue));
   const maxLogValue = Math.log10(maxRawValue + 1);
   data.forEach((item) => {
     const score = maxLogValue > 0
       ? (Math.log10(item.rawValue + 1) / maxLogValue) * 100
       : 100;
-    item.value = item.rawValue;
+    item.value = score;
     item.mapScale = score;
   });
 }
@@ -694,7 +695,6 @@ async function loadMapData(energyType) {
   const countries = config.countries.map((country) => country.name);
   const dayLabels = config.option.xAxis[0].data;
   const seriesByCountryYear = new Map();
-  let maxRawValue = 0;
 
   config.option.series.forEach((series) => {
     const country = countries[series.xAxisIndex];
@@ -730,11 +730,11 @@ async function loadMapData(energyType) {
           value: 0,
           rawValue
         });
-        maxRawValue = Math.max(maxRawValue, rawValue);
         total += rawValue;
       });
 
       if (data.length) {
+        applyMapScaleValues(data);
         dates.push({
           date,
           data,
@@ -744,8 +744,6 @@ async function loadMapData(energyType) {
       }
     });
   });
-
-  dates.forEach((entry) => applyMapScaleValues(entry.data, maxRawValue));
 
   const maxCountryCount = dates.length ? Math.max(...dates.map((entry) => entry.countryCount)) : 0;
   let latestCompleteCoverageDate = null;
@@ -759,7 +757,6 @@ async function loadMapData(energyType) {
   const mapData = {
     dates,
     defaultIndex: dates.length - 1,
-    maxRawValue,
     maxCountryCount,
     latestCompleteCoverageDate
   };
@@ -791,15 +788,14 @@ function mapOptionForDate(entry, mapData) {
     visualMap: {
       type: "continuous",
       min: 0,
-      max: mapData.maxRawValue,
+      max: 100,
       left: 24,
       bottom: 26,
       itemWidth: 12,
       itemHeight: 128,
       calculable: false,
-      text: ["High GWh", "Low"],
+      text: ["High", "Low"],
       textGap: 10,
-      formatter: (value) => formatGwh(value),
       textStyle: {
         color: "#53625f",
         fontSize: 11,
@@ -899,7 +895,7 @@ async function renderMapChart(renderId) {
     const entry = mapData.dates[state.mapDateIndex];
     updateMapStats(entry);
     if (els.mapCoverageNote) {
-      els.mapCoverageNote.textContent = `Color scale is fixed across dates for this energy type. Latest complete coverage: ${mapData.latestCompleteCoverageDate || "-"}.`;
+      els.mapCoverageNote.textContent = `Color scale is relative within the selected date. Latest complete coverage: ${mapData.latestCompleteCoverageDate || "-"}.`;
     }
     setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT);
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
