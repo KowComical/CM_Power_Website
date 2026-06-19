@@ -142,7 +142,8 @@ def process_data_description(dataframe):
 
         ytd_sum_res = df.groupby('country').apply(current_year_sum)
         lytd_sum_res = df.groupby('country').apply(last_year_ytd_sum)
-        percentage_change_res = ((ytd_sum_res - lytd_sum_res) / lytd_sum_res) * 100
+        safe_lytd = lytd_sum_res.where(lytd_sum_res != 0)
+        percentage_change_res = ((ytd_sum_res - safe_lytd) / safe_lytd) * 100
 
         results = [{'country': country,
                     'max_date': max(df[df['country'] == country]['date']),
@@ -851,28 +852,10 @@ def get_scorecard(df, view_details):
     country_rows = df[~df['country'].isin(NON_COUNTRY_AGGREGATES)]
     n_countries = len(country_rows)
     latest_date = min(df['max_date'].dt.strftime('%Y-%b'))
-    # Example additional statisti
     selected_energy = safe_html(df['type'].tolist()[0])
 
     table_scorecard = f"""
-    <style>
-        .ui.statistics .statistic .label {{
-            margin-top: 10px !important; 
-        }}
-
-        .extra.content .meta {{
-            font-size: 1.2rem;
-            text-align: left;
-            color: #333;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 5px;
-        }}
-    </style>
-
-    <div class="ui four small statistics">
+    <div class="overview-summary ui four small statistics">
         <div class="grey statistic">
             <div class="value">
                 {selected_energy}
@@ -894,12 +877,12 @@ def get_scorecard(df, view_details):
                 {latest_date}
             </div>
             <div class="label">
-                latest date for all countries
+                latest common date
             </div>
         </div>
         <div class="grey statistic">
             <div class="value">
-                Twh
+                TWh
             </div>
             <div class="label">
                 Unit
@@ -908,7 +891,7 @@ def get_scorecard(df, view_details):
     </div>
     """
 
-    table_scorecard += "<br><br><br><div id='mydiv' class='ui centered cards'>"
+    table_scorecard += "<div id='mydiv' class='ui centered cards overview-card-grid'>"
 
     # <div class="content" style="background-color: {header_bg(row['type'])};">
 
@@ -919,28 +902,38 @@ def get_scorecard(df, view_details):
         starting_date = safe_html(row['starting_date'])
         update_frequency = safe_html(row['update_frequency'])
         region_data = safe_html(row['region_data'])
+        source = safe_html(row.get('source', ''))
+        source_url = safe_url(row.get('source_url', ''))
+        if source_url != "#":
+            source_markup = f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">{source}</a>'
+        else:
+            source_markup = source
+        yoy_value = format_percentage(row['percentage_change'])
+        yoy_color = color_percentage(row['percentage_change'])
+        ytd_value = format_number(row['year_to_date_sum'])
 
         table_scorecard += f"""
             <div class="card">
-                <div class="content" style="background-color: {header_bg(row['continent'])};">
+                <div class="content cm-card-header" style="background-color: {header_bg(row['continent'])};">
                     <div class="header smallheader">{country}</div>
                     <div class="meta smallheader">{continent}</div>
                 </div>
-                <div class="content">
-                    <div class="column kpi number">
-                        {round(row['year_to_date_sum'], 2)}<br>
+                <div class="content cm-kpi-grid">
+                    <div class="kpi number">
+                        {ytd_value}
                         <p class="kpi text">Year-to-Date (YTD)</p>
                     </div>
-                    <div class="column kpi number" style="color: {color_percentage(row['percentage_change'])};">
-                        {row['percentage_change']:.2f}%<br>
+                    <div class="kpi number" style="color: {yoy_color};">
+                        {yoy_value}
                         <p class="kpi text">YTD YoY Change</p>
                     </div>
                 </div>
-                <div class="extra content">
+                <div class="extra content cm-card-meta">
                     <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
                     <div class="meta"><i class="edit icon"></i> Data Since: {starting_date}</div>
+                    <div class="meta"><i class="external alternate icon"></i> Source: {source_markup}</div>
                 </div>
-                <div class="extra content" {view_details}> 
+                <div class="extra content cm-card-meta" {view_details}> 
                     <div class="meta"><i class="history icon"></i> Time Resolution: {resolution}</div>
                     <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {update_frequency}</div>
                     <div class="meta"><i class="th icon"></i> Region Data Availability: {region_data}</div>
@@ -968,7 +961,21 @@ def safe_url(value):
     return escape(url, quote=True)
 
 
+def format_number(value):
+    if pd.isna(value) or not math.isfinite(float(value)):
+        return "n/a"
+    return f"{float(value):,.2f}"
+
+
+def format_percentage(value):
+    if pd.isna(value) or not math.isfinite(float(value)):
+        return "n/a"
+    return f"{float(value):.2f}%"
+
+
 def color_percentage(value):
+    if pd.isna(value) or not math.isfinite(float(value)):
+        return "#66736f"
     if value < 0:
         return "red"
     else:

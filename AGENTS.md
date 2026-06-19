@@ -16,7 +16,8 @@ The app has no frontend build step. `index.html` loads checked-in CSS/JS and gen
 ## Important Paths
 
 - `README.md`: short project/deploy description.
-- `index.html`: static shell with sidebar controls and four panels: Overview, Daily Trends, Source Share, IEA Compare.
+- `index.html`: static shell with sidebar controls and panels for Overview, Daily Trends, IEA Compare, and Global Map.
+  The `Generation Mix` / Source Share panel may be intentionally hidden in `index.html` while still kept in the generation pipeline; do not treat this as dead code unless the user explicitly asks to remove it.
 - `upload.py`: data generation plus automated commit/push/deploy workflow.
 - `auto.sh`: daily runner for `upload.py`; sets cache/log paths and uses `flock` to avoid overlapping jobs.
 - `requirements.txt`: currently only `pandas==2.1.1`.
