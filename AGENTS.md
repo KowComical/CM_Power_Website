@@ -90,6 +90,8 @@ Generated/deployed outputs are listed in `upload.py` as `GENERATED_OUTPUTS` and 
 
 For all user-requested changes in this repository, finish by uploading the completed work to GitHub after verification. Stage, commit, and push only the files changed for the user's request, and leave unrelated pre-existing working tree changes untouched unless the user explicitly asks to include them.
 
+After pushing the source branch, also deploy the completed website assets to the `gh-pages` branch so the public GitHub Pages site reflects the change.
+
 ## Verification
 
 Useful checks after changes:
