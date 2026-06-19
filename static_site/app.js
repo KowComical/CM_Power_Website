@@ -20,6 +20,9 @@ const PAGE_TITLES = {
 const WORLD_MAP_NAME = "cmPowerWorld";
 const MAP_CHART_HEIGHT = 560;
 const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
+const MAP_POINT_MARKERS = [
+  { name: "Singapore", coord: [103.8198, 1.3521] }
+];
 const MAP_SCALE_COLORS = [
   "#f7fbff",
   "#d8eef5",
@@ -728,6 +731,20 @@ async function loadMapData(energyType) {
 }
 
 function mapOptionForDate(entry) {
+  const pointMarkers = MAP_POINT_MARKERS
+    .map((marker) => {
+      const countryData = entry.data.find((item) => item.name === marker.name);
+      if (!countryData) {
+        return null;
+      }
+
+      return {
+        ...countryData,
+        coord: marker.coord
+      };
+    })
+    .filter(Boolean);
+
   return {
     backgroundColor: "#edf5f7",
     tooltip: {
@@ -800,6 +817,28 @@ function mapOptionForDate(entry) {
           areaColor: "#f1c66d",
           borderColor: "#ffffff",
           borderWidth: 0.9
+        }
+      },
+      markPoint: {
+        symbol: "circle",
+        symbolSize: 9,
+        data: pointMarkers,
+        label: {
+          show: false
+        },
+        itemStyle: {
+          color: "#1f7a8c",
+          borderColor: "#ffffff",
+          borderWidth: 2,
+          shadowBlur: 8,
+          shadowColor: "rgba(31, 122, 140, 0.45)"
+        },
+        emphasis: {
+          itemStyle: {
+            color: "#f1c66d",
+            borderColor: "#1e2726",
+            borderWidth: 2
+          }
         }
       }
     }]
