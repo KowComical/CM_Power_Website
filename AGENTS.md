@@ -93,6 +93,17 @@ For all user-requested changes in this repository, finish by uploading the compl
 
 After pushing the source branch, also deploy the completed website assets to the `gh-pages` branch so the public GitHub Pages site reflects the change.
 
+## 更新日志规则
+
+每次代码、数据处理、文档或自动化相关更新都必须记录在根目录 `UPDATE_LOG.md`，方便后续维护者追踪更新时间、更新内容和受影响路径。记录统一使用中文。
+
+日期写在 `## YYYY-MM-DD` 标题中；同一天内有多条更新时，必须在日期标题下用 `### HH:MM - 更新标题` 分隔。条目正文不再重复日期和时间。
+
+每条记录至少包含：
+
+- `更新内容`：说明本次修复、数据处理、文档或自动化更新的核心内容。
+- `影响路径`：列出本次实际修改、生成、删除或清理的文件和目录。
+
 ## Verification
 
 Useful checks after changes:
