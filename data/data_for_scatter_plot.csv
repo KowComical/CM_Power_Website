@@ -37113,8 +37113,8 @@
 2025,6,Costa Rica,solar,0.0,0.01
 2025,6,Costa Rica,total,1.12,1.2
 2025,6,Costa Rica,wind,0.08,0.08
-2025,6,Croatia,coal,0.01,0.0
-2025,6,Croatia,fossil,0.09,0.07
+2025,6,Croatia,coal,0.03,0.0
+2025,6,Croatia,fossil,0.11,0.07
 2025,6,Croatia,gas,0.08,0.07
 2025,6,Croatia,hydro,0.31,0.38
 2025,6,Croatia,nuclear,0.0,0.0
@@ -37122,7 +37122,7 @@
 2025,6,Croatia,other,0.08,0.08
 2025,6,Croatia,renewables,0.67,0.9
 2025,6,Croatia,solar,0.07,0.24
-2025,6,Croatia,total,0.75,0.97
+2025,6,Croatia,total,0.77,0.97
 2025,6,Croatia,wind,0.21,0.21
 2025,6,Czech Republic,coal,0.79,0.78
 2025,6,Czech Republic,fossil,0.91,0.97
@@ -37146,16 +37146,16 @@
 2025,6,Denmark,solar,0.57,0.62
 2025,6,Denmark,total,2.58,2.53
 2025,6,Denmark,wind,1.69,1.63
-2025,6,EU27&UK,coal,13.59,13.75
-2025,6,EU27&UK,fossil,40.42,50.5
-2025,6,EU27&UK,gas,25.84,33.77
+2025,6,EU27&UK,coal,13.64,13.75
+2025,6,EU27&UK,fossil,40.48,50.5
+2025,6,EU27&UK,gas,25.85,33.77
 2025,6,EU27&UK,hydro,28.8,29.9
 2025,6,EU27&UK,nuclear,46.43,47.64
 2025,6,EU27&UK,oil,0.99,2.98
 2025,6,EU27&UK,other,14.63,17.08
 2025,6,EU27&UK,renewables,119.24,138.6
 2025,6,EU27&UK,solar,39.46,52.38
-2025,6,EU27&UK,total,206.09,236.74
+2025,6,EU27&UK,total,206.15,236.74
 2025,6,EU27&UK,wind,36.36,39.24
 2025,6,Estonia,coal,0.05,0.1
 2025,6,Estonia,fossil,0.13,0.11
@@ -37257,8 +37257,8 @@
 2025,6,Japan,total,68.33,75.97
 2025,6,Japan,wind,0.72,0.73
 2025,6,Latvia,coal,0.0,0.0
-2025,6,Latvia,fossil,0.0,0.01
-2025,6,Latvia,gas,0.0,0.01
+2025,6,Latvia,fossil,0.01,0.01
+2025,6,Latvia,gas,0.01,0.01
 2025,6,Latvia,hydro,0.35,0.36
 2025,6,Latvia,nuclear,0.0,0.0
 2025,6,Latvia,oil,0.0,0.0
@@ -37311,8 +37311,8 @@
 2025,6,Montenegro,solar,0.0,0.01
 2025,6,Montenegro,total,0.13,0.08
 2025,6,Montenegro,wind,0.02,0.02
-2025,6,Netherlands,coal,0.2,0.32
-2025,6,Netherlands,fossil,1.06,2.81
+2025,6,Netherlands,coal,0.23,0.32
+2025,6,Netherlands,fossil,1.09,2.81
 2025,6,Netherlands,gas,0.86,2.4
 2025,6,Netherlands,hydro,0.0,0.0
 2025,6,Netherlands,nuclear,0.34,0.34
@@ -37320,7 +37320,7 @@
 2025,6,Netherlands,other,2.28,0.41
 2025,6,Netherlands,renewables,3.53,6.51
 2025,6,Netherlands,solar,0.06,3.77
-2025,6,Netherlands,total,4.93,9.65
+2025,6,Netherlands,total,4.96,9.65
 2025,6,Netherlands,wind,1.19,2.32
 2025,6,New Zealand,coal,0.06,0.07
 2025,6,New Zealand,fossil,0.46,0.46
@@ -37436,12 +37436,12 @@
 2025,6,Sweden,fossil,0.0,0.04
 2025,6,Sweden,gas,0.0,0.0
 2025,6,Sweden,hydro,4.11,4.11
-2025,6,Sweden,nuclear,3.01,3.23
+2025,6,Sweden,nuclear,3.0,3.23
 2025,6,Sweden,oil,0.0,0.02
 2025,6,Sweden,other,0.26,0.65
 2025,6,Sweden,renewables,7.38,8.1
 2025,6,Sweden,solar,0.38,0.72
-2025,6,Sweden,total,10.39,11.38
+2025,6,Sweden,total,10.38,11.38
 2025,6,Sweden,wind,2.63,2.62
 2025,6,Switzerland,coal,0.0,0.0
 2025,6,Switzerland,fossil,0.0,0.02
