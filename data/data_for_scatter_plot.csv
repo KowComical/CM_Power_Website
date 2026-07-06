@@ -37113,8 +37113,8 @@
 2025,6,Costa Rica,solar,0.0,0.01
 2025,6,Costa Rica,total,1.12,1.2
 2025,6,Costa Rica,wind,0.08,0.08
-2025,6,Croatia,coal,0.03,0.0
-2025,6,Croatia,fossil,0.11,0.07
+2025,6,Croatia,coal,0.02,0.0
+2025,6,Croatia,fossil,0.1,0.07
 2025,6,Croatia,gas,0.08,0.07
 2025,6,Croatia,hydro,0.31,0.38
 2025,6,Croatia,nuclear,0.0,0.0
@@ -37146,7 +37146,7 @@
 2025,6,Denmark,solar,0.57,0.62
 2025,6,Denmark,total,2.58,2.53
 2025,6,Denmark,wind,1.69,1.63
-2025,6,EU27&UK,coal,13.64,13.75
+2025,6,EU27&UK,coal,13.63,13.75
 2025,6,EU27&UK,fossil,40.48,50.5
 2025,6,EU27&UK,gas,25.85,33.77
 2025,6,EU27&UK,hydro,28.8,29.9
@@ -37155,7 +37155,7 @@
 2025,6,EU27&UK,other,14.63,17.08
 2025,6,EU27&UK,renewables,119.24,138.6
 2025,6,EU27&UK,solar,39.46,52.38
-2025,6,EU27&UK,total,206.15,236.74
+2025,6,EU27&UK,total,206.14,236.74
 2025,6,EU27&UK,wind,36.36,39.24
 2025,6,Estonia,coal,0.05,0.1
 2025,6,Estonia,fossil,0.13,0.11
@@ -37510,15 +37510,15 @@
 2025,7,Australia,total,15.66,24.79
 2025,7,Australia,wind,0.0,4.3
 2025,7,Austria,coal,0.0,0.16
-2025,7,Austria,fossil,0.05,0.36
-2025,7,Austria,gas,0.05,0.15
+2025,7,Austria,fossil,0.08,0.36
+2025,7,Austria,gas,0.08,0.15
 2025,7,Austria,hydro,3.95,4.02
 2025,7,Austria,nuclear,0.0,0.0
 2025,7,Austria,oil,0.0,0.06
 2025,7,Austria,other,0.14,0.41
 2025,7,Austria,renewables,5.51,6.36
 2025,7,Austria,solar,0.68,1.17
-2025,7,Austria,total,5.56,6.72
+2025,7,Austria,total,5.59,6.72
 2025,7,Austria,wind,0.74,0.75
 2025,7,Belgium,coal,0.0,0.22
 2025,7,Belgium,fossil,1.26,1.21
@@ -37546,12 +37546,12 @@
 2025,7,Bulgaria,fossil,0.68,0.61
 2025,7,Bulgaria,gas,0.1,0.1
 2025,7,Bulgaria,hydro,0.25,0.26
-2025,7,Bulgaria,nuclear,1.38,1.07
+2025,7,Bulgaria,nuclear,1.39,1.07
 2025,7,Bulgaria,oil,0.0,0.02
 2025,7,Bulgaria,other,0.01,0.1
 2025,7,Bulgaria,renewables,1.26,1.43
 2025,7,Bulgaria,solar,0.92,1.0
-2025,7,Bulgaria,total,3.32,3.1
+2025,7,Bulgaria,total,3.33,3.1
 2025,7,Bulgaria,wind,0.07,0.07
 2025,7,Canada,coal,1.36,1.32
 2025,7,Canada,fossil,12.22,11.81
@@ -37598,7 +37598,7 @@
 2025,7,Costa Rica,total,1.2,1.27
 2025,7,Costa Rica,wind,0.15,0.15
 2025,7,Croatia,coal,0.12,0.08
-2025,7,Croatia,fossil,0.29,0.28
+2025,7,Croatia,fossil,0.3,0.28
 2025,7,Croatia,gas,0.17,0.19
 2025,7,Croatia,hydro,0.33,0.4
 2025,7,Croatia,nuclear,0.0,0.0
@@ -37630,16 +37630,16 @@
 2025,7,Denmark,solar,0.63,0.63
 2025,7,Denmark,total,2.16,2.05
 2025,7,Denmark,wind,1.15,1.08
-2025,7,EU27&UK,coal,18.83,19.63
-2025,7,EU27&UK,fossil,52.7,65.07
-2025,7,EU27&UK,gas,32.7,41.79
+2025,7,EU27&UK,coal,18.82,19.63
+2025,7,EU27&UK,fossil,52.72,65.07
+2025,7,EU27&UK,gas,32.72,41.79
 2025,7,EU27&UK,hydro,27.59,28.42
 2025,7,EU27&UK,nuclear,51.86,52.92
 2025,7,EU27&UK,oil,1.17,3.64
 2025,7,EU27&UK,other,14.96,17.55
 2025,7,EU27&UK,renewables,111.11,129.59
 2025,7,EU27&UK,solar,38.33,51.13
-2025,7,EU27&UK,total,215.67,247.58
+2025,7,EU27&UK,total,215.69,247.58
 2025,7,EU27&UK,wind,30.22,32.49
 2025,7,Estonia,coal,0.03,0.05
 2025,7,Estonia,fossil,0.06,0.05
@@ -37653,7 +37653,7 @@
 2025,7,Estonia,total,0.33,0.34
 2025,7,Estonia,wind,0.07,0.08
 2025,7,Finland,coal,0.01,0.05
-2025,7,Finland,fossil,0.04,0.07
+2025,7,Finland,fossil,0.03,0.07
 2025,7,Finland,gas,0.02,0.01
 2025,7,Finland,hydro,0.87,0.91
 2025,7,Finland,nuclear,3.01,3.0
@@ -37661,7 +37661,7 @@
 2025,7,Finland,other,0.73,0.57
 2025,7,Finland,renewables,2.73,2.6
 2025,7,Finland,solar,0.25,0.19
-2025,7,Finland,total,5.78,5.66
+2025,7,Finland,total,5.77,5.66
 2025,7,Finland,wind,0.88,0.92
 2025,7,France,coal,0.0,0.0
 2025,7,France,fossil,0.74,0.92
@@ -37752,8 +37752,8 @@
 2025,7,Latvia,total,0.46,0.44
 2025,7,Latvia,wind,0.01,0.01
 2025,7,Lithuania,coal,0.0,0.0
-2025,7,Lithuania,fossil,0.15,0.09
-2025,7,Lithuania,gas,0.15,0.08
+2025,7,Lithuania,fossil,0.14,0.09
+2025,7,Lithuania,gas,0.14,0.08
 2025,7,Lithuania,hydro,0.16,0.05
 2025,7,Lithuania,nuclear,0.0,0.0
 2025,7,Lithuania,oil,0.0,0.01
@@ -37784,8 +37784,8 @@
 2025,7,Mexico,solar,1.88,2.4
 2025,7,Mexico,total,33.02,33.56
 2025,7,Mexico,wind,2.18,2.18
-2025,7,Montenegro,coal,0.0,0.0
-2025,7,Montenegro,fossil,0.0,0.0
+2025,7,Montenegro,coal,0.01,0.0
+2025,7,Montenegro,fossil,0.01,0.0
 2025,7,Montenegro,gas,0.0,0.0
 2025,7,Montenegro,hydro,0.04,0.05
 2025,7,Montenegro,nuclear,0.0,0.0
@@ -37793,7 +37793,7 @@
 2025,7,Montenegro,other,0.0,0.0
 2025,7,Montenegro,renewables,0.06,0.09
 2025,7,Montenegro,solar,0.0,0.01
-2025,7,Montenegro,total,0.06,0.09
+2025,7,Montenegro,total,0.08,0.09
 2025,7,Montenegro,wind,0.02,0.02
 2025,7,Netherlands,coal,0.3,0.71
 2025,7,Netherlands,fossil,1.82,4.46
@@ -37905,8 +37905,8 @@
 2025,7,Slovenia,solar,0.08,0.21
 2025,7,Slovenia,total,0.98,1.13
 2025,7,Slovenia,wind,0.0,0.0
-2025,7,Spain,coal,0.11,0.12
-2025,7,Spain,fossil,4.85,6.46
+2025,7,Spain,coal,0.1,0.12
+2025,7,Spain,fossil,4.84,6.46
 2025,7,Spain,gas,4.71,5.47
 2025,7,Spain,hydro,2.86,2.45
 2025,7,Spain,nuclear,4.51,5.09
@@ -37914,7 +37914,7 @@
 2025,7,Spain,other,0.54,0.6
 2025,7,Spain,renewables,14.48,15.8
 2025,7,Spain,solar,6.82,8.18
-2025,7,Spain,total,23.85,27.34
+2025,7,Spain,total,23.84,27.34
 2025,7,Spain,wind,4.27,4.57
 2025,7,Sweden,coal,0.0,0.02
 2025,7,Sweden,fossil,0.0,0.04
@@ -41836,7 +41836,7 @@
 2026,3,United States,fossil,161.47,174.83
 2026,3,United States,gas,115.7,125.91
 2026,3,United States,hydro,25.08,29.32
-2026,3,United States,nuclear,62.4,62.14
+2026,3,United States,nuclear,62.39,62.14
 2026,3,United States,oil,0.36,2.1
 2026,3,United States,other,4.53,5.86
 2026,3,United States,renewables,107.07,123.96
