@@ -14,6 +14,7 @@ Russia,EMRES,https://emres.cn,Europe,Hourly,Hourly,Not Available,2015-01-01
 United States,EIA,https://www.eia.gov/electricity/,North America,Hourly,Hourly,Available,2016-01-01
 Mexico,Gobierno de Mexico,https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx,North America,Hourly,Monthly,Not Available,2016-04-01
 Canada,Statistics Canada,https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2510001501,North America,Daily,Monthly,Available,2016-01-01
+Panama,CND,https://www.cnd.com.pa/index.php/informes/categoria/informes-de-operaciones,North America,Hourly,Daily,Available,2019-01-01
 Brazil,ONS,http://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao,South America,Hourly,Hourly,Not Available,2016-01-01
 Chile,Coordinador Eléctrico Nacional,https://www.coordinador.cl/operacion/graficos/operacion-real/generacion-real/,South America,Hourly,Daily,Available,2012-01-01
 Colombia,XM,https://sinergox.xm.com.co/Paginas/Home.aspx,South America,Hourly,Daily,Not Available,2000-01-01
