@@ -51,13 +51,13 @@ const DAILY_TREND_YEAR_COLORS = {
 
 const DAILY_TREND_INACTIVE_COLOR = "#dbe3e4";
 const CONTINENT_SCATTER_COLORS = {
-  Africa: "#b73535",
-  Asia: "#b47600",
-  Europe: "#245f9c",
-  "North America": "#81363f",
-  Oceania: "#087968",
-  "South America": "#7a3f99",
-  Other: "#526166"
+  Africa: "#D55E00",
+  Asia: "#E69F00",
+  Europe: "#0072B2",
+  "North America": "#CC79A7",
+  Oceania: "#009E73",
+  "South America": "#56B4E9",
+  Other: "#6B7280"
 };
 const SCATTER_CONTINENTS = [
   "Africa", "Asia", "Europe",
@@ -87,6 +87,7 @@ let renderSerial = 0;
 let mapUpdateSerial = 0;
 let scatterSelectionFrame = null;
 let scatterSelectedContinents = null;
+let scatterHasAnimated = false;
 
 const els = {
   status: document.getElementById("statusText"),
@@ -283,7 +284,8 @@ function setChart(container, name, option, height, renderKey = null) {
     charts[name].dispose();
   }
   charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
-  optimizeChartOption(option, name);
+  const animateInitialScatter = name === "scatter" && !scatterHasAnimated;
+  optimizeChartOption(option, name, animateInitialScatter);
   if (name === "line" && Array.isArray(option.series)) {
     option.series.forEach((series, index) => {
       series.id = `daily-line-${index}`;
@@ -291,6 +293,9 @@ function setChart(container, name, option, height, renderKey = null) {
     prepareDailyTrendRuntime(charts[name], option);
   }
   charts[name].setOption(option, true);
+  if (animateInitialScatter) {
+    scatterHasAnimated = true;
+  }
   chartRenderState[name] = {
     key: renderKey,
     width: chartContainerWidth(container),
@@ -307,8 +312,8 @@ function setChart(container, name, option, height, renderKey = null) {
   }
 }
 
-function optimizeChartOption(option, chartName) {
-  option.animation = false;
+function optimizeChartOption(option, chartName, animateInitialScatter = false) {
+  option.animation = animateInitialScatter;
   option.useUTC = true;
   if (chartName === "line") {
     applyDailyTrendTheme(option);
@@ -328,7 +333,14 @@ function optimizeChartOption(option, chartName) {
   }
 
   option.series.forEach((series) => {
-    series.animation = false;
+    series.animation = animateInitialScatter;
+    if (animateInitialScatter) {
+      series.animationDuration = series.type === "scatter" ? 850 : 600;
+      series.animationEasing = "cubicOut";
+      series.animationDelay = series.type === "scatter"
+        ? (dataIndex) => (dataIndex % 48) * 6
+        : 120;
+    }
     if (series.type !== "map") {
       series.emphasis = { disabled: true };
     }
@@ -1114,14 +1126,51 @@ function countryContinent(country, continentsByCountry) {
   return continentsByCountry.get(country) || "Other";
 }
 
-function scatterColumns(width, gridCount) {
-  if (width < 720) {
-    return 1;
-  }
-  if (width < 1180) {
-    return Math.min(2, gridCount);
-  }
-  return Math.min(3, gridCount);
+function scatterColumns(width) {
+  return width < 920 ? 1 : 2;
+}
+
+function scatterLayout(width, gridCount) {
+  const columns = scatterColumns(width);
+  const sidePadding = columns === 1 ? 20 : 38;
+  const columnGap = columns === 1 ? 0 : 46;
+  const cellWidth = columns === 1
+    ? width - sidePadding * 2
+    : (width - sidePadding * 2 - columnGap) / 2;
+  const plotSize = Math.max(
+    160,
+    Math.min(columns === 1 ? 520 : 460, cellWidth - 108)
+  );
+  const topBand = width < 620 ? 168 : 126;
+  const rowStride = plotSize + 106;
+  const rows = columns === 1
+    ? gridCount
+    : 1 + Math.ceil(Math.max(0, gridCount - 1) / 2);
+
+  return {
+    columns,
+    height: topBand + rows * rowStride + 22,
+    position(index) {
+      const row = columns === 1
+        ? index
+        : index === 0 ? 0 : 1 + Math.floor((index - 1) / 2);
+      const column = columns === 1 || index === 0 ? 0 : (index - 1) % 2;
+      const cellLeft = columns === 1
+        ? sidePadding
+        : index === 0
+          ? (width - cellWidth) / 2
+          : sidePadding + column * (cellWidth + columnGap);
+      const left = cellLeft + (cellWidth - plotSize) / 2;
+      const titleTop = topBand + row * rowStride;
+
+      return {
+        left,
+        titleTop,
+        gridTop: titleTop + 30,
+        plotSize
+      };
+    }
+  };
 }
 
 function niceScatterAxis(maxValue, splitCount = 4) {
@@ -1279,8 +1328,8 @@ function refreshScatterSelection(chart, selected = {}) {
 
 async function renderScatterChart(renderId) {
   const containerWidth = chartContainerWidth(els.scatterChart);
-  const columns = scatterColumns(containerWidth, ENERGY_TYPES.length);
-  const renderKey = `scatter|${columns}`;
+  const columns = scatterColumns(containerWidth);
+  const renderKey = `scatter|${columns}|${containerWidth}`;
   if (reuseRenderedChart(els.scatterChart, "scatter", renderKey)) {
     setStatus("IEA comparison");
     return;
@@ -1310,11 +1359,8 @@ async function renderScatterChart(renderId) {
         ? countries.some((country) => countryContinent(country, continentsByCountry) === "Other")
         : countries.some((country) => continentsByCountry.get(country) === continent)
     ));
-    const rows = Math.max(1, Math.ceil(types.length / columns));
-    const chartHeightValue = 122 + rows * 320 + 38;
-    const sideGap = columns === 1 ? 8 : 4.5;
-    const columnGap = columns === 1 ? 0 : 3.5;
-    const gridWidth = (100 - sideGap * 2 - columnGap * (columns - 1)) / columns;
+    const layout = scatterLayout(containerWidth, types.length);
+    const chartHeightValue = layout.height;
 
     const grid = [];
     const xAxis = [];
@@ -1322,9 +1368,10 @@ async function renderScatterChart(renderId) {
     const series = [];
     const rowsByGrid = [];
     const titles = [{
-      text: "Comparison of CM_Power and IEA by Energy Source for Key Countries (TWh)",
+      text: "Comparison of CM Power and IEA by Energy Source (TWh)",
       left: "center",
-      top: "0%"
+      top: 10,
+      textStyle: { color: "#1f2928", fontSize: 17, fontWeight: 750 }
     }];
 
     types.forEach((type, index) => {
@@ -1338,18 +1385,15 @@ async function renderScatterChart(renderId) {
       const stats = scatterFitStats(visibleGroup);
       const axis = niceScatterAxis(Math.max(...visibleGroup.flatMap((row) => [row.value, row.iea])));
       const maxVal = axis.max;
-      const col = index % columns;
-      const row = Math.floor(index / columns);
-      const left = sideGap + col * (gridWidth + columnGap);
-      const titleTop = 92 + row * 320;
-      const gridTop = titleTop + 28;
+      const position = layout.position(index);
 
       grid.push({
-        left: `${left}%`,
-        top: gridTop,
-        width: `${gridWidth}%`,
-        height: 230,
-        containLabel: true
+        left: position.left,
+        top: position.gridTop,
+        width: position.plotSize,
+        height: position.plotSize,
+        containLabel: false,
+        show: false
       });
 
       xAxis.push({
@@ -1361,10 +1405,22 @@ async function renderScatterChart(renderId) {
         splitNumber: 4,
         name: "CM_Power",
         nameLocation: "center",
-        nameGap: 25,
-        axisLabel: { color: "#5d6969", fontSize: 10 },
-        axisLine: { lineStyle: { color: "#b7c7c5" } },
-        splitLine: { lineStyle: { color: "#e6eeec" } }
+        nameGap: 31,
+        position: "bottom",
+        axisLabel: { color: "#4f5b59", fontSize: 10, margin: 9 },
+        axisLine: {
+          show: true,
+          onZero: false,
+          lineStyle: { color: "#202725", width: 1.1 }
+        },
+        axisTick: {
+          show: true,
+          inside: true,
+          length: 5,
+          lineStyle: { color: "#202725", width: 1 }
+        },
+        minorTick: { show: false },
+        splitLine: { show: false }
       });
 
       yAxis.push({
@@ -1376,19 +1432,31 @@ async function renderScatterChart(renderId) {
         splitNumber: 4,
         name: "IEA",
         nameLocation: "center",
-        nameGap: 30,
-        axisLabel: { color: "#5d6969", fontSize: 10 },
-        axisLine: { lineStyle: { color: "#b7c7c5" } },
-        splitLine: { lineStyle: { color: "#e6eeec" } }
+        nameGap: 40,
+        position: "left",
+        axisLabel: { color: "#4f5b59", fontSize: 10, margin: 9 },
+        axisLine: {
+          show: true,
+          onZero: false,
+          lineStyle: { color: "#202725", width: 1.1 }
+        },
+        axisTick: {
+          show: true,
+          inside: true,
+          length: 5,
+          lineStyle: { color: "#202725", width: 1 }
+        },
+        minorTick: { show: false },
+        splitLine: { show: false }
       });
 
       titles.push({
         id: `scatter-title-${index}`,
         text: `${typeTitle} · R2 ${formatR2(stats.r2)}`,
         textAlign: "center",
-        left: `${left + gridWidth / 2}%`,
-        top: titleTop,
-        textStyle: { color: "#546160", fontSize: 13, fontWeight: 700 }
+        left: position.left + position.plotSize / 2,
+        top: position.titleTop,
+        textStyle: { color: "#35413f", fontSize: 13, fontWeight: 750 }
       });
 
       series.push({
@@ -1434,9 +1502,9 @@ async function renderScatterChart(renderId) {
           progressiveThreshold: 5000,
           itemStyle: {
             color: CONTINENT_SCATTER_COLORS[continent],
-            borderColor: "rgba(255, 255, 255, 0.88)",
-            borderWidth: 0.6,
-            opacity: 0.9
+            borderColor: "#111827",
+            borderWidth: 0.75,
+            opacity: 0.82
           },
           data: continentRows.map((item) => [
             item.value,
@@ -1471,23 +1539,19 @@ async function renderScatterChart(renderId) {
         selected: scatterSelectedContinents ? { ...scatterSelectedContinents } : undefined,
         data: continents.map((continent) => ({
           name: continent,
-          icon: "roundRect",
+          icon: "circle",
           textStyle: {
             color: CONTINENT_SCATTER_COLORS[continent],
-            fontWeight: 800,
-            backgroundColor: "#f8fbfa",
-            borderColor: CONTINENT_SCATTER_COLORS[continent],
-            borderWidth: 1,
-            borderRadius: 4,
-            padding: [4, 7, 4, 7]
+            fontWeight: 750
           }
         })),
         orient: "horizontal",
         left: "center",
-        top: 46,
-        itemWidth: 22,
-        itemHeight: 7,
-        itemGap: 13,
+        top: 49,
+        itemWidth: 12,
+        itemHeight: 12,
+        itemGap: 17,
+        itemStyle: { borderColor: "#111827", borderWidth: 0.75 },
         inactiveColor: "#aebaba",
         textStyle: { fontSize: 13, color: "#4b5656" }
       }
