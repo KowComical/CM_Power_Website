@@ -4,6 +4,13 @@
 
 日期写在 `## YYYY-MM-DD` 标题中；同一天内有多条更新时，必须在日期标题下用 `### HH:MM - 更新标题` 分隔。条目正文不再重复日期和时间。
 
+## 2026-07-19
+
+### 00:17 - 优化图表切换与升级 ECharts
+
+- 更新内容：修复 IEA Compare 初始化时重复调用 `setOption()`、页面切换重复销毁图表、隐藏图表参与 resize、图例更新重复传输完整数据，以及地图能源切换沿用旧日期下标等问题；为 Daily Trends、IEA Compare、Generation Mix 和 Global Map 增加按状态复用，IEA 依赖改为并行加载并恢复浏览器缓存，洲别筛选更新改为合并延后执行，地图能源切换后按该能源最新完整覆盖日期重新定位；将 vendored ECharts 从 5.6.0 升级至 6.1.0，并更新静态资源 cache buster。完整保留现有图表、国家、能源类型、数据点、图例、Tooltip 和筛选功能。
+- 影响路径：`static_site/app.js`、`static_site/vendor/echarts.min.js`、`index.html`、`UPDATE_LOG.md`
+
 ## 2026-07-18
 
 ### 21:39 - 新增尼加拉瓜国家数据说明
