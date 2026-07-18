@@ -283,9 +283,13 @@ function setChart(container, name, option, height, renderKey = null) {
     }
     charts[name].dispose();
   }
+  const revealInitialScatter = name === "scatter" && !scatterHasAnimated;
+  if (revealInitialScatter) {
+    container.classList.remove("is-revealed");
+    container.classList.add("scatter-reveal");
+  }
   charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
-  const animateInitialScatter = name === "scatter" && !scatterHasAnimated;
-  optimizeChartOption(option, name, animateInitialScatter);
+  optimizeChartOption(option, name);
   if (name === "line" && Array.isArray(option.series)) {
     option.series.forEach((series, index) => {
       series.id = `daily-line-${index}`;
@@ -293,8 +297,14 @@ function setChart(container, name, option, height, renderKey = null) {
     prepareDailyTrendRuntime(charts[name], option);
   }
   charts[name].setOption(option, true);
-  if (animateInitialScatter) {
+  if (revealInitialScatter) {
     scatterHasAnimated = true;
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => container.classList.add("is-revealed"));
+    });
+    window.setTimeout(() => {
+      container.classList.remove("scatter-reveal", "is-revealed");
+    }, 820);
   }
   chartRenderState[name] = {
     key: renderKey,
@@ -312,8 +322,8 @@ function setChart(container, name, option, height, renderKey = null) {
   }
 }
 
-function optimizeChartOption(option, chartName, animateInitialScatter = false) {
-  option.animation = animateInitialScatter;
+function optimizeChartOption(option, chartName) {
+  option.animation = false;
   option.useUTC = true;
   if (chartName === "line") {
     applyDailyTrendTheme(option);
@@ -333,14 +343,7 @@ function optimizeChartOption(option, chartName, animateInitialScatter = false) {
   }
 
   option.series.forEach((series) => {
-    series.animation = animateInitialScatter;
-    if (animateInitialScatter) {
-      series.animationDuration = series.type === "scatter" ? 850 : 600;
-      series.animationEasing = "cubicOut";
-      series.animationDelay = series.type === "scatter"
-        ? (dataIndex) => (dataIndex % 48) * 6
-        : 120;
-    }
+    series.animation = false;
     if (series.type !== "map") {
       series.emphasis = { disabled: true };
     }
@@ -1155,19 +1158,26 @@ function scatterLayout(width, gridCount) {
         ? index
         : index === 0 ? 0 : 1 + Math.floor((index - 1) / 2);
       const column = columns === 1 || index === 0 ? 0 : (index - 1) % 2;
+      const leftColumnPlot = sidePadding + (cellWidth - plotSize) / 2;
       const cellLeft = columns === 1
         ? sidePadding
         : index === 0
-          ? (width - cellWidth) / 2
+          ? sidePadding
           : sidePadding + column * (cellWidth + columnGap);
-      const left = cellLeft + (cellWidth - plotSize) / 2;
+      const left = columns === 2 && index === 0
+        ? leftColumnPlot
+        : cellLeft + (cellWidth - plotSize) / 2;
+      const plotWidth = columns === 2 && index === 0
+        ? cellWidth + columnGap + plotSize
+        : plotSize;
       const titleTop = topBand + row * rowStride;
 
       return {
         left,
         titleTop,
         gridTop: titleTop + 30,
-        plotSize
+        plotWidth,
+        plotHeight: plotSize
       };
     }
   };
@@ -1371,7 +1381,7 @@ async function renderScatterChart(renderId) {
       text: "Comparison of CM Power and IEA by Energy Source (TWh)",
       left: "center",
       top: 10,
-      textStyle: { color: "#1f2928", fontSize: 17, fontWeight: 750 }
+      textStyle: { color: "#1f2928", fontSize: 21, fontWeight: 750 }
     }];
 
     types.forEach((type, index) => {
@@ -1390,8 +1400,8 @@ async function renderScatterChart(renderId) {
       grid.push({
         left: position.left,
         top: position.gridTop,
-        width: position.plotSize,
-        height: position.plotSize,
+        width: position.plotWidth,
+        height: position.plotHeight,
         containLabel: false,
         show: false
       });
@@ -1407,7 +1417,8 @@ async function renderScatterChart(renderId) {
         nameLocation: "center",
         nameGap: 31,
         position: "bottom",
-        axisLabel: { color: "#4f5b59", fontSize: 10, margin: 9 },
+        nameTextStyle: { color: "#35413f", fontSize: 13, fontWeight: 650 },
+        axisLabel: { color: "#4f5b59", fontSize: 12, margin: 10 },
         axisLine: {
           show: true,
           onZero: false,
@@ -1416,7 +1427,7 @@ async function renderScatterChart(renderId) {
         axisTick: {
           show: true,
           inside: true,
-          length: 5,
+          length: 7,
           lineStyle: { color: "#202725", width: 1 }
         },
         minorTick: { show: false },
@@ -1434,7 +1445,8 @@ async function renderScatterChart(renderId) {
         nameLocation: "center",
         nameGap: 40,
         position: "left",
-        axisLabel: { color: "#4f5b59", fontSize: 10, margin: 9 },
+        nameTextStyle: { color: "#35413f", fontSize: 13, fontWeight: 650 },
+        axisLabel: { color: "#4f5b59", fontSize: 12, margin: 10 },
         axisLine: {
           show: true,
           onZero: false,
@@ -1443,7 +1455,7 @@ async function renderScatterChart(renderId) {
         axisTick: {
           show: true,
           inside: true,
-          length: 5,
+          length: 7,
           lineStyle: { color: "#202725", width: 1 }
         },
         minorTick: { show: false },
@@ -1454,9 +1466,9 @@ async function renderScatterChart(renderId) {
         id: `scatter-title-${index}`,
         text: `${typeTitle} · R2 ${formatR2(stats.r2)}`,
         textAlign: "center",
-        left: position.left + position.plotSize / 2,
+        left: position.left + position.plotWidth / 2,
         top: position.titleTop,
-        textStyle: { color: "#35413f", fontSize: 13, fontWeight: 750 }
+        textStyle: { color: "#35413f", fontSize: 16, fontWeight: 750 }
       });
 
       series.push({
@@ -1496,15 +1508,15 @@ async function renderScatterChart(renderId) {
           dimensions: ["CM_Power", "IEA", "country", "year", "month", "type"],
           encode: { x: 0, y: 1 },
           symbol: "circle",
-          symbolSize: 6.2,
+          symbolSize: 8.4,
           large: false,
           progressive: 3000,
           progressiveThreshold: 5000,
           itemStyle: {
             color: CONTINENT_SCATTER_COLORS[continent],
             borderColor: "#111827",
-            borderWidth: 0.75,
-            opacity: 0.82
+            borderWidth: 0.95,
+            opacity: 0.8
           },
           data: continentRows.map((item) => [
             item.value,
@@ -1533,7 +1545,9 @@ async function renderScatterChart(renderId) {
       series,
       tooltip: {
         trigger: "item",
-        formatter: scatterTooltip
+        formatter: scatterTooltip,
+        padding: [10, 12],
+        textStyle: { fontSize: 14, lineHeight: 20 }
       },
       legend: {
         selected: scatterSelectedContinents ? { ...scatterSelectedContinents } : undefined,
@@ -1548,12 +1562,12 @@ async function renderScatterChart(renderId) {
         orient: "horizontal",
         left: "center",
         top: 49,
-        itemWidth: 12,
-        itemHeight: 12,
-        itemGap: 17,
-        itemStyle: { borderColor: "#111827", borderWidth: 0.75 },
+        itemWidth: 16,
+        itemHeight: 16,
+        itemGap: 22,
+        itemStyle: { borderColor: "#111827", borderWidth: 0.95 },
         inactiveColor: "#aebaba",
-        textStyle: { fontSize: 13, color: "#4b5656" }
+        textStyle: { fontSize: 15, color: "#4b5656", fontWeight: 650 }
       }
     };
 
