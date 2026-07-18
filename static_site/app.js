@@ -76,13 +76,17 @@ const state = {
 const jsonCache = new Map();
 const mapDataCache = new Map();
 const charts = {};
+const chartRenderState = {};
 let scatterRecords = null;
 let scatterMetadata = null;
 let countryContinentMap = null;
 let scatterRuntime = null;
+let dailyTrendRuntime = null;
 let worldMapRegistered = false;
 let renderSerial = 0;
 let mapUpdateSerial = 0;
+let scatterSelectionFrame = null;
+let scatterSelectedContinents = null;
 
 const els = {
   status: document.getElementById("statusText"),
@@ -136,7 +140,7 @@ function showError(container, error) {
 }
 
 async function fetchText(path) {
-  const response = await fetch(encodeURI(path), { cache: "no-store" });
+  const response = await fetch(encodeURI(path));
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}: ${path}`);
   }
@@ -158,6 +162,25 @@ async function fetchJson(path) {
 
 function cloneOption(option) {
   return JSON.parse(JSON.stringify(option));
+}
+
+function chartContainerWidth(container) {
+  return Math.round(container.clientWidth || container.parentElement?.clientWidth || window.innerWidth);
+}
+
+function reuseRenderedChart(container, name, renderKey) {
+  const chart = charts[name];
+  const previous = chartRenderState[name];
+  if (!chart || chart.isDisposed() || !previous || previous.key !== renderKey) {
+    return false;
+  }
+
+  const width = chartContainerWidth(container);
+  if (width > 0 && width !== previous.width) {
+    chart.resize({ width, height: previous.height, silent: true });
+    previous.width = width;
+  }
+  return true;
 }
 
 function updateVisibleControls() {
@@ -250,23 +273,37 @@ function dailyTrendLayout(option, containerWidth) {
   };
 }
 
-function setChart(container, name, option, height) {
+function setChart(container, name, option, height, renderKey = null) {
   container.style.height = `${height}px`;
   if (charts[name]) {
+    if (name === "scatter" && scatterSelectionFrame !== null) {
+      window.cancelAnimationFrame(scatterSelectionFrame);
+      scatterSelectionFrame = null;
+    }
     charts[name].dispose();
   }
   charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
   optimizeChartOption(option, name);
+  if (name === "line" && Array.isArray(option.series)) {
+    option.series.forEach((series, index) => {
+      series.id = `daily-line-${index}`;
+    });
+    prepareDailyTrendRuntime(charts[name], option);
+  }
   charts[name].setOption(option, true);
+  chartRenderState[name] = {
+    key: renderKey,
+    width: chartContainerWidth(container),
+    height
+  };
   if (name === "line") {
-    charts[name].on("legendselectchanged", () => refreshDailyTrendYearStyles(charts[name]));
-    charts[name].on("legendselected", () => refreshDailyTrendYearStyles(charts[name]));
-    charts[name].on("legendunselected", () => refreshDailyTrendYearStyles(charts[name]));
+    charts[name].on("legendselectchanged", (params) => (
+      refreshDailyTrendYearStyles(charts[name], params.selected)
+    ));
   } else if (name === "scatter") {
-    charts[name].on("legendselectchanged", (params) => refreshScatterSelection(charts[name], params.selected));
-    charts[name].on("legendselected", (params) => refreshScatterSelection(charts[name], params.selected));
-    charts[name].on("legendunselected", (params) => refreshScatterSelection(charts[name], params.selected));
-    refreshScatterSelection(charts[name]);
+    charts[name].on("legendselectchanged", (params) => (
+      scheduleScatterSelectionRefresh(charts[name], params.selected)
+    ));
   }
 }
 
@@ -322,7 +359,11 @@ function getDailyTrendLegend(option) {
 
 function isDailyTrendYearSelected(option, year) {
   const legend = getDailyTrendLegend(option);
-  return !legend || !legend.selected || legend.selected[year] !== false;
+  return !legend || dailyTrendYearSelected(legend.selected, year);
+}
+
+function dailyTrendYearSelected(selected, year) {
+  return !selected || selected[year] !== false;
 }
 
 function setDailyTrendRecentYearsSelected(option, visibleCount = 4) {
@@ -383,10 +424,14 @@ function styleDailyTrendLegendItems(option) {
     return;
   }
 
-  legend.data = legend.data.map((item) => {
+  legend.data = styledDailyTrendLegendItems(legend.data, legend.selected);
+}
+
+function styledDailyTrendLegendItems(items, selected) {
+  return items.map((item) => {
     const name = typeof item === "string" ? item : item.name;
     const color = DAILY_TREND_YEAR_COLORS[name];
-    const isSelected = isDailyTrendYearSelected(option, name);
+    const isSelected = dailyTrendYearSelected(selected, name);
     return {
       ...(typeof item === "string" ? { name } : item),
       icon: "roundRect",
@@ -405,14 +450,54 @@ function styleDailyTrendLegendItems(option) {
   });
 }
 
-function refreshDailyTrendYearStyles(chart) {
-  const option = chart.getOption();
-  styleDailyTrendLegendItems(option);
-  styleDailyTrendSeries(option);
+function prepareDailyTrendRuntime(chart, option) {
+  const legend = getDailyTrendLegend(option);
+  dailyTrendRuntime = {
+    chart,
+    legendItems: Array.isArray(legend?.data)
+      ? legend.data.map((item) => (typeof item === "string" ? item : { ...item }))
+      : [],
+    series: option.series.map((series) => ({
+      id: series.id,
+      name: series.name,
+      lineStyle: { ...(series.lineStyle || {}) },
+      itemStyle: { ...(series.itemStyle || {}) }
+    }))
+  };
+}
+
+function refreshDailyTrendYearStyles(chart, selected = {}) {
+  if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
+    return;
+  }
+
+  const series = dailyTrendRuntime.series.map((item) => {
+    const color = DAILY_TREND_YEAR_COLORS[item.name];
+    const isLatest = item.name === "2026";
+    const isSelected = dailyTrendYearSelected(selected, item.name);
+    return {
+      id: item.id,
+      lineStyle: {
+        ...item.lineStyle,
+        color,
+        width: isLatest ? 2.6 : isSelected ? 2.15 : 1.35,
+        opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+      },
+      itemStyle: {
+        ...item.itemStyle,
+        color,
+        opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+      }
+    };
+  });
+
   chart.setOption({
-    legend: option.legend,
-    series: option.series
-  }, false);
+    legend: {
+      selected: { ...selected },
+      data: styledDailyTrendLegendItems(dailyTrendRuntime.legendItems, selected)
+    },
+    series
+  }, { notMerge: false, lazyUpdate: true, silent: true });
 }
 
 function applyDailyTrendTheme(option) {
@@ -598,6 +683,14 @@ function filterDailyTrendOption(option, config) {
 }
 
 async function renderLineChart(renderId) {
+  const containerWidth = chartContainerWidth(els.lineChart);
+  const layoutColumns = dailyTrendColumns(containerWidth, Number.MAX_SAFE_INTEGER);
+  const renderKey = `${state.energy}|${state.continent}|${layoutColumns}`;
+  if (reuseRenderedChart(els.lineChart, "line", renderKey)) {
+    setStatus(chartRenderState.line.status || `${titleCase(state.energy)} trends / ${state.continent}`);
+    return;
+  }
+
   setStatus("Loading daily trends...");
   try {
     const config = await fetchJson(`tools/line_chart/${state.energy}.json`);
@@ -606,12 +699,13 @@ async function renderLineChart(renderId) {
     }
     const option = cloneOption(config.option);
     const selectedCountryCount = filterDailyTrendOption(option, config);
-    const containerWidth = els.lineChart.clientWidth || els.lineChart.parentElement.clientWidth || window.innerWidth;
     const layout = dailyTrendLayout(option, containerWidth);
     reflowDailyTrendLayout(option, layout);
-    setChart(els.lineChart, "line", option, layout.height);
     const regionLabel = state.continent === "World" ? "World" : `${state.continent} (${selectedCountryCount})`;
-    setStatus(`${titleCase(state.energy)} trends / ${regionLabel}`);
+    const status = `${titleCase(state.energy)} trends / ${regionLabel}`;
+    setChart(els.lineChart, "line", option, layout.height, renderKey);
+    chartRenderState.line.status = status;
+    setStatus(status);
   } catch (error) {
     if (!isCurrentRender(renderId)) {
       return;
@@ -622,13 +716,19 @@ async function renderLineChart(renderId) {
 }
 
 async function renderStackedChart(renderId) {
+  const renderKey = state.stacked;
+  if (reuseRenderedChart(els.stackedChart, "stacked", renderKey)) {
+    setStatus(`${state.stacked} share`);
+    return;
+  }
+
   setStatus("Loading generation mix...");
   try {
     const config = await fetchJson(`tools/stacked_area_chart/${state.stacked}.json`);
     if (!isCurrentRender(renderId)) {
       return;
     }
-    setChart(els.stackedChart, "stacked", cloneOption(config.option), chartHeight(config));
+    setChart(els.stackedChart, "stacked", cloneOption(config.option), chartHeight(config), renderKey);
     setStatus(`${state.stacked} share`);
   } catch (error) {
     if (!isCurrentRender(renderId)) {
@@ -871,9 +971,20 @@ async function updateMapForDate() {
 
   if (charts.map) {
     charts.map.setOption(mapOptionForDate(entry, mapData), true);
+    chartRenderState.map = {
+      key: `${state.energy}|${entry.date}`,
+      width: chartContainerWidth(els.mapChart),
+      height: MAP_CHART_HEIGHT
+    };
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
   } else {
-    setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT);
+    setChart(
+      els.mapChart,
+      "map",
+      mapOptionForDate(entry, mapData),
+      MAP_CHART_HEIGHT,
+      `${state.energy}|${entry.date}`
+    );
   }
 }
 
@@ -897,12 +1008,16 @@ async function renderMapChart(renderId) {
     els.mapDateSlider.max = String(latestIndex);
     els.mapDateSlider.value = String(state.mapDateIndex);
     const entry = mapData.dates[state.mapDateIndex];
+    const renderKey = `${state.energy}|${entry.date}`;
     updateMapStats(entry);
     if (els.mapCoverageNote) {
       els.mapCoverageNote.textContent = `Relative color scale within the selected date. No-data countries are gray. Latest complete coverage: ${mapData.latestCompleteCoverageDate || "-"}.`;
     }
-    setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT);
-    setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
+    const status = `${titleCase(state.energy)} map / ${entry.date}`;
+    if (!reuseRenderedChart(els.mapChart, "map", renderKey)) {
+      setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT, renderKey);
+    }
+    setStatus(status);
   } catch (error) {
     if (!isCurrentRender(renderId)) {
       return;
@@ -1099,6 +1214,20 @@ function scatterTooltip(params) {
   ].join("<br>");
 }
 
+function scheduleScatterSelectionRefresh(chart, selected = {}) {
+  if (scatterSelectionFrame !== null) {
+    window.cancelAnimationFrame(scatterSelectionFrame);
+  }
+  const selectedSnapshot = { ...selected };
+  scatterSelectedContinents = selectedSnapshot;
+  scatterSelectionFrame = window.requestAnimationFrame(() => {
+    scatterSelectionFrame = null;
+    if (!chart.isDisposed()) {
+      refreshScatterSelection(chart, selectedSnapshot);
+    }
+  });
+}
+
 function refreshScatterSelection(chart, selected = {}) {
   if (!chart || !scatterRuntime) {
     return;
@@ -1142,22 +1271,32 @@ function refreshScatterSelection(chart, selected = {}) {
     });
   });
 
-  chart.setOption({ title: titles, xAxis, yAxis, series: referenceSeries }, false);
+  chart.setOption(
+    { title: titles, xAxis, yAxis, series: referenceSeries },
+    { notMerge: false, lazyUpdate: true, silent: true }
+  );
 }
 
 async function renderScatterChart(renderId) {
+  const containerWidth = chartContainerWidth(els.scatterChart);
+  const columns = scatterColumns(containerWidth, ENERGY_TYPES.length);
+  const renderKey = `scatter|${columns}`;
+  if (reuseRenderedChart(els.scatterChart, "scatter", renderKey)) {
+    setStatus("IEA comparison");
+    return;
+  }
+
   setStatus("Loading IEA comparison...");
   try {
-    const records = await loadScatterRecords();
-    const metadata = await loadScatterMetadata();
+    const [records, metadata, continentsByCountry] = await Promise.all([
+      loadScatterRecords(),
+      loadScatterMetadata(),
+      loadCountryContinents()
+    ]);
     if (!isCurrentRender(renderId)) {
       return;
     }
     updateScatterMetadata(metadata);
-    const continentsByCountry = await loadCountryContinents();
-    if (!isCurrentRender(renderId)) {
-      return;
-    }
     const types = ENERGY_TYPES.filter((type) => records.some((row) => row.type === type));
     const recordsByType = new Map(types.map((type) => [type, []]));
     records.forEach((row) => {
@@ -1171,8 +1310,6 @@ async function renderScatterChart(renderId) {
         ? countries.some((country) => countryContinent(country, continentsByCountry) === "Other")
         : countries.some((country) => continentsByCountry.get(country) === continent)
     ));
-    const containerWidth = els.scatterChart.clientWidth || els.scatterChart.parentElement.clientWidth || window.innerWidth;
-    const columns = scatterColumns(containerWidth, types.length);
     const rows = Math.max(1, Math.ceil(types.length / columns));
     const chartHeightValue = 122 + rows * 320 + 38;
     const sideGap = columns === 1 ? 8 : 4.5;
@@ -1193,8 +1330,13 @@ async function renderScatterChart(renderId) {
     types.forEach((type, index) => {
       const group = recordsByType.get(type) || [];
       const typeTitle = titleCase(type);
-      const stats = scatterFitStats(group);
-      const axis = niceScatterAxis(Math.max(...group.flatMap((row) => [row.value, row.iea])));
+      const visibleGroup = scatterSelectedContinents
+        ? group.filter((item) => (
+          scatterSelectedContinents[countryContinent(item.country, continentsByCountry)] !== false
+        ))
+        : group;
+      const stats = scatterFitStats(visibleGroup);
+      const axis = niceScatterAxis(Math.max(...visibleGroup.flatMap((row) => [row.value, row.iea])));
       const maxVal = axis.max;
       const col = index % columns;
       const row = Math.floor(index / columns);
@@ -1326,6 +1468,7 @@ async function renderScatterChart(renderId) {
         formatter: scatterTooltip
       },
       legend: {
+        selected: scatterSelectedContinents ? { ...scatterSelectedContinents } : undefined,
         data: continents.map((continent) => ({
           name: continent,
           icon: "roundRect",
@@ -1350,7 +1493,7 @@ async function renderScatterChart(renderId) {
       }
     };
 
-    setChart(els.scatterChart, "scatter", option, Math.max(760, chartHeightValue));
+    setChart(els.scatterChart, "scatter", option, Math.max(760, chartHeightValue), renderKey);
     setStatus("IEA comparison");
   } catch (error) {
     if (!isCurrentRender(renderId)) {
@@ -1382,7 +1525,11 @@ function bindEvents() {
   });
 
   els.energy.addEventListener("change", () => {
-    state.energy = els.energy.value;
+    const nextEnergy = els.energy.value;
+    if (nextEnergy !== state.energy) {
+      state.mapDateIndex = null;
+    }
+    state.energy = nextEnergy;
     render();
   });
 
@@ -1412,12 +1559,17 @@ function bindEvents() {
   window.addEventListener("resize", () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
-      if (state.tab === "line") {
-        render();
-      } else if (state.tab === "scatter") {
+      if (state.tab === "line" || state.tab === "scatter") {
         render();
       } else {
-        Object.values(charts).forEach((chart) => chart.resize());
+        const chartName = state.tab === "stacked" ? "stacked" : state.tab === "map" ? "map" : null;
+        const chart = chartName ? charts[chartName] : null;
+        if (chart && !chart.isDisposed()) {
+          chart.resize();
+          if (chartRenderState[chartName]) {
+            chartRenderState[chartName].width = chart.getWidth();
+          }
+        }
       }
     }, 150);
   });
