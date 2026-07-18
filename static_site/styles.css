@@ -233,6 +233,29 @@ h1 {
   font-weight: 800;
 }
 
+#scatterPanel .chart-note {
+  padding: 14px 18px;
+  font-size: 0.96rem;
+}
+
+#scatterChart.scatter-reveal {
+  opacity: 0;
+  will-change: opacity;
+}
+
+#scatterChart.scatter-reveal.is-revealed {
+  opacity: 1;
+  transition: opacity 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #scatterChart.scatter-reveal,
+  #scatterChart.scatter-reveal.is-revealed {
+    opacity: 1;
+    transition: none;
+  }
+}
+
 #lineChart {
   min-height: 460px;
 }
