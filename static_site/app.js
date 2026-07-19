@@ -51,18 +51,24 @@ const DAILY_TREND_YEAR_COLORS = {
 
 const DAILY_TREND_INACTIVE_COLOR = "#dbe3e4";
 const CONTINENT_SCATTER_COLORS = {
-  Africa: "#D55E00",
-  Asia: "#E69F00",
-  Europe: "#0072B2",
-  "North America": "#CC79A7",
-  Oceania: "#009E73",
-  "South America": "#56B4E9",
-  Other: "#6B7280"
+  Africa: "#5070dd",
+  Asia: "#b6d634",
+  Europe: "#505372",
+  "North America": "#ff994d",
+  Oceania: "#0ca8df",
+  "South America": "#ffd10a",
+  Other: "#fb628b"
 };
 const SCATTER_CONTINENTS = [
   "Africa", "Asia", "Europe",
   "North America", "Oceania", "South America", "Other"
 ];
+const SCATTER_TYPE_ORDER = [
+  "total", "fossil", "renewables",
+  "coal", "gas", "oil", "nuclear",
+  "hydro", "wind", "solar", "other"
+];
+const SCATTER_LAYER_BASE = 10;
 
 const state = {
   tab: "overview",
@@ -85,9 +91,9 @@ let dailyTrendRuntime = null;
 let worldMapRegistered = false;
 let renderSerial = 0;
 let mapUpdateSerial = 0;
-let scatterSelectionFrame = null;
 let scatterSelectedContinents = null;
 let scatterHasAnimated = false;
+let scatterTransitionSerial = 0;
 
 const els = {
   status: document.getElementById("statusText"),
@@ -100,6 +106,7 @@ const els = {
   lineChart: document.getElementById("lineChart"),
   stackedChart: document.getElementById("stackedChart"),
   scatterMeta: document.getElementById("scatterMeta"),
+  scatterLegend: document.getElementById("scatterLegend"),
   scatterChart: document.getElementById("scatterChart"),
   mapChart: document.getElementById("mapChart"),
   mapDateSlider: document.getElementById("mapDateSlider"),
@@ -277,16 +284,11 @@ function dailyTrendLayout(option, containerWidth) {
 function setChart(container, name, option, height, renderKey = null) {
   container.style.height = `${height}px`;
   if (charts[name]) {
-    if (name === "scatter" && scatterSelectionFrame !== null) {
-      window.cancelAnimationFrame(scatterSelectionFrame);
-      scatterSelectionFrame = null;
-    }
     charts[name].dispose();
   }
-  const revealInitialScatter = name === "scatter" && !scatterHasAnimated;
-  if (revealInitialScatter) {
-    container.classList.remove("is-revealed");
-    container.classList.add("scatter-reveal");
+  const animateInitialScatter = name === "scatter" && !scatterHasAnimated;
+  if (animateInitialScatter) {
+    container.style.visibility = "hidden";
   }
   charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
   optimizeChartOption(option, name);
@@ -297,14 +299,11 @@ function setChart(container, name, option, height, renderKey = null) {
     prepareDailyTrendRuntime(charts[name], option);
   }
   charts[name].setOption(option, true);
-  if (revealInitialScatter) {
+  if (animateInitialScatter) {
     scatterHasAnimated = true;
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => container.classList.add("is-revealed"));
-    });
-    window.setTimeout(() => {
-      container.classList.remove("scatter-reveal", "is-revealed");
-    }, 820);
+    revealScatterLayers(charts[name], container);
+  } else if (name === "scatter") {
+    syncScatterLayerVisibility(charts[name]);
   }
   chartRenderState[name] = {
     key: renderKey,
@@ -314,10 +313,6 @@ function setChart(container, name, option, height, renderKey = null) {
   if (name === "line") {
     charts[name].on("legendselectchanged", (params) => (
       refreshDailyTrendYearStyles(charts[name], params.selected)
-    ));
-  } else if (name === "scatter") {
-    charts[name].on("legendselectchanged", (params) => (
-      scheduleScatterSelectionRefresh(charts[name], params.selected)
     ));
   }
 }
@@ -344,7 +339,12 @@ function optimizeChartOption(option, chartName) {
 
   option.series.forEach((series) => {
     series.animation = false;
-    if (series.type !== "map") {
+    if (series.type === "scatter") {
+      series.emphasis = {
+        scale: 1.18,
+        itemStyle: { opacity: 1, borderColor: "#3f4652", borderWidth: 1.4 }
+      };
+    } else if (series.type !== "map") {
       series.emphasis = { disabled: true };
     }
     series.select = { disabled: true };
@@ -1130,53 +1130,80 @@ function countryContinent(country, continentsByCountry) {
 }
 
 function scatterColumns(width) {
-  return width < 920 ? 1 : 2;
+  if (width >= 1000) {
+    return 4;
+  }
+  return width >= 620 ? 2 : 1;
 }
 
 function scatterLayout(width, gridCount) {
   const columns = scatterColumns(width);
-  const sidePadding = columns === 1 ? 20 : 38;
-  const columnGap = columns === 1 ? 0 : 46;
-  const cellWidth = columns === 1
-    ? width - sidePadding * 2
-    : (width - sidePadding * 2 - columnGap) / 2;
-  const plotSize = Math.max(
-    160,
-    Math.min(columns === 1 ? 520 : 460, cellWidth - 108)
-  );
-  const topBand = width < 620 ? 168 : 126;
-  const rowStride = plotSize + 106;
-  const rows = columns === 1
-    ? gridCount
-    : 1 + Math.ceil(Math.max(0, gridCount - 1) / 2);
+  const topBand = 36;
+
+  if (columns === 4) {
+    const sidePadding = 22;
+    const columnGap = 24;
+    const firstRowColumns = 3;
+    const firstCellWidth = (
+      width - sidePadding * 2 - columnGap * (firstRowColumns - 1)
+    ) / firstRowColumns;
+    const lowerCellWidth = (
+      width - sidePadding * 2 - columnGap * (columns - 1)
+    ) / columns;
+    const firstPlotSize = firstCellWidth - 52;
+    const lowerPlotSize = lowerCellWidth - 52;
+    const rowGapBand = 112;
+    const lowerRows = Math.ceil(Math.max(0, gridCount - firstRowColumns) / columns);
+    const lowerStart = topBand + firstPlotSize + rowGapBand;
+
+    return {
+      columns,
+      height: lowerStart + lowerRows * (lowerPlotSize + rowGapBand) + 22,
+      position(index) {
+        const firstRow = index < firstRowColumns;
+        const row = firstRow ? 0 : 1 + Math.floor((index - firstRowColumns) / columns);
+        const column = firstRow ? index : (index - firstRowColumns) % columns;
+        const cellWidth = firstRow ? firstCellWidth : lowerCellWidth;
+        const plotSize = firstRow ? firstPlotSize : lowerPlotSize;
+        const titleTop = firstRow
+          ? topBand
+          : lowerStart + (row - 1) * (lowerPlotSize + rowGapBand);
+        const cellLeft = sidePadding + column * (cellWidth + columnGap);
+
+        return {
+          left: cellLeft + (cellWidth - plotSize) / 2,
+          titleTop,
+          gridTop: titleTop + 32,
+          plotWidth: plotSize,
+          plotHeight: plotSize
+        };
+      }
+    };
+  }
+
+  const sidePadding = 20;
+  const columnGap = columns === 1 ? 0 : 34;
+  const cellWidth = (
+    width - sidePadding * 2 - columnGap * (columns - 1)
+  ) / columns;
+  const plotSize = Math.max(160, Math.min(520, cellWidth - 96));
+  const rowGapBand = 112;
+  const rows = Math.ceil(gridCount / columns);
 
   return {
     columns,
-    height: topBand + rows * rowStride + 22,
+    height: topBand + rows * (plotSize + rowGapBand) + 22,
     position(index) {
-      const row = columns === 1
-        ? index
-        : index === 0 ? 0 : 1 + Math.floor((index - 1) / 2);
-      const column = columns === 1 || index === 0 ? 0 : (index - 1) % 2;
-      const leftColumnPlot = sidePadding + (cellWidth - plotSize) / 2;
-      const cellLeft = columns === 1
-        ? sidePadding
-        : index === 0
-          ? sidePadding
-          : sidePadding + column * (cellWidth + columnGap);
-      const left = columns === 2 && index === 0
-        ? leftColumnPlot
-        : cellLeft + (cellWidth - plotSize) / 2;
-      const plotWidth = columns === 2 && index === 0
-        ? cellWidth + columnGap + plotSize
-        : plotSize;
-      const titleTop = topBand + row * rowStride;
+      const row = Math.floor(index / columns);
+      const column = index % columns;
+      const cellLeft = sidePadding + column * (cellWidth + columnGap);
+      const titleTop = topBand + row * (plotSize + rowGapBand);
 
       return {
-        left,
+        left: cellLeft + (cellWidth - plotSize) / 2,
         titleTop,
-        gridTop: titleTop + 30,
-        plotWidth,
+        gridTop: titleTop + 32,
+        plotWidth: plotSize,
         plotHeight: plotSize
       };
     }
@@ -1259,7 +1286,10 @@ function formatR2(value) {
 
 function scatterTooltip(params) {
   const value = params.value || params.data || [];
-  if (!Array.isArray(value) || value.length < 6) {
+  if (
+    scatterSelectedContinents?.[params.seriesName] === false ||
+    !Array.isArray(value) || value.length < 6
+  ) {
     return "";
   }
 
@@ -1273,21 +1303,158 @@ function scatterTooltip(params) {
   ].join("<br>");
 }
 
-function scheduleScatterSelectionRefresh(chart, selected = {}) {
-  if (scatterSelectionFrame !== null) {
-    window.cancelAnimationFrame(scatterSelectionFrame);
+function scatterLayerZlevel(continent) {
+  return SCATTER_LAYER_BASE + SCATTER_CONTINENTS.indexOf(continent);
+}
+
+function scatterLayerElement(chart, continent) {
+  if (!chart || chart.isDisposed()) {
+    return null;
   }
-  const selectedSnapshot = { ...selected };
-  scatterSelectedContinents = selectedSnapshot;
-  scatterSelectionFrame = window.requestAnimationFrame(() => {
-    scatterSelectionFrame = null;
-    if (!chart.isDisposed()) {
-      refreshScatterSelection(chart, selectedSnapshot);
+  const zlevel = scatterLayerZlevel(continent);
+  if (zlevel < SCATTER_LAYER_BASE) {
+    return null;
+  }
+  return chart.getZr()?.painter?.getLayer(zlevel)?.dom || null;
+}
+
+function animateLayerOpacity(element, targetOpacity, duration, delay = 0) {
+  if (!element) {
+    return Promise.resolve();
+  }
+
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const target = String(targetOpacity);
+  if (reduceMotion || typeof element.animate !== "function") {
+    element.style.opacity = target;
+    return Promise.resolve();
+  }
+
+  element.getAnimations().forEach((animation) => animation.cancel());
+  const currentOpacity = Number.parseFloat(window.getComputedStyle(element).opacity) || 0;
+  element.style.willChange = "opacity";
+  const animation = element.animate(
+    [{ opacity: currentOpacity }, { opacity: targetOpacity }],
+    {
+      duration,
+      delay,
+      easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+      fill: "forwards"
+    }
+  );
+
+  return animation.finished
+    .catch(() => undefined)
+    .then(() => {
+      element.style.opacity = target;
+      element.style.willChange = "";
+      animation.cancel();
+    });
+}
+
+function revealScatterLayers(chart, container) {
+  const continents = scatterRuntime?.continents || [];
+  const selected = normalizedScatterSelection(scatterSelectedContinents || {});
+  const layers = continents.map((continent) => ({
+    continent,
+    element: scatterLayerElement(chart, continent)
+  })).filter(({ element }) => Boolean(element));
+
+  layers.forEach(({ element }) => {
+    element.style.opacity = "0";
+  });
+  container.style.visibility = "";
+
+  window.requestAnimationFrame(() => {
+    layers.forEach(({ continent, element }, index) => {
+      if (selected[continent]) {
+        animateLayerOpacity(element, 1, 1600, index * 90);
+      }
+    });
+  });
+}
+
+function normalizedScatterSelection(selected = {}) {
+  return Object.fromEntries((scatterRuntime?.continents || []).map((continent) => [
+    continent,
+    selected[continent] !== false
+  ]));
+}
+
+function syncScatterLayerVisibility(chart) {
+  const selected = normalizedScatterSelection(scatterSelectedContinents || {});
+  (scatterRuntime?.continents || []).forEach((continent) => {
+    const layer = scatterLayerElement(chart, continent);
+    if (layer) {
+      layer.style.opacity = selected[continent] ? "1" : "0";
     }
   });
 }
 
-function refreshScatterSelection(chart, selected = {}) {
+function renderScatterLegend(continents) {
+  if (!els.scatterLegend) {
+    return;
+  }
+
+  const selected = Object.fromEntries(continents.map((continent) => [
+    continent,
+    scatterSelectedContinents?.[continent] !== false
+  ]));
+  scatterSelectedContinents = selected;
+  els.scatterLegend.replaceChildren();
+
+  continents.forEach((continent) => {
+    const button = document.createElement("button");
+    const dot = document.createElement("span");
+    const label = document.createElement("span");
+    button.type = "button";
+    button.className = "scatter-legend-button";
+    button.dataset.continent = continent;
+    button.style.setProperty("--legend-color", CONTINENT_SCATTER_COLORS[continent]);
+    button.setAttribute("aria-pressed", String(selected[continent]));
+    button.setAttribute("aria-label", `Toggle ${continent}`);
+    dot.className = "scatter-legend-dot";
+    dot.setAttribute("aria-hidden", "true");
+    label.textContent = continent;
+    button.append(dot, label);
+    button.addEventListener("click", () => transitionScatterContinent(continent, button));
+    els.scatterLegend.append(button);
+  });
+}
+
+async function transitionScatterContinent(continent, button) {
+  const chart = charts.scatter;
+  if (
+    !chart || chart.isDisposed() || !scatterRuntime ||
+    els.scatterLegend?.classList.contains("is-transitioning")
+  ) {
+    return;
+  }
+
+  const serial = ++scatterTransitionSerial;
+  const previousSelection = normalizedScatterSelection(scatterSelectedContinents || {});
+  const nextSelected = !previousSelection[continent];
+  const nextSelection = { ...previousSelection, [continent]: nextSelected };
+  scatterSelectedContinents = nextSelection;
+  button.setAttribute("aria-pressed", String(nextSelected));
+  els.scatterLegend?.classList.add("is-transitioning");
+  els.scatterLegend?.setAttribute("aria-busy", "true");
+
+  await animateLayerOpacity(
+    scatterLayerElement(chart, continent),
+    nextSelected ? 1 : 0,
+    nextSelected ? 1350 : 1150
+  );
+
+  if (serial === scatterTransitionSerial && !chart.isDisposed()) {
+    refreshScatterSelection(chart, nextSelection, false);
+  }
+
+  els.scatterLegend?.classList.remove("is-transitioning");
+  els.scatterLegend?.removeAttribute("aria-busy");
+}
+
+function refreshScatterSelection(chart, selected = {}, lazyUpdate = true) {
   if (!chart || !scatterRuntime) {
     return;
   }
@@ -1302,6 +1469,7 @@ function refreshScatterSelection(chart, selected = {}) {
   const xAxis = [];
   const yAxis = [];
   const referenceSeries = [];
+  const scatterSeriesUpdates = [];
 
   rowsByGrid.forEach((rows, index) => {
     const stats = scatterFitStats(rows);
@@ -1328,11 +1496,22 @@ function refreshScatterSelection(chart, selected = {}) {
       id: `scatter-reference-${index}`,
       data: [[0, 0], [axis.max, axis.max]]
     });
+    scatterRuntime.continents.forEach((continent) => {
+      scatterSeriesUpdates.push({
+        id: `scatter-${index}-${continent}`,
+        silent: selected[continent] === false
+      });
+    });
   });
 
   chart.setOption(
-    { title: titles, xAxis, yAxis, series: referenceSeries },
-    { notMerge: false, lazyUpdate: true, silent: true }
+    {
+      title: titles,
+      xAxis,
+      yAxis,
+      series: [...referenceSeries, ...scatterSeriesUpdates]
+    },
+    { notMerge: false, lazyUpdate, silent: true }
   );
 }
 
@@ -1356,7 +1535,7 @@ async function renderScatterChart(renderId) {
       return;
     }
     updateScatterMetadata(metadata);
-    const types = ENERGY_TYPES.filter((type) => records.some((row) => row.type === type));
+    const types = SCATTER_TYPE_ORDER.filter((type) => records.some((row) => row.type === type));
     const recordsByType = new Map(types.map((type) => [type, []]));
     records.forEach((row) => {
       if (recordsByType.has(row.type)) {
@@ -1377,12 +1556,7 @@ async function renderScatterChart(renderId) {
     const yAxis = [];
     const series = [];
     const rowsByGrid = [];
-    const titles = [{
-      text: "Comparison of CM Power and IEA by Energy Source (TWh)",
-      left: "center",
-      top: 10,
-      textStyle: { color: "#1f2928", fontSize: 21, fontWeight: 750 }
-    }];
+    const titles = [];
 
     types.forEach((type, index) => {
       const group = recordsByType.get(type) || [];
@@ -1501,22 +1675,24 @@ async function renderScatterChart(renderId) {
         }
 
         series.push({
+          id: `scatter-${index}-${continent}`,
           name: continent,
           type: "scatter",
           xAxisIndex: index,
           yAxisIndex: index,
+          zlevel: scatterLayerZlevel(continent),
           dimensions: ["CM_Power", "IEA", "country", "year", "month", "type"],
           encode: { x: 0, y: 1 },
           symbol: "circle",
-          symbolSize: 8.4,
+          symbolSize: 15,
           large: false,
           progressive: 3000,
           progressiveThreshold: 5000,
           itemStyle: {
             color: CONTINENT_SCATTER_COLORS[continent],
-            borderColor: "#111827",
-            borderWidth: 0.95,
-            opacity: 0.8
+            borderColor: "#555",
+            borderWidth: 1,
+            opacity: 0.86
           },
           data: continentRows.map((item) => [
             item.value,
@@ -1536,6 +1712,7 @@ async function renderScatterChart(renderId) {
       gridLabels: types.map((type) => titleCase(type)),
       rowsByGrid
     };
+    renderScatterLegend(continents);
 
     const option = {
       title: titles,
@@ -1549,26 +1726,7 @@ async function renderScatterChart(renderId) {
         padding: [10, 12],
         textStyle: { fontSize: 14, lineHeight: 20 }
       },
-      legend: {
-        selected: scatterSelectedContinents ? { ...scatterSelectedContinents } : undefined,
-        data: continents.map((continent) => ({
-          name: continent,
-          icon: "circle",
-          textStyle: {
-            color: CONTINENT_SCATTER_COLORS[continent],
-            fontWeight: 750
-          }
-        })),
-        orient: "horizontal",
-        left: "center",
-        top: 49,
-        itemWidth: 16,
-        itemHeight: 16,
-        itemGap: 22,
-        itemStyle: { borderColor: "#111827", borderWidth: 0.95 },
-        inactiveColor: "#aebaba",
-        textStyle: { fontSize: 15, color: "#4b5656", fontWeight: 650 }
-      }
+      legend: { show: false }
     };
 
     setChart(els.scatterChart, "scatter", option, Math.max(760, chartHeightValue), renderKey);
