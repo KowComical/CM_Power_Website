@@ -69,6 +69,12 @@ const SCATTER_TYPE_ORDER = [
   "hydro", "wind", "solar", "other"
 ];
 const SCATTER_LAYER_BASE = 10;
+const SCATTER_REVEAL_DURATION = 1600;
+const SCATTER_REVEAL_STAGGER = 100;
+const SCATTER_REVEAL_EASING = "cubic-bezier(0.37, 0, 0.63, 1)";
+const SCATTER_FILTER_FADE_DURATION = 380;
+const SCATTER_REFLOW_FADE_DURATION = 540;
+const SCATTER_FILTER_EASING = "cubic-bezier(0.37, 0, 0.63, 1)";
 
 const state = {
   tab: "overview",
@@ -93,8 +99,7 @@ let renderSerial = 0;
 let mapUpdateSerial = 0;
 let scatterSelectedContinents = null;
 let scatterRevealRequested = false;
-let scatterTransitionSerial = 0;
-const scatterTransitionTokens = new Map();
+let scatterSelectionTransitionActive = false;
 
 const els = {
   status: document.getElementById("statusText"),
@@ -295,6 +300,9 @@ function setChart(container, name, option, height, renderKey = null) {
     container.style.visibility = "hidden";
   }
   charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
+  const scatterRenderReady = revealScatter
+    ? waitForScatterRender(charts[name])
+    : Promise.resolve();
   optimizeChartOption(option, name);
   if (name === "line" && Array.isArray(option.series)) {
     option.series.forEach((series, index) => {
@@ -305,7 +313,7 @@ function setChart(container, name, option, height, renderKey = null) {
   charts[name].setOption(option, true);
   if (revealScatter) {
     scatterRevealRequested = false;
-    revealScatterLayers(charts[name], container);
+    revealScatterLayers(charts[name], container, scatterRenderReady);
   } else if (name === "scatter") {
     syncScatterLayerVisibility(charts[name]);
   }
@@ -1284,6 +1292,65 @@ function scatterFitStats(rows) {
   return { n, r2: (sxy * sxy) / (sxx * syy) };
 }
 
+function summarizeScatterRows(rows) {
+  return rows.reduce((summary, row) => {
+    const x = row.value;
+    const y = row.iea;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+      return summary;
+    }
+    summary.n += 1;
+    summary.sumX += x;
+    summary.sumY += y;
+    summary.sumXX += x * x;
+    summary.sumYY += y * y;
+    summary.sumXY += x * y;
+    summary.max = Math.max(summary.max, x, y);
+    return summary;
+  }, {
+    n: 0,
+    sumX: 0,
+    sumY: 0,
+    sumXX: 0,
+    sumYY: 0,
+    sumXY: 0,
+    max: 0
+  });
+}
+
+function combineScatterSummaries(summaries) {
+  return summaries.reduce((combined, summary) => ({
+    n: combined.n + summary.n,
+    sumX: combined.sumX + summary.sumX,
+    sumY: combined.sumY + summary.sumY,
+    sumXX: combined.sumXX + summary.sumXX,
+    sumYY: combined.sumYY + summary.sumYY,
+    sumXY: combined.sumXY + summary.sumXY,
+    max: Math.max(combined.max, summary.max)
+  }), {
+    n: 0,
+    sumX: 0,
+    sumY: 0,
+    sumXX: 0,
+    sumYY: 0,
+    sumXY: 0,
+    max: 0
+  });
+}
+
+function scatterFitFromSummary(summary) {
+  if (summary.n < 2) {
+    return { n: summary.n, r2: null };
+  }
+  const sxx = summary.sumXX - (summary.sumX * summary.sumX) / summary.n;
+  const syy = summary.sumYY - (summary.sumY * summary.sumY) / summary.n;
+  const sxy = summary.sumXY - (summary.sumX * summary.sumY) / summary.n;
+  if (!sxx || !syy) {
+    return { n: summary.n, r2: null };
+  }
+  return { n: summary.n, r2: (sxy * sxy) / (sxx * syy) };
+}
+
 function formatR2(value) {
   return Number.isFinite(value) ? value.toFixed(3) : "n/a";
 }
@@ -1322,7 +1389,13 @@ function scatterLayerElement(chart, continent) {
   return chart.getZr()?.painter?.getLayer(zlevel)?.dom || null;
 }
 
-function animateLayerOpacity(element, targetOpacity, duration, delay = 0) {
+function animateLayerOpacity(
+  element,
+  targetOpacity,
+  duration,
+  delay = 0,
+  easing = "cubic-bezier(0.22, 1, 0.36, 1)"
+) {
   if (!element) {
     return Promise.resolve();
   }
@@ -1342,7 +1415,7 @@ function animateLayerOpacity(element, targetOpacity, duration, delay = 0) {
     {
       duration,
       delay,
-      easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+      easing,
       fill: "forwards"
     }
   );
@@ -1360,11 +1433,27 @@ function nextAnimationFrame() {
   return new Promise((resolve) => window.requestAnimationFrame(resolve));
 }
 
-async function revealScatterLayers(chart, container) {
+function waitForScatterRender(chart, timeout = 2600) {
+  return new Promise((resolve) => {
+    let timeoutId = null;
+    const finish = () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+      chart?.off("finished", finish);
+      resolve();
+    };
+    chart.on("finished", finish);
+    timeoutId = window.setTimeout(finish, timeout);
+  });
+}
+
+async function revealScatterLayers(chart, container, renderReady = Promise.resolve()) {
   const continents = scatterRuntime?.continents || [];
   const selected = normalizedScatterSelection(scatterSelectedContinents || {});
   let layers = [];
 
+  await renderReady;
   for (let attempt = 0; attempt < 6; attempt += 1) {
     await nextAnimationFrame();
     if (!chart || chart.isDisposed()) {
@@ -1390,7 +1479,13 @@ async function revealScatterLayers(chart, container) {
   await nextAnimationFrame();
   layers.forEach(({ continent, element }, index) => {
     if (selected[continent]) {
-      animateLayerOpacity(element, 1, 1050, index * 80);
+      animateLayerOpacity(
+        element,
+        1,
+        SCATTER_REVEAL_DURATION,
+        index * SCATTER_REVEAL_STAGGER,
+        SCATTER_REVEAL_EASING
+      );
     }
   });
 }
@@ -1443,52 +1538,157 @@ function renderScatterLegend(continents) {
   });
 }
 
+function createScatterSnapshot(chart, selected) {
+  const width = chart.getWidth();
+  const height = chart.getHeight();
+  const pixelRatio = height > 2000
+    ? 1
+    : Math.min(chart.getDevicePixelRatio(), 1.5);
+  const snapshot = document.createElement("canvas");
+  snapshot.className = "scatter-transition-snapshot";
+  snapshot.width = Math.round(width * pixelRatio);
+  snapshot.height = Math.round(height * pixelRatio);
+  snapshot.style.width = `${width}px`;
+  snapshot.style.height = `${height}px`;
+  snapshot.setAttribute("aria-hidden", "true");
+
+  const context = snapshot.getContext("2d");
+  context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+  const continentsByLayer = new Map((scatterRuntime?.continents || []).flatMap((continent) => {
+    const layer = scatterLayerElement(chart, continent);
+    return layer ? [[layer, continent]] : [];
+  }));
+  const sources = [...els.scatterChart.querySelectorAll("canvas")]
+    .filter((canvas) => continentsByLayer.has(canvas));
+
+  sources.forEach((source) => {
+    const continent = continentsByLayer.get(source);
+    context.globalAlpha = selected[continent] === false ? 0 : 1;
+    context.drawImage(
+      source,
+      0,
+      0,
+      source.width,
+      source.height,
+      0,
+      0,
+      width,
+      height
+    );
+  });
+  context.globalAlpha = 1;
+  return snapshot;
+}
+
+function removeScatterSnapshot(snapshot) {
+  snapshot.remove();
+  snapshot.width = 0;
+  snapshot.height = 0;
+}
+
 async function transitionScatterContinent(continent, button) {
   const chart = charts.scatter;
-  if (!chart || chart.isDisposed() || !scatterRuntime) {
+  if (
+    !chart || chart.isDisposed() || !scatterRuntime ||
+    scatterSelectionTransitionActive
+  ) {
     return;
   }
 
-  const transitionToken = ++scatterTransitionSerial;
-  scatterTransitionTokens.set(continent, transitionToken);
+  scatterSelectionTransitionActive = true;
   const previousSelection = normalizedScatterSelection(scatterSelectedContinents || {});
   const nextSelected = !previousSelection[continent];
   const nextSelection = { ...previousSelection, [continent]: nextSelected };
+  const previousSnapshot = createScatterSnapshot(chart, previousSelection);
+  const selectedSnapshot = createScatterSnapshot(chart, nextSelection);
+  els.scatterChart.append(selectedSnapshot, previousSnapshot);
+
   scatterSelectedContinents = nextSelection;
   button.setAttribute("aria-pressed", String(nextSelected));
   button.setAttribute("aria-busy", "true");
   els.scatterLegend?.setAttribute("aria-busy", "true");
 
-  refreshScatterSelection(chart, nextSelection, false);
-  await nextAnimationFrame();
+  const liveLayers = (scatterRuntime?.continents || []).flatMap((layerContinent) => {
+    const element = scatterLayerElement(chart, layerContinent);
+    if (!element) {
+      return [];
+    }
+    element.getAnimations().forEach((animation) => animation.cancel());
+    element.style.opacity = "0";
+    return [{ continent: layerContinent, element }];
+  });
+  const baseLayer = chart.getZr()?.painter?.getLayer(0)?.dom || null;
 
-  await animateLayerOpacity(
-    scatterLayerElement(chart, continent),
-    nextSelected ? 1 : 0,
-    nextSelected ? 800 : 650
+  const selectionTransition = animateLayerOpacity(
+    previousSnapshot,
+    0,
+    SCATTER_FILTER_FADE_DURATION,
+    0,
+    SCATTER_FILTER_EASING
+  );
+  const baseFade = animateLayerOpacity(
+    baseLayer,
+    0.28,
+    SCATTER_FILTER_FADE_DURATION,
+    0,
+    SCATTER_FILTER_EASING
   );
 
-  if (scatterTransitionTokens.get(continent) !== transitionToken) {
-    return;
+  await nextAnimationFrame();
+  const renderReady = waitForScatterRender(chart);
+  if (!chart.isDisposed()) {
+    refreshScatterSelection(chart, nextSelection, true, continent);
+  }
+  await Promise.all([selectionTransition, baseFade, renderReady]);
+  removeScatterSnapshot(previousSnapshot);
+
+  if (!chart.isDisposed()) {
+    const liveLayerReveals = liveLayers.map(({ continent: layerContinent, element }) => (
+      nextSelection[layerContinent] === false
+        ? Promise.resolve()
+        : animateLayerOpacity(
+          element,
+          1,
+          SCATTER_REFLOW_FADE_DURATION,
+          0,
+          SCATTER_FILTER_EASING
+        )
+    ));
+    await Promise.all([
+      animateLayerOpacity(
+        selectedSnapshot,
+        0,
+        SCATTER_REFLOW_FADE_DURATION,
+        0,
+        SCATTER_FILTER_EASING
+      ),
+      animateLayerOpacity(
+        baseLayer,
+        1,
+        SCATTER_REFLOW_FADE_DURATION,
+        0,
+        SCATTER_FILTER_EASING
+      ),
+      ...liveLayerReveals
+    ]);
   }
 
-  scatterTransitionTokens.delete(continent);
+  removeScatterSnapshot(selectedSnapshot);
+  scatterSelectionTransitionActive = false;
   button.removeAttribute("aria-busy");
-  if (!scatterTransitionTokens.size) {
-    els.scatterLegend?.removeAttribute("aria-busy");
-  }
+  els.scatterLegend?.removeAttribute("aria-busy");
 }
 
-function refreshScatterSelection(chart, selected = {}, lazyUpdate = true) {
+function refreshScatterSelection(
+  chart,
+  selected = {},
+  lazyUpdate = true,
+  changedContinent = null
+) {
   if (!chart || !scatterRuntime) {
     return;
   }
-
-  const rowsByGrid = scatterRuntime.rowsByGrid.map((rowsByContinent) => (
-    scatterRuntime.continents.flatMap((continent) => (
-      selected[continent] === false ? [] : rowsByContinent.get(continent) || []
-    ))
-  ));
 
   const titles = [];
   const xAxis = [];
@@ -1496,10 +1696,13 @@ function refreshScatterSelection(chart, selected = {}, lazyUpdate = true) {
   const referenceSeries = [];
   const scatterSeriesUpdates = [];
 
-  rowsByGrid.forEach((rows, index) => {
-    const stats = scatterFitStats(rows);
-    const maxValue = rows.length ? Math.max(...rows.flatMap((row) => [row.value, row.iea])) : 1;
-    const axis = niceScatterAxis(maxValue);
+  scatterRuntime.summariesByGrid.forEach((summariesByContinent, index) => {
+    const activeSummaries = scatterRuntime.continents.flatMap((continent) => (
+      selected[continent] === false ? [] : [summariesByContinent.get(continent)]
+    )).filter(Boolean);
+    const summary = combineScatterSummaries(activeSummaries);
+    const stats = scatterFitFromSummary(summary);
+    const axis = niceScatterAxis(summary.max || 1);
 
     titles.push({
       id: `scatter-title-${index}`,
@@ -1521,12 +1724,12 @@ function refreshScatterSelection(chart, selected = {}, lazyUpdate = true) {
       id: `scatter-reference-${index}`,
       data: [[0, 0], [axis.max, axis.max]]
     });
-    scatterRuntime.continents.forEach((continent) => {
+    if (changedContinent && summariesByContinent.has(changedContinent)) {
       scatterSeriesUpdates.push({
-        id: `scatter-${index}-${continent}`,
-        silent: selected[continent] === false
+        id: `scatter-${index}-${changedContinent}`,
+        silent: selected[changedContinent] === false
       });
-    });
+    }
   });
 
   chart.setOption(
@@ -1724,6 +1927,7 @@ async function renderScatterChart(renderId) {
             borderWidth: 1,
             opacity: 0.86
           },
+          silent: scatterSelectedContinents?.[continent] === false,
           data: continentRows.map((item) => [
             item.value,
             item.iea,
@@ -1740,7 +1944,12 @@ async function renderScatterChart(renderId) {
     scatterRuntime = {
       continents,
       gridLabels: types.map((type) => titleCase(type)),
-      rowsByGrid
+      summariesByGrid: rowsByGrid.map((rowsByContinent) => new Map(
+        [...rowsByContinent].map(([continent, rows]) => [
+          continent,
+          summarizeScatterRows(rows)
+        ])
+      ))
     };
     renderScatterLegend(continents);
 
