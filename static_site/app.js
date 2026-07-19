@@ -92,8 +92,9 @@ let worldMapRegistered = false;
 let renderSerial = 0;
 let mapUpdateSerial = 0;
 let scatterSelectedContinents = null;
-let scatterHasAnimated = false;
+let scatterRevealRequested = false;
 let scatterTransitionSerial = 0;
+const scatterTransitionTokens = new Map();
 
 const els = {
   status: document.getElementById("statusText"),
@@ -206,6 +207,9 @@ function setHidden(selector, hidden) {
 }
 
 function activateTab(nextTab) {
+  if (nextTab === "scatter") {
+    scatterRevealRequested = true;
+  }
   state.tab = nextTab;
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.tab === nextTab);
@@ -286,8 +290,8 @@ function setChart(container, name, option, height, renderKey = null) {
   if (charts[name]) {
     charts[name].dispose();
   }
-  const animateInitialScatter = name === "scatter" && !scatterHasAnimated;
-  if (animateInitialScatter) {
+  const revealScatter = name === "scatter" && scatterRevealRequested;
+  if (revealScatter) {
     container.style.visibility = "hidden";
   }
   charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
@@ -299,8 +303,8 @@ function setChart(container, name, option, height, renderKey = null) {
     prepareDailyTrendRuntime(charts[name], option);
   }
   charts[name].setOption(option, true);
-  if (animateInitialScatter) {
-    scatterHasAnimated = true;
+  if (revealScatter) {
+    scatterRevealRequested = false;
     revealScatterLayers(charts[name], container);
   } else if (name === "scatter") {
     syncScatterLayerVisibility(charts[name]);
@@ -1352,25 +1356,42 @@ function animateLayerOpacity(element, targetOpacity, duration, delay = 0) {
     });
 }
 
-function revealScatterLayers(chart, container) {
+function nextAnimationFrame() {
+  return new Promise((resolve) => window.requestAnimationFrame(resolve));
+}
+
+async function revealScatterLayers(chart, container) {
   const continents = scatterRuntime?.continents || [];
   const selected = normalizedScatterSelection(scatterSelectedContinents || {});
-  const layers = continents.map((continent) => ({
-    continent,
-    element: scatterLayerElement(chart, continent)
-  })).filter(({ element }) => Boolean(element));
+  let layers = [];
 
-  layers.forEach(({ element }) => {
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    await nextAnimationFrame();
+    if (!chart || chart.isDisposed()) {
+      container.style.visibility = "";
+      return;
+    }
+    layers = continents.map((continent) => ({
+      continent,
+      element: scatterLayerElement(chart, continent)
+    })).filter(({ element }) => Boolean(element));
+    if (layers.length === continents.length) {
+      break;
+    }
+  }
+
+  layers.forEach(({ continent, element }) => {
+    element.getAnimations().forEach((animation) => animation.cancel());
     element.style.opacity = "0";
+    element.style.willChange = selected[continent] ? "opacity" : "";
   });
   container.style.visibility = "";
 
-  window.requestAnimationFrame(() => {
-    layers.forEach(({ continent, element }, index) => {
-      if (selected[continent]) {
-        animateLayerOpacity(element, 1, 1600, index * 90);
-      }
-    });
+  await nextAnimationFrame();
+  layers.forEach(({ continent, element }, index) => {
+    if (selected[continent]) {
+      animateLayerOpacity(element, 1, 1050, index * 80);
+    }
   });
 }
 
@@ -1424,34 +1445,38 @@ function renderScatterLegend(continents) {
 
 async function transitionScatterContinent(continent, button) {
   const chart = charts.scatter;
-  if (
-    !chart || chart.isDisposed() || !scatterRuntime ||
-    els.scatterLegend?.classList.contains("is-transitioning")
-  ) {
+  if (!chart || chart.isDisposed() || !scatterRuntime) {
     return;
   }
 
-  const serial = ++scatterTransitionSerial;
+  const transitionToken = ++scatterTransitionSerial;
+  scatterTransitionTokens.set(continent, transitionToken);
   const previousSelection = normalizedScatterSelection(scatterSelectedContinents || {});
   const nextSelected = !previousSelection[continent];
   const nextSelection = { ...previousSelection, [continent]: nextSelected };
   scatterSelectedContinents = nextSelection;
   button.setAttribute("aria-pressed", String(nextSelected));
-  els.scatterLegend?.classList.add("is-transitioning");
+  button.setAttribute("aria-busy", "true");
   els.scatterLegend?.setAttribute("aria-busy", "true");
+
+  refreshScatterSelection(chart, nextSelection, false);
+  await nextAnimationFrame();
 
   await animateLayerOpacity(
     scatterLayerElement(chart, continent),
     nextSelected ? 1 : 0,
-    nextSelected ? 1350 : 1150
+    nextSelected ? 800 : 650
   );
 
-  if (serial === scatterTransitionSerial && !chart.isDisposed()) {
-    refreshScatterSelection(chart, nextSelection, false);
+  if (scatterTransitionTokens.get(continent) !== transitionToken) {
+    return;
   }
 
-  els.scatterLegend?.classList.remove("is-transitioning");
-  els.scatterLegend?.removeAttribute("aria-busy");
+  scatterTransitionTokens.delete(continent);
+  button.removeAttribute("aria-busy");
+  if (!scatterTransitionTokens.size) {
+    els.scatterLegend?.removeAttribute("aria-busy");
+  }
 }
 
 function refreshScatterSelection(chart, selected = {}, lazyUpdate = true) {
@@ -1520,6 +1545,11 @@ async function renderScatterChart(renderId) {
   const columns = scatterColumns(containerWidth);
   const renderKey = `scatter|${columns}|${containerWidth}`;
   if (reuseRenderedChart(els.scatterChart, "scatter", renderKey)) {
+    if (scatterRevealRequested) {
+      scatterRevealRequested = false;
+      els.scatterChart.style.visibility = "hidden";
+      revealScatterLayers(charts.scatter, els.scatterChart);
+    }
     setStatus("IEA comparison");
     return;
   }
@@ -1684,7 +1714,7 @@ async function renderScatterChart(renderId) {
           dimensions: ["CM_Power", "IEA", "country", "year", "month", "type"],
           encode: { x: 0, y: 1 },
           symbol: "circle",
-          symbolSize: 15,
+          symbolSize: 12,
           large: false,
           progressive: 3000,
           progressiveThreshold: 5000,

@@ -274,9 +274,9 @@ h1 {
 }
 
 .scatter-legend-dot {
-  width: 15px;
-  height: 15px;
-  flex: 0 0 15px;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
   border: 1px solid #555;
   border-radius: 50%;
   background: var(--legend-color);
@@ -286,8 +286,8 @@ h1 {
   opacity: 0.34;
 }
 
-.scatter-legend.is-transitioning .scatter-legend-button {
-  cursor: wait;
+.scatter-legend-button[aria-busy="true"] {
+  cursor: progress;
 }
 
 .scatter-legend-button:focus-visible {
