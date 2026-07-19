@@ -9,7 +9,7 @@
 ### 19:56 - 新增肯尼亚、毛里求斯和危地马拉网站数据说明
 
 - 更新内容：在网站国家数据说明表中新增肯尼亚、毛里求斯和危地马拉，分别记录 KNBS / Kenya Power、Statistics Mauritius / Central Electricity Board 和 AMM 官方来源；三国均以已验证 simulated 的实际可用起点登记为 Daily 分辨率、Monthly 更新、无区域级数据，起始日期依次为 2016-01-01、2016-01-01 和 2017-01-01。台湾尚未生成人口加权日温度和 simulated，本次不加入。
-- 验证：CSV 字段、国家唯一性、日期格式和洲别通过检查；三国 simulated daily/monthly 产物已存在。当前数据库 `Global_PM_corT.csv` 尚未汇入三国，因此本次不重生成 Overview HTML，待下一次数据库 `global_sum` 后由网站生成链路自动纳入卡片与图表。
+- 验证：CSV 字段、国家唯一性、日期格式和洲别通过检查；三国 simulated daily/monthly 产物以及数据库 `Global_PM_corT.csv` 中的数据均已存在，网站生成链路可据此纳入对应卡片与图表。
 - 影响路径：`data/data_description.csv`、`UPDATE_LOG.md`
 
 ### 15:53 - 重构 IEA 散点进场与筛选过渡
