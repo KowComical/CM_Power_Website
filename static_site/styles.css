@@ -238,22 +238,62 @@ h1 {
   font-size: 0.96rem;
 }
 
-#scatterChart.scatter-reveal {
-  opacity: 0;
-  will-change: opacity;
+.scatter-chart-heading {
+  margin: 0;
+  padding: 14px 18px 2px;
+  color: #1f2928;
+  font-size: 1.32rem;
+  font-weight: 750;
+  line-height: 1.25;
+  text-align: center;
 }
 
-#scatterChart.scatter-reveal.is-revealed {
-  opacity: 1;
-  transition: opacity 720ms cubic-bezier(0.22, 1, 0.36, 1);
+.scatter-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 22px;
+  min-height: 52px;
+  padding: 10px 18px 4px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #scatterChart.scatter-reveal,
-  #scatterChart.scatter-reveal.is-revealed {
-    opacity: 1;
-    transition: none;
-  }
+.scatter-legend-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--legend-color);
+  padding: 4px 0;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: opacity 240ms ease;
+}
+
+.scatter-legend-dot {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  border: 1px solid #555;
+  border-radius: 50%;
+  background: var(--legend-color);
+}
+
+.scatter-legend-button[aria-pressed="false"] {
+  opacity: 0.34;
+}
+
+.scatter-legend.is-transitioning .scatter-legend-button {
+  cursor: wait;
+}
+
+.scatter-legend-button:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 #lineChart {
