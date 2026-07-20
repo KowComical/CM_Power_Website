@@ -4,6 +4,15 @@
 
 日期写在 `## YYYY-MM-DD` 标题中；同一天内有多条更新时，必须在日期标题下用 `### HH:MM - 更新标题` 分隔。条目正文不再重复日期和时间。
 
+## 2026-07-20
+
+### 12:19 - 新增台湾网站数据说明与图表数据
+
+- 更新内容：在国家数据说明表中新增台湾，来源登记为 MOEA Energy Administration 官方开放数据，洲别为 Asia，网站标准输出为 Daily、官方更新频率为 Monthly、无区域级数据，已验证 simulated 起点为 2016-01-01；先重建数据库全局汇总纳入台湾，再重新生成网站下载数据、Overview 卡片、Daily Trends、Source Share 和 IEA 对比产物。
+- 验证：`data_description.csv` 共 71 个唯一国家记录，字段、日期和洲别检查通过。数据库全局汇总包含台湾 2019-01-01–2026-05-31 共 2,708 天、8 个标准能源、21,664 行；网站下载长表包含同一日期范围的 11 个类型、29,788 行。Asia/World 的 Total Overview、Total 趋势 JSON 和 Fossil 结构 JSON 均包含台湾，相关生成文件可正常解析。
+- 风险：网站当前全局发布口径从 2019-01-01 开始，因此图表和下载数据晚于元数据中 simulated 的真实起点 2016-01-01；台湾官方月度值目前到 2026-05，新增温度不会在官方 6 月月量发布前单独推进发电数据。
+- 影响路径：`data/data_description.csv`、`data/data_for_download.csv.gz`、`data/data_for_scatter_plot.csv`、`data/iea_compare_metadata.json`、`tools/data_description/`、`tools/line_chart/`、`tools/stacked_area_chart/`、`UPDATE_LOG.md`
+
 ## 2026-07-19
 
 ### 19:56 - 新增肯尼亚、毛里求斯和危地马拉网站数据说明
