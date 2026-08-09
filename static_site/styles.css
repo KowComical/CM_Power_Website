@@ -419,61 +419,208 @@ h1 {
 .map-panel {
   background: #f5f3ee;
   border-color: #d8d4cb;
-  border-radius: 18px;
-  box-shadow: 0 18px 44px rgba(48, 44, 36, 0.09);
+  border-radius: 20px;
+  box-shadow: 0 22px 54px rgba(48, 44, 36, 0.11);
 }
 
 .map-editorial-header {
-  padding: 18px 22px 10px;
-  text-align: center;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto;
+  align-items: end;
+  gap: 32px;
+  padding: 26px 32px 10px;
+}
+
+.map-title-block {
+  min-width: 0;
 }
 
 .map-kicker {
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   color: #0f766e;
-  font-size: 0.7rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
 }
 
 .map-editorial-header h2 {
   margin: 0;
   color: #1c1c1a;
-  font-size: 1.45rem;
+  font-size: 1.72rem;
   font-weight: 720;
-  line-height: 1.25;
+  line-height: 1.18;
 }
 
-.map-summary-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: 4px 9px;
-  margin: 8px 0 0;
-  color: #77746c;
-  font-size: 0.84rem;
-  font-weight: 600;
+.map-summary-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(108px, auto));
+  margin: 0;
 }
 
-.map-summary-line strong {
-  color: #393833;
+.map-summary-list > div {
+  min-width: 0;
+  padding: 0 18px;
+  border-left: 1px solid #d4d0c7;
+}
+
+.map-summary-list > div:last-child {
+  padding-right: 0;
+}
+
+.map-summary-list dt {
+  margin: 0;
+  color: #8c8981;
+  font-size: 0.64rem;
   font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.map-summary-list dd {
+  margin: 5px 0 0;
+  color: #2e2d29;
+  font-size: 0.92rem;
+  font-weight: 750;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .map-note {
-  margin: 5px 0 0;
+  margin: 7px 0 0;
   color: #8c8981;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 550;
   line-height: 1.4;
 }
 
-.map-timeline {
-  width: min(760px, calc(100% - 44px));
+.map-chart {
+  position: relative;
+  width: calc(100% - 36px);
+  min-height: 0;
   margin: 0 auto;
-  padding: 8px 0 4px;
+  overflow: hidden;
+}
+
+.map-chart svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.map-chart svg.is-dragging {
+  cursor: grabbing;
+}
+
+.map-sphere {
+  fill: #e9ece7;
+  stroke: #cac7be;
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-country {
+  stroke: #f5f3ee;
+  stroke-width: 0.72;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-country.is-hovered {
+  stroke: #1c1c1a;
+  stroke-width: 1.45;
+}
+
+.map-country-marker {
+  stroke: #f5f3ee;
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-country-marker.is-hovered {
+  stroke: #1c1c1a;
+  stroke-width: 1.8;
+}
+
+.map-tooltip {
+  position: absolute;
+  z-index: 3;
+  min-width: 154px;
+  padding: 9px 11px;
+  border: 1px solid #393833;
+  border-radius: 4px;
+  background: rgba(245, 243, 238, 0.98);
+  box-shadow: 0 12px 30px rgba(28, 28, 26, 0.16);
+  color: #1c1c1a;
+  font-size: 0.72rem;
+  line-height: 1.32;
+  pointer-events: none;
+}
+
+.map-tooltip-country {
+  font-size: 0.82rem;
+  font-weight: 760;
+}
+
+.map-tooltip-date {
+  margin-top: 1px;
+  color: #77746c;
+}
+
+.map-tooltip-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px solid #d8d4cb;
+}
+
+.map-tooltip-row strong {
+  font-weight: 760;
+  white-space: nowrap;
+}
+
+.map-scale {
+  display: grid;
+  grid-template-columns: auto minmax(210px, 440px) auto;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  margin: 0 auto;
+  color: #77746c;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.map-scale-ramp {
+  display: block;
+  width: 100%;
+  height: 10px;
+  border: 1px solid rgba(57, 56, 51, 0.2);
+  background: linear-gradient(
+    90deg,
+    #3158a5 0%,
+    #2f7fc1 10%,
+    #2da5bb 20%,
+    #5dbc91 30%,
+    #9dce68 40%,
+    #d6d957 50%,
+    #f1c54c 60%,
+    #f2a543 70%,
+    #ec733c 80%,
+    #dc4537 90%,
+    #b92732 100%
+  );
+}
+
+.map-timeline {
+  width: min(980px, calc(100% - 64px));
+  margin: 14px auto 0;
+  padding: 12px 0 19px;
   border-top: 1px solid rgba(178, 172, 160, 0.5);
 }
 
@@ -483,7 +630,7 @@ h1 {
   justify-content: space-between;
   margin-bottom: 6px;
   color: #77746c;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -501,9 +648,9 @@ h1 {
   display: grid;
   grid-template-columns: auto minmax(120px, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: #8c8981;
-  font-size: 0.65rem;
+  font-size: 0.66rem;
   font-weight: 600;
 }
 
@@ -545,10 +692,6 @@ h1 {
   box-shadow: 0 0 0 1px #285763;
 }
 
-.map-chart {
-  min-height: 600px;
-}
-
 .error-box {
   padding: 20px;
   border: 1px solid #e5b9a9;
@@ -581,29 +724,62 @@ h1 {
   }
 
   .map-editorial-header {
-    padding: 16px 14px 9px;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 18px 14px 8px;
+    text-align: center;
   }
 
   .map-editorial-header h2 {
-    font-size: 1.25rem;
+    font-size: 1.34rem;
   }
 
-  .map-summary-line {
-    gap: 3px 7px;
+  .map-summary-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid #d4d0c7;
+    padding-top: 12px;
+  }
+
+  .map-summary-list > div {
+    padding: 0 8px;
+  }
+
+  .map-summary-list > div:first-child {
+    border-left: 0;
+  }
+
+  .map-summary-list > div:last-child {
+    padding-right: 8px;
+  }
+
+  .map-summary-list dd {
     font-size: 0.76rem;
+  }
+
+  .map-chart {
+    width: calc(100% - 16px);
+  }
+
+  .map-scale {
+    grid-template-columns: auto minmax(120px, 1fr) auto;
+    width: calc(100% - 28px);
+    gap: 7px;
+    font-size: 0.6rem;
+  }
+
+  .map-scale-ramp {
+    height: 9px;
   }
 
   .map-timeline {
     width: calc(100% - 28px);
+    margin-top: 11px;
+    padding-bottom: 15px;
   }
 
   .map-date-control {
     gap: 7px;
     font-size: 0.6rem;
-  }
-
-  .map-chart {
-    min-height: 360px;
   }
 
   .chart-note span {

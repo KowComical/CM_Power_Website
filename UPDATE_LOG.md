@@ -6,6 +6,12 @@
 
 ## 2026-08-09
 
+### 19:38 - 将 Global Map 重构为 D3 SVG 世界地图
+
+- 更新内容：停止使用 ECharts Canvas 渲染 Global Map，改用 D3、TopoJSON 与 Equal Earth 投影生成单一响应式 SVG，从渲染机制上消除 hover 和拖动时脏矩形重绘造成的横竖白色空缺。地图改用蓝—青—绿—黄—橙—红的连续多色阶，缺失数据保持中性灰；采用轻量 110m 世界几何并为新加坡、毛里求斯补充小国标记，所有当前报告国家均可落图。重新组织标题、日期、覆盖国家和合计值为出版物式横向层级，让地图占据主体；色带和时间轴移至地图下方，Tooltip 压缩日期与数值间距，并保留滚轮缩放、缩放后拖动、能源切换和每日滑块。日期滑动使用逐帧合并更新，避免连续拖动堆积重绘；同步更新静态资源缓存标识。
+- 验证：`node --check static_site/app.js` 与 `git diff --check` 通过；Chromium 在 1440×1000、736×1000 和 390×844 下验证桌面、平板和手机布局，无运行时错误。地图为 1 个 SVG、0 个 Canvas，连续扫过国家后仅当前国家保留 hover 描边，未出现横竖白色空缺；缩放后拖动产生正确坐标变换。当前日期的 67 个报告国家全部匹配到国家几何或小国标记，120 次连续时间轴输入合并完成约 31ms；Solar 能源切换、紧凑 Tooltip 以及 Daily Trends / IEA Compare 回归检查均通过。
+- 影响路径：`index.html`、`static_site/app.js`、`static_site/styles.css`、`static_site/vendor/d3.min.js`、`static_site/vendor/topojson-client.min.js`、`static_site/vendor/world-countries-110m.mjs`、`UPDATE_LOG.md`
+
 ### 18:53 - 放大 IEA 标题图例并重设计 Global Map
 
 - 更新内容：放大 IEA Compare 顶部主标题、月份说明、洲别图例文字和圆点，保持原有居中层级及窄屏换行。将 Global Map 从等权 KPI 卡片与彩虹色阶重构为数据出版物式界面：以居中的 Daily Electricity Atlas 标识、能源标题、内联日期/覆盖国家/总量摘要替代四块工具栏卡片，新增带起止日期和动态进度的细线时间轴。地图统一为暖白纸面与低饱和纸色—青绿—深蓝单向色阶，色标移至底部横向居中；移除南极洲以放大主要大陆，地图边界改为纸色细线，No-data 国家使用中性灰，hover 使用暖橙强调，Tooltip 统一为纸色黑边紧凑卡片。桌面和手机分别使用自适应高度与等比例地理布局，避免窄屏世界地图纵向拉伸；能源与日期变化会同步更新标题、摘要、时间轴进度和地图，并同步更新静态资源缓存标识。
