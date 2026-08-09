@@ -48,7 +48,6 @@ const DAILY_TREND_MUTED = "#77746c";
 const DAILY_TREND_GRID = "#dedbd3";
 const DAILY_TREND_INACTIVE_COLOR = "#d1cec6";
 const DAILY_TREND_DRAW_DURATION = 1100;
-const DAILY_TREND_DRAW_ZLEVEL = 40;
 const CONTINENT_SCATTER_COLORS = {
   Africa: "#5070dd",
   Asia: "#b6d634",
@@ -318,6 +317,7 @@ function setChart(container, name, option, height, renderKey = null) {
   charts[name].setOption(option, true);
   if (name === "line") {
     cacheDailyTrendLineSegments(charts[name]);
+    bindDailyTrendTooltip(charts[name]);
   }
   if (revealScatter) {
     scatterRevealRequested = false;
@@ -332,8 +332,9 @@ function setChart(container, name, option, height, renderKey = null) {
   };
   if (name === "line") {
     charts[name].on("legendselectchanged", (params) => {
-      cacheDailyTrendLineSegments(charts[name]);
+      cacheDailyTrendLineSegments(charts[name], params.name, true);
       refreshDailyTrendYearStyles(charts[name], params.selected);
+      refreshDailyTrendTooltipTargets(charts[name]);
       animateDailyTrendYear(
         charts[name],
         params.name,
@@ -354,7 +355,7 @@ function optimizeChartOption(option, chartName) {
   if (option.tooltip) {
     option.tooltip.transitionDuration = 0;
     option.tooltip.confine = true;
-    option.tooltip.triggerOn = "mousemove|click";
+    option.tooltip.triggerOn = chartName === "line" ? "none" : "mousemove|click";
     option.tooltip.axisPointer = option.tooltip.axisPointer || {};
     option.tooltip.axisPointer.animation = false;
   }
@@ -377,6 +378,7 @@ function optimizeChartOption(option, chartName) {
     series.selectedMode = false;
 
     if (series.type === "line") {
+      series.silent = chartName === "line";
       series.showSymbol = false;
       series.hoverAnimation = false;
       series.sampling = series.sampling || "lttb";
@@ -562,27 +564,12 @@ function styleDailyTrendLegendItems(option) {
   legend.data = styledDailyTrendLegendItems(legend.data, legend.selected, yearColors);
 }
 
-function styledDailyTrendLegendItems(items, selected, yearColors = dailyTrendYearPalette(
-  items.map((item) => (typeof item === "string" ? item : item.name))
-)) {
+function styledDailyTrendLegendItems(items) {
   return items.map((item) => {
     const name = typeof item === "string" ? item : item.name;
-    const color = yearColors[name] || DAILY_TREND_LATEST_COLOR;
-    const isSelected = dailyTrendYearSelected(selected, name);
     return {
       ...(typeof item === "string" ? { name } : item),
-      icon: "roundRect",
-      textStyle: {
-        ...((typeof item === "string" ? {} : item.textStyle) || {}),
-        color,
-        backgroundColor: isSelected ? "#ffffff" : "transparent",
-        borderColor: isSelected ? color : "transparent",
-        borderWidth: isSelected ? 1 : 0,
-        borderRadius: 4,
-        fontWeight: isSelected ? 800 : 650,
-        opacity: isSelected ? 1 : 0.68,
-        padding: [3, 6, 3, 6]
-      }
+      icon: "roundRect"
     };
   });
 }
@@ -600,12 +587,8 @@ function dailyTrendLegendRichStyles(yearColors, selected = {}) {
     const isSelected = dailyTrendYearSelected(selected, name);
     return [dailyTrendLegendYearToken(name), {
       color,
-      backgroundColor: isSelected ? "#ffffff" : "transparent",
-      borderColor: isSelected ? color : "transparent",
-      borderWidth: isSelected ? 1 : 0,
-      borderRadius: 4,
-      fontWeight: isSelected ? 800 : 650,
-      padding: [3, 6, 3, 6]
+      fontWeight: isSelected ? 700 : 500,
+      padding: [2, 3, 2, 3]
     }];
   }));
 }
@@ -618,9 +601,12 @@ function prepareDailyTrendRuntime(chart, option) {
       ? legend.data.map((item) => (typeof item === "string" ? item : { ...item }))
       : [],
     yearColors: dailyTrendYearPalette(option.series.map((series) => series.name)),
+    axisData: (option.xAxis || []).map((axis) => axis.data || []),
     series: option.series.map((series) => ({
       id: series.id,
       name: series.name,
+      xAxisIndex: series.xAxisIndex,
+      data: series.data,
       lineStyle: { ...(series.lineStyle || {}) },
       drawSegments: null
     })),
@@ -628,7 +614,14 @@ function prepareDailyTrendRuntime(chart, option) {
     drawTimer: null,
     drawToken: 0,
     drawingYear: null,
-    drawingRevealsYear: false
+    drawingRevealsYear: false,
+    drawingSeries: [],
+    tooltipTargets: [],
+    tooltipFrame: null,
+    tooltipPoint: null,
+    tooltipLastKey: null,
+    tooltipVisible: false,
+    tooltipElement: null
   };
 }
 
@@ -651,6 +644,169 @@ function refreshDailyTrendYearStyles(chart, selected = {}) {
       }
     }
   }, { notMerge: false, lazyUpdate: false, silent: true });
+}
+
+function refreshDailyTrendTooltipTargets(chart) {
+  if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
+    return;
+  }
+  const selected = chart.getOption().legend?.[0]?.selected;
+  const modelById = new Map(
+    chart.getModel().getSeries().map((seriesModel) => [seriesModel.id, seriesModel])
+  );
+  const targetsByAxis = new Map();
+  dailyTrendRuntime.series
+    .filter((item) => dailyTrendYearSelected(selected, item.name))
+    .sort((left, right) => Number(left.name) - Number(right.name))
+    .forEach((item) => {
+      const seriesModel = modelById.get(item.id);
+      const xAxisIndex = item.xAxisIndex;
+      if (!seriesModel) {
+        return;
+      }
+      const coordinateSystem = seriesModel.coordinateSystem;
+      const rect = coordinateSystem?.getArea?.() || coordinateSystem?.grid?.getRect?.();
+      const dataCount = dailyTrendRuntime.axisData[xAxisIndex]?.length || 0;
+      if (!rect || !dataCount) {
+        return;
+      }
+      if (!targetsByAxis.has(xAxisIndex)) {
+        targetsByAxis.set(xAxisIndex, {
+          coordinateSystem,
+          dataCount,
+          labels: dailyTrendRuntime.axisData[xAxisIndex],
+          series: [],
+          xAxisIndex
+        });
+      }
+      targetsByAxis.get(xAxisIndex).series.push(item);
+    });
+  dailyTrendRuntime.tooltipTargets = [...targetsByAxis.values()];
+  dailyTrendRuntime.tooltipLastKey = null;
+  hideDailyTrendTooltip(chart);
+}
+
+function hideDailyTrendTooltip(chart) {
+  if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
+    return;
+  }
+  dailyTrendRuntime.tooltipLastKey = null;
+  dailyTrendRuntime.tooltipPoint = null;
+  if (dailyTrendRuntime.tooltipVisible) {
+    dailyTrendRuntime.tooltipElement.hidden = true;
+    dailyTrendRuntime.tooltipVisible = false;
+  }
+}
+
+function renderDailyTrendTooltip(target, dataIndex) {
+  const tooltip = dailyTrendRuntime.tooltipElement;
+  const rows = target.series
+    .map((item) => ({
+      color: dailyTrendRuntime.yearColors[item.name],
+      name: item.name,
+      value: item.data?.[dataIndex]
+    }))
+    .filter((item) => item.value != null && item.value !== "-");
+  if (!rows.length) {
+    return false;
+  }
+
+  const header = document.createElement("div");
+  header.className = "daily-trend-tooltip-date";
+  header.textContent = target.labels[dataIndex] || "";
+  tooltip.replaceChildren(header);
+  rows.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "daily-trend-tooltip-row";
+    const label = document.createElement("span");
+    const marker = document.createElement("i");
+    marker.className = "daily-trend-tooltip-marker";
+    marker.style.backgroundColor = item.color;
+    marker.setAttribute("aria-hidden", "true");
+    label.append(marker, document.createTextNode(item.name));
+    const value = document.createElement("strong");
+    value.textContent = formatDailyTrendValue(item.value);
+    row.append(label, value);
+    tooltip.append(row);
+  });
+  return true;
+}
+
+function showDailyTrendTooltipAtPoint(chart, point) {
+  if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart || chart.isDisposed()) {
+    return;
+  }
+  const target = dailyTrendRuntime.tooltipTargets.find((item) => (
+    item.coordinateSystem?.containPoint?.(point)
+  ));
+  if (!target) {
+    hideDailyTrendTooltip(chart);
+    return;
+  }
+  const rect = target.coordinateSystem.getArea?.() || target.coordinateSystem.grid?.getRect?.();
+  if (!rect || rect.width <= 0) {
+    hideDailyTrendTooltip(chart);
+    return;
+  }
+  const ratio = Math.max(0, Math.min(1, (point[0] - rect.x) / rect.width));
+  const dataIndex = Math.round(ratio * (target.dataCount - 1));
+  const tooltipKey = `${target.xAxisIndex}:${dataIndex}`;
+  if (tooltipKey === dailyTrendRuntime.tooltipLastKey) {
+    return;
+  }
+  if (!renderDailyTrendTooltip(target, dataIndex)) {
+    hideDailyTrendTooltip(chart);
+    return;
+  }
+  dailyTrendRuntime.tooltipLastKey = tooltipKey;
+  dailyTrendRuntime.tooltipVisible = true;
+  const tooltip = dailyTrendRuntime.tooltipElement;
+  tooltip.hidden = false;
+  const offset = 12;
+  let left = point[0] + offset;
+  let top = point[1] + offset;
+  if (left + tooltip.offsetWidth > chart.getWidth() - 8) {
+    left = point[0] - tooltip.offsetWidth - offset;
+  }
+  if (top + tooltip.offsetHeight > rect.y + rect.height) {
+    top = point[1] - tooltip.offsetHeight - offset;
+  }
+  tooltip.style.transform = `translate3d(${Math.max(8, left)}px, ${Math.max(8, top)}px, 0)`;
+}
+
+function bindDailyTrendTooltip(chart) {
+  if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
+    return;
+  }
+  chart.getDom().querySelector(".daily-trend-tooltip")?.remove();
+  const tooltip = document.createElement("div");
+  tooltip.className = "daily-trend-tooltip";
+  tooltip.setAttribute("role", "tooltip");
+  tooltip.hidden = true;
+  chart.getDom().append(tooltip);
+  dailyTrendRuntime.tooltipElement = tooltip;
+  refreshDailyTrendTooltipTargets(chart);
+  const queueTooltip = (event) => {
+    if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
+      return;
+    }
+    dailyTrendRuntime.tooltipPoint = [event.offsetX, event.offsetY];
+    if (dailyTrendRuntime.tooltipFrame != null) {
+      return;
+    }
+    dailyTrendRuntime.tooltipFrame = requestAnimationFrame(() => {
+      if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
+        return;
+      }
+      dailyTrendRuntime.tooltipFrame = null;
+      if (dailyTrendRuntime.tooltipPoint) {
+        showDailyTrendTooltipAtPoint(chart, dailyTrendRuntime.tooltipPoint);
+      }
+    });
+  };
+  chart.getZr().on("mousemove", queueTooltip);
+  chart.getZr().on("click", queueTooltip);
+  chart.getZr().on("globalout", () => hideDailyTrendTooltip(chart));
 }
 
 function dailyTrendLineSegments(seriesModel) {
@@ -679,7 +835,7 @@ function dailyTrendLineSegments(seriesModel) {
   return segments;
 }
 
-function cacheDailyTrendLineSegments(chart) {
+function cacheDailyTrendLineSegments(chart, year = null, forceYear = false) {
   if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
     return;
   }
@@ -688,7 +844,14 @@ function cacheDailyTrendLineSegments(chart) {
   );
   const selected = chart.getOption().legend?.[0]?.selected;
   dailyTrendRuntime.series.forEach((item) => {
-    if (!dailyTrendYearSelected(selected, item.name) && !item.drawSegments) {
+    if (year && item.name !== year) {
+      return;
+    }
+    if (
+      !forceYear &&
+      !dailyTrendYearSelected(selected, item.name) &&
+      !item.drawSegments
+    ) {
       return;
     }
     const segments = dailyTrendLineSegments(modelById.get(item.id));
@@ -698,12 +861,32 @@ function cacheDailyTrendLineSegments(chart) {
   });
 }
 
+function dailyTrendSeriesInViewport(chart, yearSeries) {
+  const chartBounds = chart.getDom().getBoundingClientRect();
+  const viewportMargin = 80;
+  const modelById = new Map(
+    chart.getModel().getSeries().map((seriesModel) => [seriesModel.id, seriesModel])
+  );
+  return yearSeries.filter((item) => {
+    const coordinateSystem = modelById.get(item.id)?.coordinateSystem;
+    const rect = coordinateSystem?.getArea?.() || coordinateSystem?.grid?.getRect?.();
+    if (!rect) {
+      return false;
+    }
+    const top = chartBounds.top + rect.y;
+    const bottom = top + rect.height;
+    return bottom >= -viewportMargin && top <= window.innerHeight + viewportMargin;
+  });
+}
+
 function dailyTrendDrawOverlay(chart, yearSeries, startsVisible = false) {
   const modelById = new Map(
     chart.getModel().getSeries().map((seriesModel) => [seriesModel.id, seriesModel])
   );
-  const overlay = new echarts.graphic.Group({ silent: true });
-  const clipAnimations = [];
+  const overlay = document.createElement("div");
+  overlay.className = "daily-trend-draw-overlay";
+  overlay.setAttribute("aria-hidden", "true");
+  const clipElements = [];
   let animatedGroupCount = 0;
 
   yearSeries.forEach((item) => {
@@ -722,46 +905,49 @@ function dailyTrendDrawOverlay(chart, yearSeries, startsVisible = false) {
     const right = Math.max(...xs) + 3;
     const top = Math.min(...ys) - 4;
     const bottom = Math.max(...ys) + 4;
-    const countryGroup = new echarts.graphic.Group({ silent: true });
+    const width = Math.max(1, right - left);
+    const height = Math.max(1, bottom - top);
+    const clip = document.createElement("div");
+    clip.className = "daily-trend-draw-segment";
+    clip.style.left = `${left}px`;
+    clip.style.top = `${top}px`;
+    clip.style.width = `${width}px`;
+    clip.style.height = `${height}px`;
+    clip.style.clipPath = startsVisible
+      ? "inset(0 0% 0 0)"
+      : "inset(0 100% 0 0)";
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("height", String(height));
     segments.forEach((segment) => {
       if (segment.length < 2) {
         return;
       }
-      countryGroup.add(new echarts.graphic.Polyline({
-        silent: true,
-        zlevel: DAILY_TREND_DRAW_ZLEVEL,
-        shape: { points: segment },
-        style: {
-          fill: null,
-          stroke: item.lineStyle.color,
-          lineWidth: item.lineStyle.width,
-          lineCap: "round",
-          lineJoin: "round",
-          opacity: item.lineStyle.opacity
-        }
-      }));
+      const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      polyline.setAttribute(
+        "points",
+        segment.map((point) => `${point[0] - left},${point[1] - top}`).join(" ")
+      );
+      polyline.setAttribute("fill", "none");
+      polyline.setAttribute("stroke", item.lineStyle.color);
+      polyline.setAttribute("stroke-width", String(item.lineStyle.width));
+      polyline.setAttribute("stroke-linecap", "round");
+      polyline.setAttribute("stroke-linejoin", "round");
+      polyline.setAttribute("opacity", String(item.lineStyle.opacity));
+      svg.append(polyline);
     });
-    const fullWidth = Math.max(1, right - left);
-    const clip = new echarts.graphic.Rect({
-      silent: true,
-      shape: {
-        x: left,
-        y: top,
-        width: startsVisible ? fullWidth : 0,
-        height: Math.max(1, bottom - top)
-      }
-    });
-    countryGroup.setClipPath(clip);
-    overlay.add(countryGroup);
-    clipAnimations.push({ clip, width: startsVisible ? 0 : fullWidth });
+    clip.append(svg);
+    overlay.append(clip);
+    clipElements.push(clip);
     animatedGroupCount += 1;
   });
 
   if (!animatedGroupCount) {
     return null;
   }
-  chart.getZr().add(overlay);
-  overlay.dailyTrendClipAnimations = clipAnimations;
+  chart.getDom().append(overlay);
+  overlay.dailyTrendClipElements = clipElements;
   return overlay;
 }
 
@@ -769,15 +955,7 @@ function removeDailyTrendDrawOverlay(chart, overlay) {
   if (!chart || chart.isDisposed() || !overlay) {
     return;
   }
-  const renderer = chart.getZr();
-  renderer.remove(overlay);
-  if (typeof renderer.painter?.delLayer === "function") {
-    renderer.painter.delLayer(DAILY_TREND_DRAW_ZLEVEL);
-  }
-  chart.getDom()?.querySelector(
-    `canvas[data-zr-dom-id^="zr_${DAILY_TREND_DRAW_ZLEVEL}."]`
-  )?.remove();
-  renderer.refresh();
+  overlay.remove();
 }
 
 function setDailyTrendSeriesViewsVisible(chart, yearSeries, visible) {
@@ -816,10 +994,12 @@ function cancelDailyTrendDraw(restoreView = true, year = null) {
   }
   const drawingYear = dailyTrendRuntime.drawingYear;
   const drawingRevealsYear = dailyTrendRuntime.drawingRevealsYear;
+  const drawingSeries = dailyTrendRuntime.drawingSeries;
   dailyTrendRuntime.drawingYear = null;
   dailyTrendRuntime.drawingRevealsYear = false;
+  dailyTrendRuntime.drawingSeries = [];
   if (
-    !restoreView || !drawingRevealsYear || !drawingYear ||
+    !restoreView || !drawingRevealsYear || !drawingYear || !drawingSeries.length ||
     (year && drawingYear !== year) ||
     !dailyTrendRuntime.chart || dailyTrendRuntime.chart.isDisposed()
   ) {
@@ -827,7 +1007,7 @@ function cancelDailyTrendDraw(restoreView = true, year = null) {
   }
   setDailyTrendSeriesViewsVisible(
     dailyTrendRuntime.chart,
-    dailyTrendRuntime.series.filter((item) => item.name === drawingYear),
+    drawingSeries,
     true
   );
 }
@@ -844,27 +1024,41 @@ function animateDailyTrendYear(chart, year, revealYear = true) {
   if (!yearSeries.length) {
     return;
   }
+  const animatedYearSeries = dailyTrendSeriesInViewport(chart, yearSeries);
+  if (!animatedYearSeries.length) {
+    return;
+  }
 
   const token = ++dailyTrendRuntime.drawToken;
   dailyTrendRuntime.drawingYear = year;
   dailyTrendRuntime.drawingRevealsYear = revealYear;
+  dailyTrendRuntime.drawingSeries = animatedYearSeries;
   if (revealYear) {
-    setDailyTrendSeriesViewsVisible(chart, yearSeries, true);
+    setDailyTrendSeriesViewsVisible(chart, animatedYearSeries, true);
   }
-  const overlay = dailyTrendDrawOverlay(chart, yearSeries, !revealYear);
+  const overlay = dailyTrendDrawOverlay(chart, animatedYearSeries, !revealYear);
   if (!overlay) {
     dailyTrendRuntime.drawingYear = null;
     dailyTrendRuntime.drawingRevealsYear = false;
+    dailyTrendRuntime.drawingSeries = [];
     return;
   }
   dailyTrendRuntime.drawOverlay = overlay;
-  setDailyTrendSeriesViewsVisible(chart, yearSeries, false);
+  setDailyTrendSeriesViewsVisible(chart, animatedYearSeries, false);
   chart.getZr().flush();
-  overlay.dailyTrendClipAnimations.forEach(({ clip, width }) => {
-    clip.animateTo(
-      { shape: { width } },
-      { duration: DAILY_TREND_DRAW_DURATION, easing: "cubicOut" }
-    );
+  overlay.getBoundingClientRect();
+  requestAnimationFrame(() => {
+    if (
+      !dailyTrendRuntime || dailyTrendRuntime.chart !== chart ||
+      dailyTrendRuntime.drawToken !== token || chart.isDisposed()
+    ) {
+      return;
+    }
+    overlay.dailyTrendClipElements.forEach((clip) => {
+      clip.style.clipPath = revealYear
+        ? "inset(0 0% 0 0)"
+        : "inset(0 100% 0 0)";
+    });
   });
   dailyTrendRuntime.drawTimer = setTimeout(() => {
     if (
@@ -874,13 +1068,14 @@ function animateDailyTrendYear(chart, year, revealYear = true) {
       return;
     }
     if (revealYear) {
-      setDailyTrendSeriesViewsVisible(chart, yearSeries, true);
+      setDailyTrendSeriesViewsVisible(chart, animatedYearSeries, true);
     }
     removeDailyTrendDrawOverlay(chart, overlay);
     dailyTrendRuntime.drawOverlay = null;
     dailyTrendRuntime.drawTimer = null;
     dailyTrendRuntime.drawingYear = null;
     dailyTrendRuntime.drawingRevealsYear = false;
+    dailyTrendRuntime.drawingSeries = [];
   }, DAILY_TREND_DRAW_DURATION + 40);
 }
 
@@ -893,7 +1088,7 @@ function applyDailyTrendTheme(option) {
 
   const titles = Array.isArray(option.title) ? option.title : [option.title].filter(Boolean);
   titles.forEach((title, index) => {
-    title.left = index === 0 ? (compactHeader ? "center" : 28) : title.left;
+    title.left = index === 0 ? "center" : title.left;
     title.top = index === 0 ? 16 : title.top;
     title.text = index === 0
       ? narrowHeader
@@ -904,7 +1099,7 @@ function applyDailyTrendTheme(option) {
     delete title.subtextStyle;
     title.textStyle = {
       ...(title.textStyle || {}),
-      align: index === 0 && compactHeader ? "center" : title.textStyle?.align,
+      align: index === 0 ? "center" : title.textStyle?.align,
       color: index === 0 ? DAILY_TREND_INK : "#393833",
       fontSize: index === 0 ? (narrowHeader ? 14 : compactHeader ? 15 : 18) : 13,
       fontWeight: 700
@@ -913,12 +1108,12 @@ function applyDailyTrendTheme(option) {
 
   if (option.legend) {
     setDailyTrendRecentYearsSelected(option);
-    option.legend.left = 28;
+    option.legend.left = "center";
     option.legend.top = 52;
     option.legend.icon = "roundRect";
-    option.legend.itemWidth = 22;
-    option.legend.itemHeight = 3;
-    option.legend.itemGap = 18;
+    option.legend.itemWidth = 24;
+    option.legend.itemHeight = 2;
+    option.legend.itemGap = 14;
     option.legend.borderWidth = 0;
     option.legend.borderRadius = 0;
     option.legend.backgroundColor = "transparent";
@@ -944,6 +1139,7 @@ function applyDailyTrendTheme(option) {
 
   option.tooltip = {
     ...(option.tooltip || {}),
+    show: false,
     trigger: "axis",
     order: "seriesDesc",
     backgroundColor: "rgba(245, 243, 238, 0.97)",
@@ -957,13 +1153,8 @@ function applyDailyTrendTheme(option) {
       lineHeight: 18
     },
     axisPointer: {
-      type: "line",
-      snap: true,
-      lineStyle: {
-        color: "#9b978e",
-        width: 1,
-        type: "dashed"
-      }
+      type: "none",
+      snap: false
     },
     formatter: (params) => {
       const rows = params.filter((item) => item.value != null && item.value !== "-");
