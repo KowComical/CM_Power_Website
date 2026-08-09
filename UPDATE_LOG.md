@@ -4,6 +4,14 @@
 
 日期写在 `## YYYY-MM-DD` 标题中；同一天内有多条更新时，必须在日期标题下用 `### HH:MM - 更新标题` 分隔。条目正文不再重复日期和时间。
 
+## 2026-08-09
+
+### 10:48 - 重设计 Daily Trends 多色编辑型折线图
+
+- 更新内容：借鉴 Lieflat Charts 的 Hairline Line 编辑视觉语法，重做 Daily Trends 的纸感背景、发丝网格、月度刻度、左对齐国家标题、紧凑数值轴、Tooltip 和峰值注记；使用低饱和分类色区分年份，默认最近四年采用芥末黄、青绿、蓝和红等多色编码，并仅为最新年份保留月度锚点，兼顾逐日曲线辨识度与多国家长图性能。同步更新 CSS 与 JavaScript 缓存标识。
+- 验证：`node --check static_site/app.js` 通过；使用本地 HTTP 服务与 Chromium 分别以 1440×1000、480×1000 视口检查 Total / World，并以 1440×1000 检查 Solar / Europe，图表均正常加载，桌面多列与窄屏单列布局正常。图例切换状态、Tooltip 和峰值注记实测通过，浏览器未捕获运行时错误。
+- 影响路径：`static_site/app.js`、`static_site/styles.css`、`index.html`、`UPDATE_LOG.md`
+
 ## 2026-07-20
 
 ### 12:19 - 新增台湾网站数据说明与图表数据

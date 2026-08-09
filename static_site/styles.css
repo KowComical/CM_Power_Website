@@ -202,8 +202,10 @@ h1 {
 }
 
 #linePanel.chart-panel {
-  background: #fbfcfc;
-  border-color: #dce5e2;
+  background: #f5f3ee;
+  border-color: #d8d4cb;
+  border-radius: 18px;
+  box-shadow: 0 18px 44px rgba(48, 44, 36, 0.09);
 }
 
 .chart {

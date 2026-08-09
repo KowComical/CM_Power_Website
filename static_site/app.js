@@ -39,17 +39,22 @@ const MONTH_INDEX = {
 };
 
 const DAILY_TREND_YEAR_COLORS = {
-  2019: "#b4dd9f",
-  2020: "#70c268",
-  2021: "#35994b",
-  2022: "#176f34",
-  2023: "#b0d2ea",
-  2024: "#68a5d3",
+  2019: "#7c6ea8",
+  2020: "#5a91ad",
+  2021: "#6f9b45",
+  2022: "#a86435",
+  2023: "#b8871b",
+  2024: "#2a8f89",
   2025: "#246fa8",
-  2026: "#d73027"
+  2026: "#d83a2e"
 };
 
-const DAILY_TREND_INACTIVE_COLOR = "#dbe3e4";
+const DAILY_TREND_PAPER = "#f5f3ee";
+const DAILY_TREND_INK = "#1c1c1a";
+const DAILY_TREND_MUTED = "#77746c";
+const DAILY_TREND_GRID = "#dedbd3";
+const DAILY_TREND_INACTIVE_COLOR = "#d1cec6";
+const DAILY_TREND_COLOR_CYCLE = Object.values(DAILY_TREND_YEAR_COLORS);
 const CONTINENT_SCATTER_COLORS = {
   Africa: "#5070dd",
   Asia: "#b6d634",
@@ -273,8 +278,8 @@ function dailyTrendLayout(option, containerWidth) {
   const columns = dailyTrendColumns(containerWidth, gridCount);
   const rows = Math.max(1, Math.ceil(gridCount / columns));
   const rowHeight = columns === 1 ? 360 : columns === 2 ? 320 : columns === 3 ? 292 : 276;
-  const rowGap = rows === 1 ? 0 : 24;
-  const topBand = 112;
+  const rowGap = rows === 1 ? 0 : 30;
+  const topBand = containerWidth < 620 ? 150 : 126;
   const bottomBand = 34;
   const height = topBand + rows * rowHeight + Math.max(0, rows - 1) * rowGap + bottomBand;
 
@@ -393,6 +398,15 @@ function dailyTrendYearSelected(selected, year) {
   return !selected || selected[year] !== false;
 }
 
+function dailyTrendYearColor(year) {
+  if (DAILY_TREND_YEAR_COLORS[year]) {
+    return DAILY_TREND_YEAR_COLORS[year];
+  }
+  const numericYear = Number(year);
+  const offset = Number.isFinite(numericYear) ? numericYear - 2019 : 0;
+  return DAILY_TREND_COLOR_CYCLE[((offset % DAILY_TREND_COLOR_CYCLE.length) + DAILY_TREND_COLOR_CYCLE.length) % DAILY_TREND_COLOR_CYCLE.length];
+}
+
 function setDailyTrendRecentYearsSelected(option, visibleCount = 4) {
   const legend = getDailyTrendLegend(option);
   if (!legend || !Array.isArray(legend.data)) {
@@ -419,29 +433,70 @@ function styleDailyTrendSeries(option) {
     return;
   }
 
+  const latestYear = option.series
+    .map((series) => series.name)
+    .filter((name) => /^\d+$/.test(name))
+    .sort((a, b) => Number(b) - Number(a))[0];
+
   option.series.forEach((series) => {
     if (series.type !== "line") {
       return;
     }
 
-    const color = DAILY_TREND_YEAR_COLORS[series.name];
-    if (!color) {
-      return;
-    }
+    const color = dailyTrendYearColor(series.name);
 
-    const isLatest = series.name === "2026";
+    const isLatest = series.name === latestYear;
     const isSelected = isDailyTrendYearSelected(option, series.name);
     series.lineStyle = {
       ...(series.lineStyle || {}),
       color,
-      width: isLatest ? 2.6 : isSelected ? 2.15 : 1.35,
-      opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+      width: isLatest ? 2.15 : isSelected ? 1.45 : 0.9,
+      opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28,
+      cap: "round",
+      join: "round"
     };
     series.itemStyle = {
       ...(series.itemStyle || {}),
       color,
-      opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+      borderColor: DAILY_TREND_PAPER,
+      borderWidth: 1,
+      opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28
     };
+    series.sampling = isLatest ? false : "lttb";
+    series.showSymbol = isLatest;
+    series.showAllSymbol = isLatest;
+    series.symbol = "circle";
+    const monthlyAnchorIndexes = new Set(
+      (option.xAxis?.[series.xAxisIndex]?.data || [])
+        .map((label, index) => (/-01$/.test(label) ? index : -1))
+        .filter((index) => index >= 0)
+    );
+    series.symbolSize = isLatest
+      ? (value, params) => (monthlyAnchorIndexes.has(params.dataIndex) ? 4 : 0)
+      : 0;
+    series.markPoint = isLatest ? {
+      symbol: "circle",
+      symbolSize: 7,
+      silent: true,
+      data: [{ type: "max", name: `${latestYear} peak` }],
+      itemStyle: {
+        color,
+        borderColor: DAILY_TREND_PAPER,
+        borderWidth: 1.5
+      },
+      label: {
+        show: true,
+        position: "top",
+        distance: 4,
+        color: DAILY_TREND_INK,
+        fontSize: 9,
+        fontWeight: 700,
+        backgroundColor: DAILY_TREND_PAPER,
+        borderRadius: 2,
+        padding: [2, 3],
+        formatter: (params) => formatDailyTrendPeakValue(params.value)
+      }
+    } : undefined;
   });
 }
 
@@ -457,21 +512,18 @@ function styleDailyTrendLegendItems(option) {
 function styledDailyTrendLegendItems(items, selected) {
   return items.map((item) => {
     const name = typeof item === "string" ? item : item.name;
-    const color = DAILY_TREND_YEAR_COLORS[name];
     const isSelected = dailyTrendYearSelected(selected, name);
     return {
       ...(typeof item === "string" ? { name } : item),
       icon: "roundRect",
       textStyle: {
         ...((typeof item === "string" ? {} : item.textStyle) || {}),
-        color: isSelected ? color || "#50605d" : DAILY_TREND_INACTIVE_COLOR,
-        backgroundColor: isSelected ? "#ffffff" : "transparent",
-        borderColor: isSelected ? color || "#50605d" : "transparent",
-        borderWidth: isSelected ? 1 : 0,
-        borderRadius: 4,
-        fontWeight: isSelected ? 800 : 650,
+        color: isSelected ? DAILY_TREND_INK : DAILY_TREND_INACTIVE_COLOR,
+        backgroundColor: "transparent",
+        borderWidth: 0,
+        fontWeight: isSelected ? 700 : 600,
         opacity: isSelected ? 1 : 0.45,
-        padding: [3, 6, 3, 6]
+        padding: [2, 2, 2, 2]
       }
     };
   });
@@ -498,22 +550,26 @@ function refreshDailyTrendYearStyles(chart, selected = {}) {
     return;
   }
 
+  const latestYear = dailyTrendRuntime.series
+    .map((item) => item.name)
+    .filter((name) => /^\d+$/.test(name))
+    .sort((a, b) => Number(b) - Number(a))[0];
   const series = dailyTrendRuntime.series.map((item) => {
-    const color = DAILY_TREND_YEAR_COLORS[item.name];
-    const isLatest = item.name === "2026";
+    const color = dailyTrendYearColor(item.name);
+    const isLatest = item.name === latestYear;
     const isSelected = dailyTrendYearSelected(selected, item.name);
     return {
       id: item.id,
       lineStyle: {
         ...item.lineStyle,
         color,
-        width: isLatest ? 2.6 : isSelected ? 2.15 : 1.35,
-        opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+        width: isLatest ? 2.15 : isSelected ? 1.45 : 0.9,
+        opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28
       },
       itemStyle: {
         ...item.itemStyle,
         color,
-        opacity: isLatest ? 1 : isSelected ? 0.96 : 0.42
+        opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28
       }
     };
   });
@@ -528,31 +584,45 @@ function refreshDailyTrendYearStyles(chart, selected = {}) {
 }
 
 function applyDailyTrendTheme(option) {
-  option.backgroundColor = "#fbfcfc";
+  option.backgroundColor = DAILY_TREND_PAPER;
   option.color = Object.values(DAILY_TREND_YEAR_COLORS);
+  const compactHeader = chartContainerWidth(els.lineChart) < 620;
 
   const titles = Array.isArray(option.title) ? option.title : [option.title].filter(Boolean);
   titles.forEach((title, index) => {
-    title.left = index === 0 ? "center" : title.left;
+    title.left = index === 0 ? 28 : title.left;
     title.top = index === 0 ? 16 : title.top;
     title.text = index === 0
       ? `${titleCase(state.energy)} Daily Generation Trends (${state.continent})`
       : title.text;
+    title.subtext = index === 0
+      ? compactHeader
+        ? "One panel per country · Shared Jan–Dec axis\nHover for daily values"
+        : "Each panel is one country · Calendar years share the same Jan–Dec axis · Hover for daily values"
+      : title.subtext;
+    title.itemGap = 5;
     title.textStyle = {
       ...(title.textStyle || {}),
-      color: index === 0 ? "#1e2726" : "#2f3f3d",
+      color: index === 0 ? DAILY_TREND_INK : "#393833",
       fontSize: index === 0 ? 18 : 13,
-      fontWeight: index === 0 ? 700 : 700
+      fontWeight: 700
+    };
+    title.subtextStyle = {
+      color: DAILY_TREND_MUTED,
+      fontSize: 11,
+      fontWeight: 500,
+      lineHeight: 16
     };
   });
 
   if (option.legend) {
     setDailyTrendRecentYearsSelected(option);
-    option.legend.top = 52;
+    option.legend.left = 28;
+    option.legend.top = 68;
     option.legend.icon = "roundRect";
-    option.legend.itemWidth = 18;
-    option.legend.itemHeight = 4;
-    option.legend.itemGap = 14;
+    option.legend.itemWidth = 22;
+    option.legend.itemHeight = 3;
+    option.legend.itemGap = 18;
     option.legend.borderWidth = 0;
     option.legend.borderRadius = 0;
     option.legend.backgroundColor = "transparent";
@@ -561,13 +631,81 @@ function applyDailyTrendTheme(option) {
     option.legend.inactiveBorderColor = DAILY_TREND_INACTIVE_COLOR;
     option.legend.textStyle = {
       ...(option.legend.textStyle || {}),
-      color: "#50605d",
-      fontSize: 12,
+      color: DAILY_TREND_INK,
+      fontSize: 11,
       fontWeight: 700
     };
 
     styleDailyTrendLegendItems(option);
   }
+
+  option.tooltip = {
+    ...(option.tooltip || {}),
+    trigger: "axis",
+    order: "seriesDesc",
+    backgroundColor: "rgba(245, 243, 238, 0.97)",
+    borderColor: DAILY_TREND_INK,
+    borderWidth: 1,
+    padding: [9, 11],
+    extraCssText: "box-shadow:0 10px 28px rgba(28,28,26,.14);border-radius:4px;",
+    textStyle: {
+      color: DAILY_TREND_INK,
+      fontSize: 11,
+      lineHeight: 18
+    },
+    axisPointer: {
+      type: "line",
+      snap: true,
+      lineStyle: {
+        color: "#9b978e",
+        width: 1,
+        type: "dashed"
+      }
+    },
+    formatter: (params) => {
+      const rows = params.filter((item) => item.value != null && item.value !== "-");
+      if (!rows.length) {
+        return "";
+      }
+      return [
+        `<div style="font-weight:700;margin-bottom:3px">${rows[0].axisValueLabel || rows[0].axisValue}</div>`,
+        ...rows.map((item) => `${item.marker}${item.seriesName}<span style="float:right;margin-left:18px;font-weight:700">${formatDailyTrendValue(item.value)}</span>`)
+      ].join("<br>");
+    }
+  };
+}
+
+function formatDailyTrendValue(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "–";
+  }
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(number);
+}
+
+function formatDailyTrendPeakValue(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "–";
+  }
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: Math.abs(number) >= 100 ? 0 : 1
+  }).format(number);
+}
+
+function formatDailyTrendAxisValue(value) {
+  const number = Number(value);
+  const absolute = Math.abs(number);
+  if (!Number.isFinite(number)) {
+    return value;
+  }
+  if (absolute >= 1000000) {
+    return `${(number / 1000000).toFixed(absolute >= 10000000 ? 0 : 1).replace(/\.0$/, "")}m`;
+  }
+  if (absolute >= 1000) {
+    return `${(number / 1000).toFixed(absolute >= 10000 ? 0 : 1).replace(/\.0$/, "")}k`;
+  }
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(number);
 }
 
 function formatDailyTrendAxes(option, chartName) {
@@ -576,7 +714,7 @@ function formatDailyTrendAxes(option, chartName) {
   }
 
   const quarterLabels = new Map([
-    ["Apr-01", "Apr"],
+    ["Jan-01", "Jan"], ["Apr-01", "Apr"],
     ["Jul-01", "Jul"], ["Oct-01", "Oct"]
   ]);
 
@@ -585,22 +723,25 @@ function formatDailyTrendAxes(option, chartName) {
     axis.axisTick = axis.axisTick || {};
     axis.axisLabel.interval = (index, value) => quarterLabels.has(value);
     axis.axisLabel.formatter = (value) => quarterLabels.get(value) || "";
-    axis.axisLabel.color = "#75847f";
+    axis.axisLabel.color = DAILY_TREND_MUTED;
     axis.axisLabel.fontSize = 10;
     axis.axisLabel.margin = 8;
-    axis.axisTick.interval = (index, value) => quarterLabels.has(value);
-    axis.axisTick.lineStyle = { color: "#c6d2d0" };
+    axis.axisTick.interval = (index, value) => /-01$/.test(value);
+    axis.axisTick.length = 5;
+    axis.axisTick.lineStyle = { color: "#bdb9b0", width: 0.8 };
     axis.axisLine = axis.axisLine || {};
-    axis.axisLine.lineStyle = { color: "#c6d2d0" };
+    axis.axisLine.lineStyle = { color: "#aaa69d", width: 0.8 };
+    axis.splitLine = { ...(axis.splitLine || {}), show: false };
   });
 
   if (Array.isArray(option.yAxis)) {
     option.yAxis.forEach((axis) => {
       axis.axisLabel = {
         ...(axis.axisLabel || {}),
-        color: "#75847f",
+        color: DAILY_TREND_MUTED,
         fontSize: 10,
-        margin: 6
+        margin: 7,
+        formatter: formatDailyTrendAxisValue
       };
       axis.axisTick = { ...(axis.axisTick || {}), show: false };
       axis.axisLine = { ...(axis.axisLine || {}), show: false };
@@ -608,8 +749,9 @@ function formatDailyTrendAxes(option, chartName) {
         ...(axis.splitLine || {}),
         show: true,
         lineStyle: {
-          color: "#e6ecea",
-          width: 1
+          color: DAILY_TREND_GRID,
+          width: 0.8,
+          type: "dashed"
         }
       };
     });
@@ -622,13 +764,13 @@ function reflowDailyTrendLayout(option, layout) {
   }
 
   const { columns, rowHeight, rowGap, topBand, width } = layout;
-  const sideGap = width < 620 ? 16 : 24;
-  const columnGap = width < 760 ? 16 : 22;
+  const sideGap = width < 620 ? 18 : 26;
+  const columnGap = width < 760 ? 18 : 26;
   const availableWidth = Math.max(280, width - sideGap * 2 - columnGap * (columns - 1));
   const gridWidth = availableWidth / columns;
   const titleOffset = 0;
-  const plotTopOffset = 28;
-  const plotHeight = rowHeight - 52;
+  const plotTopOffset = 30;
+  const plotHeight = rowHeight - 58;
 
   option.grid.forEach((grid, index) => {
     const row = Math.floor(index / columns);
@@ -641,10 +783,9 @@ function reflowDailyTrendLayout(option, layout) {
     grid.width = gridWidth;
     grid.height = plotHeight;
     grid.containLabel = true;
-    grid.show = true;
+    grid.show = false;
     grid.backgroundColor = "rgba(255, 255, 255, 0)";
-    grid.borderColor = "#dce5e2";
-    grid.borderWidth = 1;
+    grid.borderWidth = 0;
   });
 
   if (Array.isArray(option.graphic)) {
@@ -657,14 +798,14 @@ function reflowDailyTrendLayout(option, layout) {
       delete graphic.left;
       delete graphic.top;
       delete graphic.width;
-      graphic.x = left + gridWidth / 2;
+      graphic.x = left + 2;
       graphic.y = top + titleOffset;
       graphic.style = {
         ...(graphic.style || {}),
-        align: "center",
-        textAlign: "center",
+        align: "left",
+        textAlign: "left",
         textVerticalAlign: "top",
-        fill: "#2f3f3d",
+        fill: DAILY_TREND_INK,
         fontSize: 13,
         fontWeight: 700
       };
