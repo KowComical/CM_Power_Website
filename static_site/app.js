@@ -49,13 +49,13 @@ const DAILY_TREND_GRID = "#dedbd3";
 const DAILY_TREND_INACTIVE_COLOR = "#8c8981";
 const DAILY_TREND_DRAW_DURATION = 1100;
 const CONTINENT_SCATTER_COLORS = {
-  Africa: "#5070dd",
-  Asia: "#b6d634",
-  Europe: "#505372",
-  "North America": "#ff994d",
-  Oceania: "#0ca8df",
-  "South America": "#ffd10a",
-  Other: "#fb628b"
+  Africa: "#756bb1",
+  Asia: "#4f9a55",
+  Europe: "#596579",
+  "North America": "#d97b42",
+  Oceania: "#3d91b4",
+  "South America": "#c8a126",
+  Other: "#a56a8b"
 };
 const SCATTER_CONTINENTS = [
   "Africa", "Asia", "Europe",
@@ -528,29 +528,7 @@ function styleDailyTrendSeries(option) {
     series.symbolSize = isLatest
       ? (value, params) => (monthlyAnchorIndexes.has(params.dataIndex) ? 4 : 0)
       : 0;
-    series.markPoint = isLatest ? {
-      symbol: "circle",
-      symbolSize: 7,
-      silent: true,
-      data: [{ type: "max", name: `${latestYear} peak` }],
-      itemStyle: {
-        color,
-        borderColor: DAILY_TREND_PAPER,
-        borderWidth: 1.5
-      },
-      label: {
-        show: true,
-        position: "top",
-        distance: 4,
-        color: DAILY_TREND_INK,
-        fontSize: 9,
-        fontWeight: 700,
-        backgroundColor: DAILY_TREND_PAPER,
-        borderRadius: 2,
-        padding: [2, 3],
-        formatter: (params) => formatDailyTrendPeakValue(params.value)
-      }
-    } : undefined;
+    delete series.markPoint;
   });
 }
 
@@ -1232,16 +1210,6 @@ function formatDailyTrendValue(value) {
     return "–";
   }
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(number);
-}
-
-function formatDailyTrendPeakValue(value) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) {
-    return "–";
-  }
-  return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: Math.abs(number) >= 100 ? 0 : 1
-  }).format(number);
 }
 
 function formatDailyTrendAxisValue(value) {
@@ -1952,9 +1920,7 @@ function updateScatterMetadata(metadata) {
   }
 
   const comparisonMonth = metadata.comparison_latest_month || metadata.iea_latest_month || "-";
-  els.scatterMeta.innerHTML = `
-    <span>IEA monthly comparison through <strong>${comparisonMonth}</strong></span>
-  `;
+  els.scatterMeta.textContent = `Monthly observations through ${comparisonMonth}`;
 }
 
 function scatterFitStats(rows) {
@@ -2063,11 +2029,13 @@ function scatterTooltip(params) {
   const [cmPower, iea, country, year, month, typeTitle] = value;
   const monthLabel = String(month).padStart(2, "0");
   return [
-    `${typeTitle} - ${country} ${year}-${monthLabel}`,
-    `Continent: ${params.seriesName}`,
-    `CM_Power: ${Number(cmPower).toFixed(2)}`,
-    `IEA: ${Number(iea).toFixed(2)}`
-  ].join("<br>");
+    `<div style="font-weight:700;margin-bottom:1px">${typeTitle} · ${country}</div>`,
+    `<div style="color:#77746c;margin-bottom:4px">${year}-${monthLabel} · ${params.seriesName}</div>`,
+    `<div style="display:grid;grid-template-columns:auto auto;column-gap:12px;row-gap:1px">`,
+    `<span>CM Power</span><strong>${Number(cmPower).toFixed(2)}</strong>`,
+    `<span>IEA</span><strong>${Number(iea).toFixed(2)}</strong>`,
+    `</div>`
+  ].join("");
 }
 
 function scatterLayerZlevel(continent) {
@@ -2223,6 +2191,10 @@ function renderScatterLegend(continents) {
     button.className = "scatter-legend-button";
     button.dataset.continent = continent;
     button.style.setProperty("--legend-color", CONTINENT_SCATTER_COLORS[continent]);
+    button.style.setProperty(
+      "--legend-text-color",
+      interpolateDailyTrendColor(CONTINENT_SCATTER_COLORS[continent], DAILY_TREND_INK, 0.22)
+    );
     button.setAttribute("aria-pressed", String(selected[continent]));
     button.setAttribute("aria-label", `Toggle ${continent}`);
     dot.className = "scatter-legend-dot";
@@ -2402,7 +2374,7 @@ function refreshScatterSelection(
 
     titles.push({
       id: `scatter-title-${index}`,
-      text: `${scatterRuntime.gridLabels[index]} · R2 ${formatR2(stats.r2)}`
+      text: `${scatterRuntime.gridLabels[index]} · R² ${formatR2(stats.r2)}`
     });
     xAxis.push({
       id: `scatter-x-${index}`,
@@ -2506,7 +2478,13 @@ async function renderScatterChart(renderId) {
         width: position.plotWidth,
         height: position.plotHeight,
         containLabel: false,
-        show: false
+        show: true,
+        backgroundColor: "rgba(255, 255, 255, 0.28)",
+        borderColor: "rgba(178, 172, 160, 0.42)",
+        borderWidth: 0.7,
+        shadowBlur: 8,
+        shadowColor: "rgba(44, 40, 32, 0.07)",
+        shadowOffsetY: 2
       });
 
       xAxis.push({
@@ -2516,22 +2494,27 @@ async function renderScatterChart(renderId) {
         max: maxVal,
         interval: axis.interval,
         splitNumber: 4,
-        name: "CM_Power",
+        name: "CM Power (TWh)",
         nameLocation: "center",
-        nameGap: 31,
+        nameGap: 27,
         position: "bottom",
-        nameTextStyle: { color: "#35413f", fontSize: 13, fontWeight: 650 },
-        axisLabel: { color: "#4f5b59", fontSize: 12, margin: 10 },
+        nameTextStyle: { color: DAILY_TREND_MUTED, fontSize: 10, fontWeight: 600 },
+        axisLabel: {
+          color: DAILY_TREND_MUTED,
+          fontSize: 10,
+          margin: 8,
+          formatter: formatDailyTrendAxisValue
+        },
         axisLine: {
           show: true,
           onZero: false,
-          lineStyle: { color: "#202725", width: 1.1 }
+          lineStyle: { color: "#aaa69d", width: 0.8 }
         },
         axisTick: {
           show: true,
           inside: true,
-          length: 7,
-          lineStyle: { color: "#202725", width: 1 }
+          length: 4,
+          lineStyle: { color: "#bdb9b0", width: 0.8 }
         },
         minorTick: { show: false },
         splitLine: { show: false }
@@ -2544,34 +2527,37 @@ async function renderScatterChart(renderId) {
         max: maxVal,
         interval: axis.interval,
         splitNumber: 4,
-        name: "IEA",
+        name: "IEA (TWh)",
         nameLocation: "center",
-        nameGap: 40,
+        nameGap: 36,
         position: "left",
-        nameTextStyle: { color: "#35413f", fontSize: 13, fontWeight: 650 },
-        axisLabel: { color: "#4f5b59", fontSize: 12, margin: 10 },
+        nameTextStyle: { color: DAILY_TREND_MUTED, fontSize: 10, fontWeight: 600 },
+        axisLabel: {
+          color: DAILY_TREND_MUTED,
+          fontSize: 10,
+          margin: 7,
+          formatter: formatDailyTrendAxisValue
+        },
         axisLine: {
-          show: true,
-          onZero: false,
-          lineStyle: { color: "#202725", width: 1.1 }
+          show: false
         },
         axisTick: {
-          show: true,
-          inside: true,
-          length: 7,
-          lineStyle: { color: "#202725", width: 1 }
+          show: false
         },
         minorTick: { show: false },
-        splitLine: { show: false }
+        splitLine: {
+          show: true,
+          lineStyle: { color: DAILY_TREND_GRID, width: 0.8, type: "dashed" }
+        }
       });
 
       titles.push({
         id: `scatter-title-${index}`,
-        text: `${typeTitle} · R2 ${formatR2(stats.r2)}`,
+        text: `${typeTitle} · R² ${formatR2(stats.r2)}`,
         textAlign: "center",
         left: position.left + position.plotWidth / 2,
         top: position.titleTop,
-        textStyle: { color: "#35413f", fontSize: 16, fontWeight: 750 }
+        textStyle: { color: "#393833", fontSize: 13, fontWeight: 700 }
       });
 
       series.push({
@@ -2583,7 +2569,7 @@ async function renderScatterChart(renderId) {
         data: [[0, 0], [maxVal, maxVal]],
         symbol: "none",
         silent: true,
-        lineStyle: { color: "#98a7a5", width: 1.2, type: "dashed", opacity: 0.75 },
+        lineStyle: { color: "#9f9b92", width: 0.9, type: "dashed", opacity: 0.72 },
         tooltip: { show: false },
         legendHoverLink: false
       });
@@ -2613,15 +2599,15 @@ async function renderScatterChart(renderId) {
           dimensions: ["CM_Power", "IEA", "country", "year", "month", "type"],
           encode: { x: 0, y: 1 },
           symbol: "circle",
-          symbolSize: 12,
+          symbolSize: 8,
           large: false,
           progressive: 3000,
           progressiveThreshold: 5000,
           itemStyle: {
             color: CONTINENT_SCATTER_COLORS[continent],
-            borderColor: "#555",
-            borderWidth: 1,
-            opacity: 0.86
+            borderColor: "#5b5953",
+            borderWidth: 0.7,
+            opacity: 0.76
           },
           silent: scatterSelectedContinents?.[continent] === false,
           data: continentRows.map((item) => [
@@ -2650,6 +2636,7 @@ async function renderScatterChart(renderId) {
     renderScatterLegend(continents);
 
     const option = {
+      backgroundColor: DAILY_TREND_PAPER,
       title: titles,
       grid,
       xAxis,
@@ -2658,8 +2645,12 @@ async function renderScatterChart(renderId) {
       tooltip: {
         trigger: "item",
         formatter: scatterTooltip,
-        padding: [10, 12],
-        textStyle: { fontSize: 14, lineHeight: 20 }
+        backgroundColor: "rgba(245, 243, 238, 0.97)",
+        borderColor: DAILY_TREND_INK,
+        borderWidth: 1,
+        padding: [8, 10],
+        extraCssText: "box-shadow:0 10px 28px rgba(28,28,26,.14);border-radius:4px;",
+        textStyle: { color: DAILY_TREND_INK, fontSize: 11, lineHeight: 16 }
       },
       legend: { show: false }
     };
