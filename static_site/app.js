@@ -38,23 +38,17 @@ const MONTH_INDEX = {
   Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
 };
 
-const DAILY_TREND_YEAR_COLORS = {
-  2019: "#7c6ea8",
-  2020: "#5a91ad",
-  2021: "#6f9b45",
-  2022: "#a86435",
-  2023: "#b8871b",
-  2024: "#2a8f89",
-  2025: "#246fa8",
-  2026: "#d83a2e"
-};
-
+const DAILY_TREND_LATEST_COLOR = "#d73027";
+const DAILY_TREND_PURPLE_RAMP = ["#d9cbea", "#b79bcf", "#906db0", "#67488c"];
+const DAILY_TREND_GREEN_RAMP = ["#b4dd9f", "#70c268", "#35994b", "#176f34"];
+const DAILY_TREND_BLUE_RAMP = ["#b0d2ea", "#68a5d3", "#246fa8"];
 const DAILY_TREND_PAPER = "#f5f3ee";
 const DAILY_TREND_INK = "#1c1c1a";
 const DAILY_TREND_MUTED = "#77746c";
 const DAILY_TREND_GRID = "#dedbd3";
 const DAILY_TREND_INACTIVE_COLOR = "#d1cec6";
-const DAILY_TREND_COLOR_CYCLE = Object.values(DAILY_TREND_YEAR_COLORS);
+const DAILY_TREND_DRAW_DURATION = 1100;
+const DAILY_TREND_DRAW_ZLEVEL = 40;
 const CONTINENT_SCATTER_COLORS = {
   Africa: "#5070dd",
   Asia: "#b6d634",
@@ -279,7 +273,7 @@ function dailyTrendLayout(option, containerWidth) {
   const rows = Math.max(1, Math.ceil(gridCount / columns));
   const rowHeight = columns === 1 ? 360 : columns === 2 ? 320 : columns === 3 ? 292 : 276;
   const rowGap = rows === 1 ? 0 : 30;
-  const topBand = containerWidth < 620 ? 150 : 126;
+  const topBand = containerWidth < 330 ? 210 : containerWidth < 620 ? 176 : 112;
   const bottomBand = 34;
   const height = topBand + rows * rowHeight + Math.max(0, rows - 1) * rowGap + bottomBand;
 
@@ -298,13 +292,19 @@ function dailyTrendLayout(option, containerWidth) {
 function setChart(container, name, option, height, renderKey = null) {
   container.style.height = `${height}px`;
   if (charts[name]) {
+    if (name === "line") {
+      cancelDailyTrendDraw(false);
+    }
     charts[name].dispose();
   }
   const revealScatter = name === "scatter" && scatterRevealRequested;
   if (revealScatter) {
     container.style.visibility = "hidden";
   }
-  charts[name] = echarts.init(container, null, { renderer: "canvas", useDirtyRect: true });
+  charts[name] = echarts.init(container, null, {
+    renderer: "canvas",
+    useDirtyRect: name !== "line"
+  });
   const scatterRenderReady = revealScatter
     ? waitForScatterRender(charts[name])
     : Promise.resolve();
@@ -316,6 +316,9 @@ function setChart(container, name, option, height, renderKey = null) {
     prepareDailyTrendRuntime(charts[name], option);
   }
   charts[name].setOption(option, true);
+  if (name === "line") {
+    cacheDailyTrendLineSegments(charts[name]);
+  }
   if (revealScatter) {
     scatterRevealRequested = false;
     revealScatterLayers(charts[name], container, scatterRenderReady);
@@ -328,9 +331,15 @@ function setChart(container, name, option, height, renderKey = null) {
     height
   };
   if (name === "line") {
-    charts[name].on("legendselectchanged", (params) => (
-      refreshDailyTrendYearStyles(charts[name], params.selected)
-    ));
+    charts[name].on("legendselectchanged", (params) => {
+      cacheDailyTrendLineSegments(charts[name]);
+      refreshDailyTrendYearStyles(charts[name], params.selected);
+      animateDailyTrendYear(
+        charts[name],
+        params.name,
+        params.selected?.[params.name] !== false
+      );
+    });
   }
 }
 
@@ -389,22 +398,63 @@ function getDailyTrendLegend(option) {
   return Array.isArray(option.legend) ? option.legend[0] : option.legend;
 }
 
-function isDailyTrendYearSelected(option, year) {
-  const legend = getDailyTrendLegend(option);
-  return !legend || dailyTrendYearSelected(legend.selected, year);
-}
-
 function dailyTrendYearSelected(selected, year) {
   return !selected || selected[year] !== false;
 }
 
-function dailyTrendYearColor(year) {
-  if (DAILY_TREND_YEAR_COLORS[year]) {
-    return DAILY_TREND_YEAR_COLORS[year];
+function interpolateDailyTrendColor(start, end, amount) {
+  const channels = [1, 3, 5].map((offset) => {
+    const from = Number.parseInt(start.slice(offset, offset + 2), 16);
+    const to = Number.parseInt(end.slice(offset, offset + 2), 16);
+    return Math.round(from + (to - from) * amount).toString(16).padStart(2, "0");
+  });
+  return `#${channels.join("")}`;
+}
+
+function sampleDailyTrendRamp(ramp, count) {
+  if (count <= 0) {
+    return [];
   }
-  const numericYear = Number(year);
-  const offset = Number.isFinite(numericYear) ? numericYear - 2019 : 0;
-  return DAILY_TREND_COLOR_CYCLE[((offset % DAILY_TREND_COLOR_CYCLE.length) + DAILY_TREND_COLOR_CYCLE.length) % DAILY_TREND_COLOR_CYCLE.length];
+  if (count === 1) {
+    return [ramp[ramp.length - 1]];
+  }
+  return Array.from({ length: count }, (_, index) => {
+    const position = index * (ramp.length - 1) / (count - 1);
+    const left = Math.floor(position);
+    const right = Math.min(ramp.length - 1, Math.ceil(position));
+    return interpolateDailyTrendColor(ramp[left], ramp[right], position - left);
+  });
+}
+
+function dailyTrendYearPalette(yearNames) {
+  const years = [...new Set(yearNames.filter((name) => /^\d+$/.test(name)).map(String))]
+    .sort((a, b) => Number(a) - Number(b));
+  const palette = {};
+  const latestYear = years.pop();
+  if (!latestYear) {
+    return palette;
+  }
+
+  const groupCount = years.length >= 9 ? 3 : Math.min(2, years.length);
+  const ramps = groupCount === 3
+    ? [DAILY_TREND_PURPLE_RAMP, DAILY_TREND_GREEN_RAMP, DAILY_TREND_BLUE_RAMP]
+    : groupCount === 2
+      ? [DAILY_TREND_GREEN_RAMP, DAILY_TREND_BLUE_RAMP]
+      : [DAILY_TREND_BLUE_RAMP];
+  let yearOffset = 0;
+  ramps.forEach((ramp, groupIndex) => {
+    const remainingYears = years.length - yearOffset;
+    const remainingGroups = ramps.length - groupIndex;
+    const groupSize = Math.ceil(remainingYears / remainingGroups);
+    const groupYears = years.slice(yearOffset, yearOffset + groupSize);
+    const groupColors = sampleDailyTrendRamp(ramp, groupYears.length);
+    groupYears.forEach((year, index) => {
+      palette[year] = groupColors[index];
+    });
+    yearOffset += groupSize;
+  });
+  palette[latestYear] = DAILY_TREND_LATEST_COLOR;
+  return palette;
 }
 
 function setDailyTrendRecentYearsSelected(option, visibleCount = 4) {
@@ -433,8 +483,9 @@ function styleDailyTrendSeries(option) {
     return;
   }
 
-  const latestYear = option.series
-    .map((series) => series.name)
+  const yearNames = option.series.map((series) => series.name);
+  const yearColors = dailyTrendYearPalette(yearNames);
+  const latestYear = yearNames
     .filter((name) => /^\d+$/.test(name))
     .sort((a, b) => Number(b) - Number(a))[0];
 
@@ -443,15 +494,14 @@ function styleDailyTrendSeries(option) {
       return;
     }
 
-    const color = dailyTrendYearColor(series.name);
+    const color = yearColors[series.name] || DAILY_TREND_LATEST_COLOR;
 
     const isLatest = series.name === latestYear;
-    const isSelected = isDailyTrendYearSelected(option, series.name);
     series.lineStyle = {
       ...(series.lineStyle || {}),
       color,
-      width: isLatest ? 2.15 : isSelected ? 1.45 : 0.9,
-      opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28,
+      width: isLatest ? 2.15 : 1.45,
+      opacity: isLatest ? 1 : 0.9,
       cap: "round",
       join: "round"
     };
@@ -460,7 +510,7 @@ function styleDailyTrendSeries(option) {
       color,
       borderColor: DAILY_TREND_PAPER,
       borderWidth: 1,
-      opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28
+      opacity: isLatest ? 1 : 0.9
     };
     series.sampling = isLatest ? false : "lttb";
     series.showSymbol = isLatest;
@@ -506,27 +556,58 @@ function styleDailyTrendLegendItems(option) {
     return;
   }
 
-  legend.data = styledDailyTrendLegendItems(legend.data, legend.selected);
+  const yearColors = dailyTrendYearPalette(
+    legend.data.map((item) => (typeof item === "string" ? item : item.name))
+  );
+  legend.data = styledDailyTrendLegendItems(legend.data, legend.selected, yearColors);
 }
 
-function styledDailyTrendLegendItems(items, selected) {
+function styledDailyTrendLegendItems(items, selected, yearColors = dailyTrendYearPalette(
+  items.map((item) => (typeof item === "string" ? item : item.name))
+)) {
   return items.map((item) => {
     const name = typeof item === "string" ? item : item.name;
+    const color = yearColors[name] || DAILY_TREND_LATEST_COLOR;
     const isSelected = dailyTrendYearSelected(selected, name);
     return {
       ...(typeof item === "string" ? { name } : item),
       icon: "roundRect",
       textStyle: {
         ...((typeof item === "string" ? {} : item.textStyle) || {}),
-        color: isSelected ? DAILY_TREND_INK : DAILY_TREND_INACTIVE_COLOR,
-        backgroundColor: "transparent",
-        borderWidth: 0,
-        fontWeight: isSelected ? 700 : 600,
-        opacity: isSelected ? 1 : 0.45,
-        padding: [2, 2, 2, 2]
+        color,
+        backgroundColor: isSelected ? "#ffffff" : "transparent",
+        borderColor: isSelected ? color : "transparent",
+        borderWidth: isSelected ? 1 : 0,
+        borderRadius: 4,
+        fontWeight: isSelected ? 800 : 650,
+        opacity: isSelected ? 1 : 0.68,
+        padding: [3, 6, 3, 6]
       }
     };
   });
+}
+
+function dailyTrendLegendYearToken(name) {
+  return `dailyYear${String(name).replace(/\W/g, "")}`;
+}
+
+function dailyTrendLegendFormatter(name) {
+  return `{${dailyTrendLegendYearToken(name)}|${name}}`;
+}
+
+function dailyTrendLegendRichStyles(yearColors, selected = {}) {
+  return Object.fromEntries(Object.entries(yearColors).map(([name, color]) => {
+    const isSelected = dailyTrendYearSelected(selected, name);
+    return [dailyTrendLegendYearToken(name), {
+      color,
+      backgroundColor: isSelected ? "#ffffff" : "transparent",
+      borderColor: isSelected ? color : "transparent",
+      borderWidth: isSelected ? 1 : 0,
+      borderRadius: 4,
+      fontWeight: isSelected ? 800 : 650,
+      padding: [3, 6, 3, 6]
+    }];
+  }));
 }
 
 function prepareDailyTrendRuntime(chart, option) {
@@ -536,12 +617,18 @@ function prepareDailyTrendRuntime(chart, option) {
     legendItems: Array.isArray(legend?.data)
       ? legend.data.map((item) => (typeof item === "string" ? item : { ...item }))
       : [],
+    yearColors: dailyTrendYearPalette(option.series.map((series) => series.name)),
     series: option.series.map((series) => ({
       id: series.id,
       name: series.name,
       lineStyle: { ...(series.lineStyle || {}) },
-      itemStyle: { ...(series.itemStyle || {}) }
-    }))
+      drawSegments: null
+    })),
+    drawOverlay: null,
+    drawTimer: null,
+    drawToken: 0,
+    drawingYear: null,
+    drawingRevealsYear: false
   };
 }
 
@@ -550,75 +637,284 @@ function refreshDailyTrendYearStyles(chart, selected = {}) {
     return;
   }
 
-  const latestYear = dailyTrendRuntime.series
-    .map((item) => item.name)
-    .filter((name) => /^\d+$/.test(name))
-    .sort((a, b) => Number(b) - Number(a))[0];
-  const series = dailyTrendRuntime.series.map((item) => {
-    const color = dailyTrendYearColor(item.name);
-    const isLatest = item.name === latestYear;
-    const isSelected = dailyTrendYearSelected(selected, item.name);
-    return {
-      id: item.id,
-      lineStyle: {
-        ...item.lineStyle,
-        color,
-        width: isLatest ? 2.15 : isSelected ? 1.45 : 0.9,
-        opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28
-      },
-      itemStyle: {
-        ...item.itemStyle,
-        color,
-        opacity: isLatest ? 1 : isSelected ? 0.9 : 0.28
-      }
-    };
-  });
-
   chart.setOption({
     legend: {
       selected: { ...selected },
-      data: styledDailyTrendLegendItems(dailyTrendRuntime.legendItems, selected)
-    },
-    series
-  }, { notMerge: false, lazyUpdate: true, silent: true });
+      data: styledDailyTrendLegendItems(
+        dailyTrendRuntime.legendItems,
+        selected,
+        dailyTrendRuntime.yearColors
+      ),
+      formatter: dailyTrendLegendFormatter,
+      textStyle: {
+        rich: dailyTrendLegendRichStyles(dailyTrendRuntime.yearColors, selected)
+      }
+    }
+  }, { notMerge: false, lazyUpdate: false, silent: true });
+}
+
+function dailyTrendLineSegments(seriesModel) {
+  const data = seriesModel?.getData();
+  if (!data) {
+    return [];
+  }
+  const layoutPoints = data.getLayout("points");
+  if (!layoutPoints || layoutPoints.length < 2) {
+    return [];
+  }
+  const segments = [];
+  let segment = [];
+  for (let index = 0; index < data.count(); index += 1) {
+    const point = [layoutPoints[index * 2], layoutPoints[index * 2 + 1]];
+    if (Number.isFinite(point[0]) && Number.isFinite(point[1])) {
+      segment.push(point);
+    } else if (segment.length) {
+      segments.push(segment);
+      segment = [];
+    }
+  }
+  if (segment.length) {
+    segments.push(segment);
+  }
+  return segments;
+}
+
+function cacheDailyTrendLineSegments(chart) {
+  if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart) {
+    return;
+  }
+  const modelById = new Map(
+    chart.getModel().getSeries().map((seriesModel) => [seriesModel.id, seriesModel])
+  );
+  const selected = chart.getOption().legend?.[0]?.selected;
+  dailyTrendRuntime.series.forEach((item) => {
+    if (!dailyTrendYearSelected(selected, item.name) && !item.drawSegments) {
+      return;
+    }
+    const segments = dailyTrendLineSegments(modelById.get(item.id));
+    if (segments.length) {
+      item.drawSegments = segments;
+    }
+  });
+}
+
+function dailyTrendDrawOverlay(chart, yearSeries, startsVisible = false) {
+  const modelById = new Map(
+    chart.getModel().getSeries().map((seriesModel) => [seriesModel.id, seriesModel])
+  );
+  const overlay = new echarts.graphic.Group({ silent: true });
+  const clipAnimations = [];
+  let animatedGroupCount = 0;
+
+  yearSeries.forEach((item) => {
+    const currentSegments = dailyTrendLineSegments(modelById.get(item.id));
+    if (currentSegments.length) {
+      item.drawSegments = currentSegments;
+    }
+    const segments = currentSegments.length ? currentSegments : (item.drawSegments || []);
+    const points = segments.flat();
+    if (!points.length) {
+      return;
+    }
+    const xs = points.map((point) => point[0]);
+    const ys = points.map((point) => point[1]);
+    const left = Math.min(...xs) - 3;
+    const right = Math.max(...xs) + 3;
+    const top = Math.min(...ys) - 4;
+    const bottom = Math.max(...ys) + 4;
+    const countryGroup = new echarts.graphic.Group({ silent: true });
+    segments.forEach((segment) => {
+      if (segment.length < 2) {
+        return;
+      }
+      countryGroup.add(new echarts.graphic.Polyline({
+        silent: true,
+        zlevel: DAILY_TREND_DRAW_ZLEVEL,
+        shape: { points: segment },
+        style: {
+          fill: null,
+          stroke: item.lineStyle.color,
+          lineWidth: item.lineStyle.width,
+          lineCap: "round",
+          lineJoin: "round",
+          opacity: item.lineStyle.opacity
+        }
+      }));
+    });
+    const fullWidth = Math.max(1, right - left);
+    const clip = new echarts.graphic.Rect({
+      silent: true,
+      shape: {
+        x: left,
+        y: top,
+        width: startsVisible ? fullWidth : 0,
+        height: Math.max(1, bottom - top)
+      }
+    });
+    countryGroup.setClipPath(clip);
+    overlay.add(countryGroup);
+    clipAnimations.push({ clip, width: startsVisible ? 0 : fullWidth });
+    animatedGroupCount += 1;
+  });
+
+  if (!animatedGroupCount) {
+    return null;
+  }
+  chart.getZr().add(overlay);
+  overlay.dailyTrendClipAnimations = clipAnimations;
+  return overlay;
+}
+
+function removeDailyTrendDrawOverlay(chart, overlay) {
+  if (!chart || chart.isDisposed() || !overlay) {
+    return;
+  }
+  const renderer = chart.getZr();
+  renderer.remove(overlay);
+  if (typeof renderer.painter?.delLayer === "function") {
+    renderer.painter.delLayer(DAILY_TREND_DRAW_ZLEVEL);
+  }
+  chart.getDom()?.querySelector(
+    `canvas[data-zr-dom-id^="zr_${DAILY_TREND_DRAW_ZLEVEL}."]`
+  )?.remove();
+  renderer.refresh();
+}
+
+function setDailyTrendSeriesViewsVisible(chart, yearSeries, visible) {
+  if (!chart || typeof chart.getViewOfSeriesModel !== "function") {
+    return false;
+  }
+  const targetIds = new Set(yearSeries.map((item) => item.id));
+  chart.getModel().getSeries().forEach((seriesModel) => {
+    if (!targetIds.has(seriesModel.id)) {
+      return;
+    }
+    const view = chart.getViewOfSeriesModel(seriesModel);
+    if (view?.group) {
+      view.group.attr({ ignore: !visible });
+    }
+  });
+  chart.getZr().refresh();
+  return true;
+}
+
+function cancelDailyTrendDraw(restoreView = true, year = null) {
+  if (!dailyTrendRuntime) {
+    return;
+  }
+  dailyTrendRuntime.drawToken += 1;
+  if (dailyTrendRuntime.drawTimer != null) {
+    clearTimeout(dailyTrendRuntime.drawTimer);
+    dailyTrendRuntime.drawTimer = null;
+  }
+  if (dailyTrendRuntime.drawOverlay) {
+    removeDailyTrendDrawOverlay(
+      dailyTrendRuntime.chart,
+      dailyTrendRuntime.drawOverlay
+    );
+    dailyTrendRuntime.drawOverlay = null;
+  }
+  const drawingYear = dailyTrendRuntime.drawingYear;
+  const drawingRevealsYear = dailyTrendRuntime.drawingRevealsYear;
+  dailyTrendRuntime.drawingYear = null;
+  dailyTrendRuntime.drawingRevealsYear = false;
+  if (
+    !restoreView || !drawingRevealsYear || !drawingYear ||
+    (year && drawingYear !== year) ||
+    !dailyTrendRuntime.chart || dailyTrendRuntime.chart.isDisposed()
+  ) {
+    return;
+  }
+  setDailyTrendSeriesViewsVisible(
+    dailyTrendRuntime.chart,
+    dailyTrendRuntime.series.filter((item) => item.name === drawingYear),
+    true
+  );
+}
+
+function animateDailyTrendYear(chart, year, revealYear = true) {
+  if (!dailyTrendRuntime || dailyTrendRuntime.chart !== chart || !/^\d+$/.test(year)) {
+    return;
+  }
+  cancelDailyTrendDraw(true);
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+  const yearSeries = dailyTrendRuntime.series.filter((item) => item.name === year);
+  if (!yearSeries.length) {
+    return;
+  }
+
+  const token = ++dailyTrendRuntime.drawToken;
+  dailyTrendRuntime.drawingYear = year;
+  dailyTrendRuntime.drawingRevealsYear = revealYear;
+  if (revealYear) {
+    setDailyTrendSeriesViewsVisible(chart, yearSeries, true);
+  }
+  const overlay = dailyTrendDrawOverlay(chart, yearSeries, !revealYear);
+  if (!overlay) {
+    dailyTrendRuntime.drawingYear = null;
+    dailyTrendRuntime.drawingRevealsYear = false;
+    return;
+  }
+  dailyTrendRuntime.drawOverlay = overlay;
+  setDailyTrendSeriesViewsVisible(chart, yearSeries, false);
+  chart.getZr().flush();
+  overlay.dailyTrendClipAnimations.forEach(({ clip, width }) => {
+    clip.animateTo(
+      { shape: { width } },
+      { duration: DAILY_TREND_DRAW_DURATION, easing: "cubicOut" }
+    );
+  });
+  dailyTrendRuntime.drawTimer = setTimeout(() => {
+    if (
+      !dailyTrendRuntime || dailyTrendRuntime.chart !== chart ||
+      dailyTrendRuntime.drawToken !== token || chart.isDisposed()
+    ) {
+      return;
+    }
+    if (revealYear) {
+      setDailyTrendSeriesViewsVisible(chart, yearSeries, true);
+    }
+    removeDailyTrendDrawOverlay(chart, overlay);
+    dailyTrendRuntime.drawOverlay = null;
+    dailyTrendRuntime.drawTimer = null;
+    dailyTrendRuntime.drawingYear = null;
+    dailyTrendRuntime.drawingRevealsYear = false;
+  }, DAILY_TREND_DRAW_DURATION + 40);
 }
 
 function applyDailyTrendTheme(option) {
   option.backgroundColor = DAILY_TREND_PAPER;
-  option.color = Object.values(DAILY_TREND_YEAR_COLORS);
-  const compactHeader = chartContainerWidth(els.lineChart) < 620;
+  option.color = Object.values(dailyTrendYearPalette(option.series.map((series) => series.name)));
+  const headerWidth = chartContainerWidth(els.lineChart);
+  const compactHeader = headerWidth < 620;
+  const narrowHeader = headerWidth < 380;
 
   const titles = Array.isArray(option.title) ? option.title : [option.title].filter(Boolean);
   titles.forEach((title, index) => {
-    title.left = index === 0 ? 28 : title.left;
+    title.left = index === 0 ? (compactHeader ? "center" : 28) : title.left;
     title.top = index === 0 ? 16 : title.top;
     title.text = index === 0
-      ? `${titleCase(state.energy)} Daily Generation Trends (${state.continent})`
+      ? narrowHeader
+        ? `${titleCase(state.energy)} Daily Trends (${state.continent})`
+        : `${titleCase(state.energy)} Daily Generation Trends (${state.continent})`
       : title.text;
-    title.subtext = index === 0
-      ? compactHeader
-        ? "One panel per country · Shared Jan–Dec axis\nHover for daily values"
-        : "Each panel is one country · Calendar years share the same Jan–Dec axis · Hover for daily values"
-      : title.subtext;
-    title.itemGap = 5;
+    delete title.subtext;
+    delete title.subtextStyle;
     title.textStyle = {
       ...(title.textStyle || {}),
+      align: index === 0 && compactHeader ? "center" : title.textStyle?.align,
       color: index === 0 ? DAILY_TREND_INK : "#393833",
-      fontSize: index === 0 ? 18 : 13,
+      fontSize: index === 0 ? (narrowHeader ? 14 : compactHeader ? 15 : 18) : 13,
       fontWeight: 700
-    };
-    title.subtextStyle = {
-      color: DAILY_TREND_MUTED,
-      fontSize: 11,
-      fontWeight: 500,
-      lineHeight: 16
     };
   });
 
   if (option.legend) {
     setDailyTrendRecentYearsSelected(option);
     option.legend.left = 28;
-    option.legend.top = 68;
+    option.legend.top = 52;
     option.legend.icon = "roundRect";
     option.legend.itemWidth = 22;
     option.legend.itemHeight = 3;
@@ -633,8 +929,15 @@ function applyDailyTrendTheme(option) {
       ...(option.legend.textStyle || {}),
       color: DAILY_TREND_INK,
       fontSize: 11,
-      fontWeight: 700
+      fontWeight: 700,
+      rich: dailyTrendLegendRichStyles(
+        dailyTrendYearPalette(
+          option.legend.data.map((item) => (typeof item === "string" ? item : item.name))
+        ),
+        option.legend.selected
+      )
     };
+    option.legend.formatter = dailyTrendLegendFormatter;
 
     styleDailyTrendLegendItems(option);
   }
@@ -669,8 +972,8 @@ function applyDailyTrendTheme(option) {
       }
       return [
         `<div style="font-weight:700;margin-bottom:3px">${rows[0].axisValueLabel || rows[0].axisValue}</div>`,
-        ...rows.map((item) => `${item.marker}${item.seriesName}<span style="float:right;margin-left:18px;font-weight:700">${formatDailyTrendValue(item.value)}</span>`)
-      ].join("<br>");
+        ...rows.map((item) => `<div style="display:grid;grid-template-columns:auto auto;justify-content:start;column-gap:9px"><span>${item.marker}${item.seriesName}</span><strong>${formatDailyTrendValue(item.value)}</strong></div>`)
+      ].join("");
     }
   };
 }
@@ -798,12 +1101,12 @@ function reflowDailyTrendLayout(option, layout) {
       delete graphic.left;
       delete graphic.top;
       delete graphic.width;
-      graphic.x = left + 2;
+      graphic.x = left + gridWidth / 2;
       graphic.y = top + titleOffset;
       graphic.style = {
         ...(graphic.style || {}),
-        align: "left",
-        textAlign: "left",
+        align: "center",
+        textAlign: "center",
         textVerticalAlign: "top",
         fill: DAILY_TREND_INK,
         fontSize: 13,
