@@ -499,6 +499,8 @@ function styleDailyTrendSeries(option) {
     const color = yearColors[series.name] || DAILY_TREND_LATEST_COLOR;
 
     const isLatest = series.name === latestYear;
+    series.z = isLatest ? 20 : 5;
+    series.zlevel = 0;
     series.lineStyle = {
       ...(series.lineStyle || {}),
       color,
@@ -586,8 +588,10 @@ function dailyTrendLegendRichStyles(yearColors, selected = {}) {
   return Object.fromEntries(Object.entries(yearColors).map(([name, color]) => {
     const isSelected = dailyTrendYearSelected(selected, name);
     return [dailyTrendLegendYearToken(name), {
-      color,
-      fontWeight: isSelected ? 700 : 500,
+      color: isSelected
+        ? interpolateDailyTrendColor(color, DAILY_TREND_INK, 0.1)
+        : interpolateDailyTrendColor(color, DAILY_TREND_PAPER, 0.66),
+      fontWeight: isSelected ? 800 : 500,
       padding: [2, 3, 2, 3]
     }];
   }));
@@ -601,6 +605,10 @@ function prepareDailyTrendRuntime(chart, option) {
       ? legend.data.map((item) => (typeof item === "string" ? item : { ...item }))
       : [],
     yearColors: dailyTrendYearPalette(option.series.map((series) => series.name)),
+    latestYear: option.series
+      .map((series) => series.name)
+      .filter((name) => /^\d+$/.test(name))
+      .sort((left, right) => Number(right) - Number(left))[0],
     axisData: (option.xAxis || []).map((axis) => axis.data || []),
     series: option.series.map((series) => ({
       id: series.id,
@@ -879,6 +887,67 @@ function dailyTrendSeriesInViewport(chart, yearSeries) {
   });
 }
 
+function appendDailyTrendOverlaySeries(
+  overlay,
+  item,
+  modelById,
+  clipPath = null,
+  staysInFront = false
+) {
+  const currentSegments = dailyTrendLineSegments(modelById.get(item.id));
+  if (currentSegments.length) {
+    item.drawSegments = currentSegments;
+  }
+  const segments = currentSegments.length ? currentSegments : (item.drawSegments || []);
+  const points = segments.flat();
+  if (!points.length) {
+    return null;
+  }
+  const xs = points.map((point) => point[0]);
+  const ys = points.map((point) => point[1]);
+  const left = Math.min(...xs) - 3;
+  const right = Math.max(...xs) + 3;
+  const top = Math.min(...ys) - 4;
+  const bottom = Math.max(...ys) + 4;
+  const width = Math.max(1, right - left);
+  const height = Math.max(1, bottom - top);
+  const clip = document.createElement("div");
+  clip.className = staysInFront
+    ? "daily-trend-draw-segment daily-trend-draw-front"
+    : "daily-trend-draw-segment";
+  clip.style.left = `${left}px`;
+  clip.style.top = `${top}px`;
+  clip.style.width = `${width}px`;
+  clip.style.height = `${height}px`;
+  if (clipPath) {
+    clip.style.clipPath = clipPath;
+  }
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("width", String(width));
+  svg.setAttribute("height", String(height));
+  segments.forEach((segment) => {
+    if (segment.length < 2) {
+      return;
+    }
+    const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    polyline.setAttribute(
+      "points",
+      segment.map((point) => `${point[0] - left},${point[1] - top}`).join(" ")
+    );
+    polyline.setAttribute("fill", "none");
+    polyline.setAttribute("stroke", item.lineStyle.color);
+    polyline.setAttribute("stroke-width", String(item.lineStyle.width));
+    polyline.setAttribute("stroke-linecap", "round");
+    polyline.setAttribute("stroke-linejoin", "round");
+    polyline.setAttribute("opacity", String(item.lineStyle.opacity));
+    svg.append(polyline);
+  });
+  clip.append(svg);
+  overlay.append(clip);
+  return clip;
+}
+
 function dailyTrendDrawOverlay(chart, yearSeries, startsVisible = false) {
   const modelById = new Map(
     chart.getModel().getSeries().map((seriesModel) => [seriesModel.id, seriesModel])
@@ -890,61 +959,36 @@ function dailyTrendDrawOverlay(chart, yearSeries, startsVisible = false) {
   let animatedGroupCount = 0;
 
   yearSeries.forEach((item) => {
-    const currentSegments = dailyTrendLineSegments(modelById.get(item.id));
-    if (currentSegments.length) {
-      item.drawSegments = currentSegments;
-    }
-    const segments = currentSegments.length ? currentSegments : (item.drawSegments || []);
-    const points = segments.flat();
-    if (!points.length) {
+    const clip = appendDailyTrendOverlaySeries(
+      overlay,
+      item,
+      modelById,
+      startsVisible ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)"
+    );
+    if (!clip) {
       return;
     }
-    const xs = points.map((point) => point[0]);
-    const ys = points.map((point) => point[1]);
-    const left = Math.min(...xs) - 3;
-    const right = Math.max(...xs) + 3;
-    const top = Math.min(...ys) - 4;
-    const bottom = Math.max(...ys) + 4;
-    const width = Math.max(1, right - left);
-    const height = Math.max(1, bottom - top);
-    const clip = document.createElement("div");
-    clip.className = "daily-trend-draw-segment";
-    clip.style.left = `${left}px`;
-    clip.style.top = `${top}px`;
-    clip.style.width = `${width}px`;
-    clip.style.height = `${height}px`;
-    clip.style.clipPath = startsVisible
-      ? "inset(0 0% 0 0)"
-      : "inset(0 100% 0 0)";
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-    svg.setAttribute("width", String(width));
-    svg.setAttribute("height", String(height));
-    segments.forEach((segment) => {
-      if (segment.length < 2) {
-        return;
-      }
-      const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-      polyline.setAttribute(
-        "points",
-        segment.map((point) => `${point[0] - left},${point[1] - top}`).join(" ")
-      );
-      polyline.setAttribute("fill", "none");
-      polyline.setAttribute("stroke", item.lineStyle.color);
-      polyline.setAttribute("stroke-width", String(item.lineStyle.width));
-      polyline.setAttribute("stroke-linecap", "round");
-      polyline.setAttribute("stroke-linejoin", "round");
-      polyline.setAttribute("opacity", String(item.lineStyle.opacity));
-      svg.append(polyline);
-    });
-    clip.append(svg);
-    overlay.append(clip);
     clipElements.push(clip);
     animatedGroupCount += 1;
   });
 
   if (!animatedGroupCount) {
     return null;
+  }
+
+  const latestYear = dailyTrendRuntime?.latestYear;
+  const animatedYear = yearSeries[0]?.name;
+  const selected = chart.getOption().legend?.[0]?.selected;
+  if (
+    latestYear && animatedYear !== latestYear &&
+    dailyTrendYearSelected(selected, latestYear)
+  ) {
+    const animatedAxes = new Set(yearSeries.map((item) => item.xAxisIndex));
+    dailyTrendRuntime.series
+      .filter((item) => item.name === latestYear && animatedAxes.has(item.xAxisIndex))
+      .forEach((item) => {
+        appendDailyTrendOverlaySeries(overlay, item, modelById, null, true);
+      });
   }
   chart.getDom().append(overlay);
   overlay.dailyTrendClipElements = clipElements;
@@ -1277,9 +1321,13 @@ function reflowDailyTrendLayout(option, layout) {
     grid.width = gridWidth;
     grid.height = plotHeight;
     grid.containLabel = true;
-    grid.show = false;
-    grid.backgroundColor = "rgba(255, 255, 255, 0)";
-    grid.borderWidth = 0;
+    grid.show = true;
+    grid.backgroundColor = "rgba(255, 255, 255, 0.28)";
+    grid.borderColor = "rgba(178, 172, 160, 0.42)";
+    grid.borderWidth = 0.7;
+    grid.shadowBlur = 8;
+    grid.shadowColor = "rgba(44, 40, 32, 0.07)";
+    grid.shadowOffsetY = 2;
   });
 
   if (Array.isArray(option.graphic)) {
