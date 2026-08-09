@@ -374,9 +374,17 @@ h1 {
 
 .daily-trend-draw-segment {
   position: absolute;
+  z-index: 1;
   overflow: hidden;
   transition: clip-path 1100ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: clip-path;
+}
+
+.daily-trend-draw-front {
+  z-index: 2;
+  overflow: visible;
+  transition: none;
+  will-change: auto;
 }
 
 .daily-trend-draw-segment svg {
