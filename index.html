@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="static_site/vendor/semantic.min.css">
   <link rel="stylesheet" href="tools/style.css">
-  <link rel="stylesheet" href="static_site/styles.css?v=20260809-7">
+  <link rel="stylesheet" href="static_site/styles.css?v=20260809-8">
 </head>
 <body>
   <aside class="sidebar">
@@ -76,20 +76,44 @@
 
     <section id="mapPanel" class="panel chart-panel map-panel" data-panel="map">
       <header class="map-editorial-header">
-        <p class="map-kicker">Daily Electricity Atlas</p>
-        <h2><span id="mapEnergyLabel">Total</span> generation by country</h2>
-        <p class="map-summary-line">
-          <strong id="mapDateValue">-</strong>
-          <span aria-hidden="true">·</span>
-          <span><strong id="mapCountryCount">-</strong> reporting countries</span>
-          <span aria-hidden="true">·</span>
-          <span><strong id="mapTotalValue">-</strong> combined</span>
-        </p>
-        <p id="mapCoverageNote" class="map-note">-</p>
+        <div class="map-title-block">
+          <p class="map-kicker">Daily Electricity Atlas</p>
+          <h2><span id="mapEnergyLabel">Total</span> generation by country</h2>
+          <p id="mapCoverageNote" class="map-note">-</p>
+        </div>
+        <dl class="map-summary-list">
+          <div>
+            <dt>Date</dt>
+            <dd id="mapDateValue">-</dd>
+          </div>
+          <div>
+            <dt>Coverage</dt>
+            <dd><span id="mapCountryCount">-</span> countries</dd>
+          </div>
+          <div>
+            <dt>Combined</dt>
+            <dd id="mapTotalValue">-</dd>
+          </div>
+        </dl>
       </header>
+      <div id="mapChart" class="chart map-chart">
+        <div id="mapTooltip" class="map-tooltip" role="tooltip" hidden>
+          <div id="mapTooltipCountry" class="map-tooltip-country">-</div>
+          <div id="mapTooltipDate" class="map-tooltip-date">-</div>
+          <div class="map-tooltip-row">
+            <span id="mapTooltipMetric">Generation</span>
+            <strong id="mapTooltipValue">-</strong>
+          </div>
+        </div>
+      </div>
+      <div class="map-scale" aria-label="Color scale from lower to higher daily generation">
+        <span>Lower output</span>
+        <span class="map-scale-ramp" aria-hidden="true"></span>
+        <span>Higher output</span>
+      </div>
       <div class="map-timeline">
         <div class="map-timeline-heading">
-          <span>Timeline</span>
+          <span>Explore daily history</span>
           <output id="mapDateLabel" for="mapDateSlider">-</output>
         </div>
         <label class="map-date-control" for="mapDateSlider">
@@ -98,11 +122,12 @@
           <span id="mapDateEnd">-</span>
         </label>
       </div>
-      <div id="mapChart" class="chart map-chart"></div>
     </section>
   </main>
 
+  <script src="static_site/vendor/d3.min.js?v=7.9.0"></script>
+  <script src="static_site/vendor/topojson-client.min.js?v=3.1.0"></script>
   <script src="static_site/vendor/echarts.min.js?v=6.1.0"></script>
-  <script src="static_site/app.js?v=20260809-7"></script>
+  <script src="static_site/app.js?v=20260809-8"></script>
 </body>
 </html>

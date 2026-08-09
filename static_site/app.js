@@ -17,19 +17,33 @@ const PAGE_TITLES = {
   map: "Global Map"
 };
 
-const WORLD_MAP_NAME = "cmPowerWorld";
 const MAP_DESKTOP_CHART_HEIGHT = 600;
-const MAP_MOBILE_CHART_HEIGHT = 360;
+const MAP_MOBILE_CHART_HEIGHT = 250;
 const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
 const MAP_SCALE_COLORS = [
-  "#ebe7de",
-  "#d6dfd5",
-  "#aec8b8",
-  "#7faa98",
-  "#53877b",
-  "#326770",
-  "#244b5d",
-  "#192f43"
+  "#3158a5",
+  "#2f7fc1",
+  "#2da5bb",
+  "#5dbc91",
+  "#9dce68",
+  "#d6d957",
+  "#f1c54c",
+  "#f2a543",
+  "#ec733c",
+  "#dc4537",
+  "#b92732"
+];
+const MAP_NO_DATA_COLOR = "#d8d6ce";
+const MAP_COUNTRY_NAME_BY_ISO3 = {
+  USA: "United States",
+  CZE: "Czech Republic",
+  DOM: "Dominican Republic",
+  BIH: "Bosnia & Herz"
+};
+// Centroids from the project's published GeoJSON for countries omitted at 110m resolution.
+const MAP_POINT_COUNTRIES = [
+  { name: "Singapore", coordinates: [103.8198, 1.3521] },
+  { name: "Mauritius", coordinates: [57.5522, -20.3484] }
 ];
 const MONTH_INDEX = {
   Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
@@ -90,9 +104,11 @@ let scatterMetadata = null;
 let countryContinentMap = null;
 let scatterRuntime = null;
 let dailyTrendRuntime = null;
-let worldMapRegistered = false;
+let worldMapGeoJson = null;
+let mapRuntime = null;
 let renderSerial = 0;
 let mapUpdateSerial = 0;
+let mapSliderFrame = null;
 let scatterSelectedContinents = null;
 let scatterRevealRequested = false;
 let scatterSelectionTransitionActive = false;
@@ -119,7 +135,12 @@ const els = {
   mapEnergyLabel: document.getElementById("mapEnergyLabel"),
   mapCountryCount: document.getElementById("mapCountryCount"),
   mapTotalValue: document.getElementById("mapTotalValue"),
-  mapCoverageNote: document.getElementById("mapCoverageNote")
+  mapCoverageNote: document.getElementById("mapCoverageNote"),
+  mapTooltip: document.getElementById("mapTooltip"),
+  mapTooltipCountry: document.getElementById("mapTooltipCountry"),
+  mapTooltipDate: document.getElementById("mapTooltipDate"),
+  mapTooltipMetric: document.getElementById("mapTooltipMetric"),
+  mapTooltipValue: document.getElementById("mapTooltipValue")
 };
 
 function titleCase(value) {
@@ -1472,18 +1493,25 @@ function applyMapScaleValues(data) {
 }
 
 async function ensureWorldMap() {
-  if (worldMapRegistered) {
-    return;
+  if (worldMapGeoJson) {
+    return worldMapGeoJson;
   }
-  const geoJson = await fetchJson("static_site/world-countries.geojson");
-  const visibleGeoJson = {
-    ...geoJson,
-    features: (geoJson.features || []).filter((feature) => (
-      feature.properties?.name !== "Antarctica"
-    ))
+  if (typeof d3 === "undefined" || typeof topojson === "undefined") {
+    throw new Error("D3 map dependencies failed to load");
+  }
+
+  const atlasModule = await import("./vendor/world-countries-110m.mjs?v=1.0.0");
+  const topology = atlasModule.default;
+  const countries = topojson.feature(
+    topology,
+    topology.objects.features
+  ).features.filter((feature) => feature.properties?.id !== "ATA");
+
+  worldMapGeoJson = {
+    type: "FeatureCollection",
+    features: countries
   };
-  echarts.registerMap(WORLD_MAP_NAME, visibleGeoJson);
-  worldMapRegistered = true;
+  return worldMapGeoJson;
 }
 
 async function loadMapData(energyType) {
@@ -1566,110 +1594,227 @@ async function loadMapData(energyType) {
   return mapData;
 }
 
-function mapOptionForDate(entry, mapData) {
-  const compactMap = chartContainerWidth(els.mapChart) < 620;
-  return {
-    backgroundColor: DAILY_TREND_PAPER,
-    tooltip: {
-      trigger: "item",
-      confine: true,
-      backgroundColor: "rgba(245, 243, 238, 0.97)",
-      borderColor: DAILY_TREND_INK,
-      borderWidth: 1,
-      padding: [8, 10],
-      extraCssText: "box-shadow:0 10px 28px rgba(28,28,26,.14);border-radius:4px;",
-      textStyle: { color: DAILY_TREND_INK, fontSize: 11, lineHeight: 16 },
-      formatter: (params) => {
-        if (!params.data || !Number.isFinite(params.data.rawValue)) {
-          return [
-            `<div style="font-weight:700;margin-bottom:1px">${params.name}</div>`,
-            `<div style="color:#77746c;margin-bottom:4px">${entry.date}</div>`,
-            `<div>No CM Power data for this date</div>`
-          ].join("");
-        }
-        return [
-          `<div style="font-weight:700;margin-bottom:1px">${params.name}</div>`,
-          `<div style="color:#77746c;margin-bottom:4px">${entry.date}</div>`,
-          `<div style="display:grid;grid-template-columns:auto auto;column-gap:12px">`,
-          `<span>${titleCase(state.energy)}</span>`,
-          `<strong>${formatGwh(params.data.rawValue)}</strong>`,
-          `</div>`
-        ].join("");
+function formatMapTotal(value) {
+  if (!Number.isFinite(value)) {
+    return "-";
+  }
+  if (value >= 1000) {
+    return `${(value / 1000).toLocaleString(undefined, {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    })} TWh`;
+  }
+  return formatGwh(value);
+}
+
+function mapCountryName(feature) {
+  const properties = feature?.properties || {};
+  return MAP_COUNTRY_NAME_BY_ISO3[properties.id] || properties.name || properties.name_long || "Unknown";
+}
+
+function mapChartHeight(width = chartContainerWidth(els.mapChart)) {
+  if (width < 620) {
+    return MAP_MOBILE_CHART_HEIGHT;
+  }
+  return Math.min(
+    MAP_DESKTOP_CHART_HEIGHT,
+    Math.max(470, Math.round(width * 0.54))
+  );
+}
+
+function hideMapTooltip() {
+  if (els.mapTooltip) {
+    els.mapTooltip.hidden = true;
+  }
+}
+
+function positionMapTooltip(event) {
+  if (!els.mapTooltip || els.mapTooltip.hidden) {
+    return;
+  }
+  const chartRect = els.mapChart.getBoundingClientRect();
+  const tooltipRect = els.mapTooltip.getBoundingClientRect();
+  const gap = 14;
+  const inset = 8;
+  const pointerX = event.clientX - chartRect.left;
+  const pointerY = event.clientY - chartRect.top;
+  let left = pointerX + gap;
+  let top = pointerY - tooltipRect.height / 2;
+
+  if (left + tooltipRect.width > chartRect.width - inset) {
+    left = pointerX - tooltipRect.width - gap;
+  }
+  top = Math.max(inset, Math.min(top, chartRect.height - tooltipRect.height - inset));
+  left = Math.max(inset, Math.min(left, chartRect.width - tooltipRect.width - inset));
+
+  els.mapTooltip.style.left = `${left}px`;
+  els.mapTooltip.style.top = `${top}px`;
+}
+
+function showMapTooltip(event, countryName) {
+  if (!mapRuntime?.currentEntry || !els.mapTooltip) {
+    return;
+  }
+  const countryData = mapRuntime.valueByCountry.get(countryName);
+  els.mapTooltipCountry.textContent = countryName;
+  els.mapTooltipDate.textContent = mapRuntime.currentEntry.date;
+  els.mapTooltipMetric.textContent = countryData ? titleCase(state.energy) : "CM Power";
+  els.mapTooltipValue.textContent = countryData
+    ? formatGwh(countryData.rawValue)
+    : "No data";
+  els.mapTooltip.hidden = false;
+  positionMapTooltip(event);
+}
+
+function mapColorScale() {
+  const lastIndex = MAP_SCALE_COLORS.length - 1;
+  return d3.scaleLinear()
+    .domain(MAP_SCALE_COLORS.map((_, index) => (index / lastIndex) * 100))
+    .range(MAP_SCALE_COLORS)
+    .interpolate(d3.interpolateRgb.gamma(2.2))
+    .clamp(true);
+}
+
+function bindMapHover(selection, nameAccessor) {
+  selection
+    .on("pointerenter", (event, datum) => {
+      const target = event.currentTarget;
+      if (mapRuntime?.hoveredElement && mapRuntime.hoveredElement !== target) {
+        mapRuntime.hoveredElement.classList.remove("is-hovered");
       }
-    },
-    visualMap: {
-      type: "continuous",
-      min: 0,
-      max: 100,
-      orient: "horizontal",
-      left: "center",
-      bottom: compactMap ? 52 : 14,
-      itemWidth: 10,
-      itemHeight: compactMap ? 145 : 190,
-      calculable: false,
-      text: ["HIGH", "LOW"],
-      textGap: 8,
-      textStyle: {
-        color: DAILY_TREND_MUTED,
-        fontSize: 9,
-        fontWeight: 700
-      },
-      inRange: {
-        color: MAP_SCALE_COLORS
-      },
-      outOfRange: {
-        color: "#dedbd3"
+      if (mapRuntime) {
+        mapRuntime.hoveredElement = target;
       }
-    },
-    series: [{
-      name: titleCase(state.energy),
-      type: "map",
-      map: WORLD_MAP_NAME,
-      data: entry.data,
-      roam: true,
-      zoom: 1,
-      layoutCenter: ["50%", compactMap ? "43%" : "45%"],
-      layoutSize: compactMap ? "100%" : "170%",
-      selectedMode: false,
-      label: {
-        show: false
-      },
-      itemStyle: {
-        areaColor: "#dedbd3",
-        borderColor: DAILY_TREND_PAPER,
-        borderWidth: 0.8
-      },
-      emphasis: {
-        disabled: false,
-        label: { show: false },
-        itemStyle: {
-          areaColor: "#d98145",
-          borderColor: "#393833",
-          borderWidth: 0.9
-        }
+      d3.select(target).classed("is-hovered", true);
+      showMapTooltip(event, nameAccessor(datum));
+    })
+    .on("pointermove", (event) => positionMapTooltip(event))
+    .on("pointerleave", (event) => {
+      d3.select(event.currentTarget).classed("is-hovered", false);
+      if (mapRuntime?.hoveredElement === event.currentTarget) {
+        mapRuntime.hoveredElement = null;
       }
-    }]
+      hideMapTooltip();
+    });
+}
+
+function createMapRuntime(geoJson, width, height) {
+  d3.select(els.mapChart).selectAll("svg").remove();
+
+  const projection = d3.geoEqualEarth()
+    .fitExtent([[18, 14], [width - 18, height - 14]], { type: "Sphere" });
+  const path = d3.geoPath(projection);
+  const svg = d3.select(els.mapChart)
+    .insert("svg", ":first-child")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .attr("role", "img")
+    .attr("aria-label", "World map of daily electricity generation by country");
+
+  svg.append("title").text("Daily electricity generation by country");
+  svg.append("desc").text("Drag or zoom the map, move over a country to see its value, and use the date slider to explore history.");
+
+  const zoomLayer = svg.append("g").attr("class", "map-zoom-layer");
+  zoomLayer.append("path")
+    .attr("class", "map-sphere")
+    .attr("d", path({ type: "Sphere" }));
+
+  const countries = zoomLayer.append("g")
+    .attr("class", "map-country-layer")
+    .selectAll("path")
+    .data(geoJson.features, (feature) => feature.properties?.id)
+    .join("path")
+    .attr("class", "map-country")
+    .attr("d", path)
+    .attr("fill", MAP_NO_DATA_COLOR);
+
+  const markers = zoomLayer.append("g")
+    .attr("class", "map-marker-layer")
+    .selectAll("circle")
+    .data(MAP_POINT_COUNTRIES, (country) => country.name)
+    .join("circle")
+    .attr("class", "map-country-marker")
+    .attr("cx", (country) => projection(country.coordinates)?.[0] ?? -100)
+    .attr("cy", (country) => projection(country.coordinates)?.[1] ?? -100)
+    .attr("r", width < 620 ? 3.2 : 4)
+    .attr("fill", MAP_NO_DATA_COLOR);
+
+  bindMapHover(countries, mapCountryName);
+  bindMapHover(markers, (country) => country.name);
+
+  const zoom = d3.zoom()
+    .scaleExtent([1, 6])
+    .extent([[0, 0], [width, height]])
+    .translateExtent([[0, 0], [width, height]])
+    .on("start", () => {
+      hideMapTooltip();
+      svg.classed("is-dragging", true);
+    })
+    .on("zoom", (event) => {
+      zoomLayer.attr("transform", event.transform);
+    })
+    .on("end", () => {
+      svg.classed("is-dragging", false);
+    });
+  svg.call(zoom);
+
+  mapRuntime = {
+    width,
+    height,
+    svg,
+    projection,
+    countries,
+    markers,
+    colorScale: mapColorScale(),
+    currentEntry: null,
+    valueByCountry: new Map(),
+    hoveredElement: null
   };
 }
 
-function mapChartHeight() {
-  return chartContainerWidth(els.mapChart) < 620
-    ? MAP_MOBILE_CHART_HEIGHT
-    : MAP_DESKTOP_CHART_HEIGHT;
+async function drawMapForDate(entry, forceLayout = false) {
+  const geoJson = await ensureWorldMap();
+  const width = Math.max(280, chartContainerWidth(els.mapChart));
+  const height = mapChartHeight(width);
+  els.mapChart.style.height = `${height}px`;
+
+  const layoutChanged = !mapRuntime ||
+    mapRuntime.width !== width ||
+    mapRuntime.height !== height;
+  if (forceLayout || layoutChanged) {
+    createMapRuntime(geoJson, width, height);
+  }
+
+  const valueByCountry = new Map(entry.data.map((country) => [country.name, country]));
+  mapRuntime.currentEntry = entry;
+  mapRuntime.valueByCountry = valueByCountry;
+  mapRuntime.svg.attr(
+    "aria-label",
+    `${titleCase(state.energy)} electricity generation by country on ${entry.date}`
+  );
+  mapRuntime.countries.attr("fill", (feature) => {
+    const countryData = valueByCountry.get(mapCountryName(feature));
+    return countryData ? mapRuntime.colorScale(countryData.mapScale) : MAP_NO_DATA_COLOR;
+  });
+  mapRuntime.markers.attr("fill", (country) => {
+    const countryData = valueByCountry.get(country.name);
+    return countryData ? mapRuntime.colorScale(countryData.mapScale) : MAP_NO_DATA_COLOR;
+  });
+  hideMapTooltip();
 }
 
 function updateMapStats(entry) {
   els.mapEnergyLabel.textContent = titleCase(state.energy);
   els.mapDateValue.textContent = entry.date;
   els.mapCountryCount.textContent = entry.countryCount.toLocaleString();
-  els.mapTotalValue.textContent = formatGwh(entry.total);
+  els.mapTotalValue.textContent = formatMapTotal(entry.total);
   els.mapDateLabel.textContent = entry.date;
   const sliderMax = Math.max(1, Number(els.mapDateSlider.max));
   const progress = Math.max(0, Math.min(100, (state.mapDateIndex / sliderMax) * 100));
   els.mapDateSlider.style.setProperty("--map-progress", `${progress}%`);
 }
 
-async function updateMapForDate() {
+async function updateMapForDate(forceLayout = false) {
   const updateId = ++mapUpdateSerial;
   const mapData = await loadMapData(state.energy);
   if (updateId !== mapUpdateSerial) {
@@ -1682,27 +1827,11 @@ async function updateMapForDate() {
 
   updateMapStats(entry);
   els.mapDateSlider.value = String(state.mapDateIndex);
-
-  if (charts.map) {
-    const height = mapChartHeight();
-    els.mapChart.style.height = `${height}px`;
-    charts.map.setOption(mapOptionForDate(entry, mapData), true);
-    charts.map.resize({ height, silent: true });
-    chartRenderState.map = {
-      key: `${state.energy}|${entry.date}`,
-      width: chartContainerWidth(els.mapChart),
-      height
-    };
-    setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
-  } else {
-    setChart(
-      els.mapChart,
-      "map",
-      mapOptionForDate(entry, mapData),
-      mapChartHeight(),
-      `${state.energy}|${entry.date}`
-    );
+  await drawMapForDate(entry, forceLayout);
+  if (updateId !== mapUpdateSerial) {
+    return;
   }
+  setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
 }
 
 async function renderMapChart(renderId) {
@@ -1727,20 +1856,21 @@ async function renderMapChart(renderId) {
     els.mapDateStart.textContent = mapData.dates[0]?.date || "-";
     els.mapDateEnd.textContent = mapData.dates[latestIndex]?.date || "-";
     const entry = mapData.dates[state.mapDateIndex];
-    const renderKey = `${state.energy}|${entry.date}`;
     updateMapStats(entry);
     if (els.mapCoverageNote) {
-      els.mapCoverageNote.textContent = `Relative daily scale · No-data countries shown in gray · Latest complete coverage ${mapData.latestCompleteCoverageDate || "-"}`;
+      els.mapCoverageNote.textContent = `Log-scaled within each day · Gray means no data · Fullest coverage ${mapData.latestCompleteCoverageDate || "-"}`;
     }
     const status = `${titleCase(state.energy)} map / ${entry.date}`;
-    if (!reuseRenderedChart(els.mapChart, "map", renderKey)) {
-      setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), mapChartHeight(), renderKey);
+    await drawMapForDate(entry);
+    if (!isCurrentRender(renderId)) {
+      return;
     }
     setStatus(status);
   } catch (error) {
     if (!isCurrentRender(renderId)) {
       return;
     }
+    mapRuntime = null;
     showError(els.mapChart, error);
     setStatus("Global map failed");
   }
@@ -2740,8 +2870,11 @@ function bindEvents() {
 
   els.mapDateSlider.addEventListener("input", () => {
     state.mapDateIndex = Number(els.mapDateSlider.value);
-    if (state.tab === "map") {
-      updateMapForDate();
+    if (state.tab === "map" && mapSliderFrame === null) {
+      mapSliderFrame = window.requestAnimationFrame(() => {
+        mapSliderFrame = null;
+        updateMapForDate();
+      });
     }
   });
 
@@ -2751,14 +2884,12 @@ function bindEvents() {
     resizeTimer = window.setTimeout(() => {
       if (state.tab === "line" || state.tab === "scatter") {
         render();
+      } else if (state.tab === "map") {
+        updateMapForDate(true);
       } else {
-        const chartName = state.tab === "stacked" ? "stacked" : state.tab === "map" ? "map" : null;
+        const chartName = state.tab === "stacked" ? "stacked" : null;
         const chart = chartName ? charts[chartName] : null;
         if (chart && !chart.isDisposed()) {
-          if (chartName === "map") {
-            updateMapForDate();
-            return;
-          }
           chart.resize();
           if (chartRenderState[chartName]) {
             chartRenderState[chartName].width = chart.getWidth();
