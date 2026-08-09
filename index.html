@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="static_site/vendor/semantic.min.css">
   <link rel="stylesheet" href="tools/style.css">
-  <link rel="stylesheet" href="static_site/styles.css?v=20260809-6">
+  <link rel="stylesheet" href="static_site/styles.css?v=20260809-7">
 </head>
 <body>
   <aside class="sidebar">
@@ -75,31 +75,34 @@
     </section>
 
     <section id="mapPanel" class="panel chart-panel map-panel" data-panel="map">
-      <div class="map-toolbar">
-        <div class="map-stat">
-          <span class="map-stat-label">Date</span>
+      <header class="map-editorial-header">
+        <p class="map-kicker">Daily Electricity Atlas</p>
+        <h2><span id="mapEnergyLabel">Total</span> generation by country</h2>
+        <p class="map-summary-line">
           <strong id="mapDateValue">-</strong>
-        </div>
-        <div class="map-stat">
-          <span class="map-stat-label">Covered Countries</span>
-          <strong id="mapCountryCount">-</strong>
-        </div>
-        <div class="map-stat">
-          <span class="map-stat-label">Daily Generation</span>
-          <strong id="mapTotalValue">-</strong>
+          <span aria-hidden="true">·</span>
+          <span><strong id="mapCountryCount">-</strong> reporting countries</span>
+          <span aria-hidden="true">·</span>
+          <span><strong id="mapTotalValue">-</strong> combined</span>
+        </p>
+        <p id="mapCoverageNote" class="map-note">-</p>
+      </header>
+      <div class="map-timeline">
+        <div class="map-timeline-heading">
+          <span>Timeline</span>
+          <output id="mapDateLabel" for="mapDateSlider">-</output>
         </div>
         <label class="map-date-control" for="mapDateSlider">
-          <span>Date</span>
+          <span id="mapDateStart">-</span>
           <input id="mapDateSlider" type="range" min="0" max="0" value="0" step="1">
-          <output id="mapDateLabel" for="mapDateSlider">-</output>
+          <span id="mapDateEnd">-</span>
         </label>
-        <p id="mapCoverageNote" class="map-note">-</p>
       </div>
       <div id="mapChart" class="chart map-chart"></div>
     </section>
   </main>
 
   <script src="static_site/vendor/echarts.min.js?v=6.1.0"></script>
-  <script src="static_site/app.js?v=20260809-6"></script>
+  <script src="static_site/app.js?v=20260809-7"></script>
 </body>
 </html>

@@ -18,20 +18,18 @@ const PAGE_TITLES = {
 };
 
 const WORLD_MAP_NAME = "cmPowerWorld";
-const MAP_CHART_HEIGHT = 560;
+const MAP_DESKTOP_CHART_HEIGHT = 600;
+const MAP_MOBILE_CHART_HEIGHT = 360;
 const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
 const MAP_SCALE_COLORS = [
-  "#f7fbff",
-  "#d8eef5",
-  "#9ed2e1",
-  "#61abc5",
-  "#c9dfbb",
-  "#fff0a8",
-  "#f3c369",
-  "#e58a4f",
-  "#d85b4f",
-  "#b93643",
-  "#7f1f2d"
+  "#ebe7de",
+  "#d6dfd5",
+  "#aec8b8",
+  "#7faa98",
+  "#53877b",
+  "#326770",
+  "#244b5d",
+  "#192f43"
 ];
 const MONTH_INDEX = {
   Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
@@ -116,6 +114,9 @@ const els = {
   mapDateSlider: document.getElementById("mapDateSlider"),
   mapDateLabel: document.getElementById("mapDateLabel"),
   mapDateValue: document.getElementById("mapDateValue"),
+  mapDateStart: document.getElementById("mapDateStart"),
+  mapDateEnd: document.getElementById("mapDateEnd"),
+  mapEnergyLabel: document.getElementById("mapEnergyLabel"),
   mapCountryCount: document.getElementById("mapCountryCount"),
   mapTotalValue: document.getElementById("mapTotalValue"),
   mapCoverageNote: document.getElementById("mapCoverageNote")
@@ -1475,7 +1476,13 @@ async function ensureWorldMap() {
     return;
   }
   const geoJson = await fetchJson("static_site/world-countries.geojson");
-  echarts.registerMap(WORLD_MAP_NAME, geoJson);
+  const visibleGeoJson = {
+    ...geoJson,
+    features: (geoJson.features || []).filter((feature) => (
+      feature.properties?.name !== "Antarctica"
+    ))
+  };
+  echarts.registerMap(WORLD_MAP_NAME, visibleGeoJson);
   worldMapRegistered = true;
 }
 
@@ -1560,50 +1567,58 @@ async function loadMapData(energyType) {
 }
 
 function mapOptionForDate(entry, mapData) {
+  const compactMap = chartContainerWidth(els.mapChart) < 620;
   return {
-    backgroundColor: "#f7faf9",
+    backgroundColor: DAILY_TREND_PAPER,
     tooltip: {
       trigger: "item",
       confine: true,
-      borderWidth: 0,
-      backgroundColor: "rgba(30, 39, 38, 0.92)",
-      textStyle: { color: "#ffffff" },
+      backgroundColor: "rgba(245, 243, 238, 0.97)",
+      borderColor: DAILY_TREND_INK,
+      borderWidth: 1,
+      padding: [8, 10],
+      extraCssText: "box-shadow:0 10px 28px rgba(28,28,26,.14);border-radius:4px;",
+      textStyle: { color: DAILY_TREND_INK, fontSize: 11, lineHeight: 16 },
       formatter: (params) => {
         if (!params.data || !Number.isFinite(params.data.rawValue)) {
           return [
-            `<strong>${params.name}</strong>`,
-            entry.date,
-            "No CM Power data for this date"
-          ].join("<br>");
+            `<div style="font-weight:700;margin-bottom:1px">${params.name}</div>`,
+            `<div style="color:#77746c;margin-bottom:4px">${entry.date}</div>`,
+            `<div>No CM Power data for this date</div>`
+          ].join("");
         }
         return [
-          `<strong>${params.name}</strong>`,
-          entry.date,
-          `${titleCase(state.energy)}: ${formatGwh(params.data.rawValue)}`
-        ].join("<br>");
+          `<div style="font-weight:700;margin-bottom:1px">${params.name}</div>`,
+          `<div style="color:#77746c;margin-bottom:4px">${entry.date}</div>`,
+          `<div style="display:grid;grid-template-columns:auto auto;column-gap:12px">`,
+          `<span>${titleCase(state.energy)}</span>`,
+          `<strong>${formatGwh(params.data.rawValue)}</strong>`,
+          `</div>`
+        ].join("");
       }
     },
     visualMap: {
       type: "continuous",
       min: 0,
       max: 100,
-      left: 24,
-      bottom: 26,
-      itemWidth: 12,
-      itemHeight: 128,
+      orient: "horizontal",
+      left: "center",
+      bottom: compactMap ? 52 : 14,
+      itemWidth: 10,
+      itemHeight: compactMap ? 145 : 190,
       calculable: false,
-      text: ["High", "Low"],
-      textGap: 10,
+      text: ["HIGH", "LOW"],
+      textGap: 8,
       textStyle: {
-        color: "#53625f",
-        fontSize: 11,
+        color: DAILY_TREND_MUTED,
+        fontSize: 9,
         fontWeight: 700
       },
       inRange: {
         color: MAP_SCALE_COLORS
       },
       outOfRange: {
-        color: "#d9dfdc"
+        color: "#dedbd3"
       }
     },
     series: [{
@@ -1613,37 +1628,45 @@ function mapOptionForDate(entry, mapData) {
       data: entry.data,
       roam: true,
       zoom: 1,
-      top: 18,
-      left: 28,
-      right: 28,
-      bottom: 18,
+      layoutCenter: ["50%", compactMap ? "43%" : "45%"],
+      layoutSize: compactMap ? "100%" : "170%",
       selectedMode: false,
       label: {
         show: false
       },
       itemStyle: {
-        areaColor: "#d9dfdc",
-        borderColor: "rgba(24, 32, 30, 0.42)",
-        borderWidth: 0.58
+        areaColor: "#dedbd3",
+        borderColor: DAILY_TREND_PAPER,
+        borderWidth: 0.8
       },
       emphasis: {
         disabled: false,
         label: { show: false },
         itemStyle: {
-          areaColor: "#f1c66d",
-          borderColor: "rgba(24, 32, 30, 0.7)",
-          borderWidth: 0.85
+          areaColor: "#d98145",
+          borderColor: "#393833",
+          borderWidth: 0.9
         }
       }
     }]
   };
 }
 
+function mapChartHeight() {
+  return chartContainerWidth(els.mapChart) < 620
+    ? MAP_MOBILE_CHART_HEIGHT
+    : MAP_DESKTOP_CHART_HEIGHT;
+}
+
 function updateMapStats(entry) {
+  els.mapEnergyLabel.textContent = titleCase(state.energy);
   els.mapDateValue.textContent = entry.date;
   els.mapCountryCount.textContent = entry.countryCount.toLocaleString();
   els.mapTotalValue.textContent = formatGwh(entry.total);
   els.mapDateLabel.textContent = entry.date;
+  const sliderMax = Math.max(1, Number(els.mapDateSlider.max));
+  const progress = Math.max(0, Math.min(100, (state.mapDateIndex / sliderMax) * 100));
+  els.mapDateSlider.style.setProperty("--map-progress", `${progress}%`);
 }
 
 async function updateMapForDate() {
@@ -1661,11 +1684,14 @@ async function updateMapForDate() {
   els.mapDateSlider.value = String(state.mapDateIndex);
 
   if (charts.map) {
+    const height = mapChartHeight();
+    els.mapChart.style.height = `${height}px`;
     charts.map.setOption(mapOptionForDate(entry, mapData), true);
+    charts.map.resize({ height, silent: true });
     chartRenderState.map = {
       key: `${state.energy}|${entry.date}`,
       width: chartContainerWidth(els.mapChart),
-      height: MAP_CHART_HEIGHT
+      height
     };
     setStatus(`${titleCase(state.energy)} map / ${entry.date}`);
   } else {
@@ -1673,7 +1699,7 @@ async function updateMapForDate() {
       els.mapChart,
       "map",
       mapOptionForDate(entry, mapData),
-      MAP_CHART_HEIGHT,
+      mapChartHeight(),
       `${state.energy}|${entry.date}`
     );
   }
@@ -1698,15 +1724,17 @@ async function renderMapChart(renderId) {
 
     els.mapDateSlider.max = String(latestIndex);
     els.mapDateSlider.value = String(state.mapDateIndex);
+    els.mapDateStart.textContent = mapData.dates[0]?.date || "-";
+    els.mapDateEnd.textContent = mapData.dates[latestIndex]?.date || "-";
     const entry = mapData.dates[state.mapDateIndex];
     const renderKey = `${state.energy}|${entry.date}`;
     updateMapStats(entry);
     if (els.mapCoverageNote) {
-      els.mapCoverageNote.textContent = `Relative color scale within the selected date. No-data countries are gray. Latest complete coverage: ${mapData.latestCompleteCoverageDate || "-"}.`;
+      els.mapCoverageNote.textContent = `Relative daily scale · No-data countries shown in gray · Latest complete coverage ${mapData.latestCompleteCoverageDate || "-"}`;
     }
     const status = `${titleCase(state.energy)} map / ${entry.date}`;
     if (!reuseRenderedChart(els.mapChart, "map", renderKey)) {
-      setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), MAP_CHART_HEIGHT, renderKey);
+      setChart(els.mapChart, "map", mapOptionForDate(entry, mapData), mapChartHeight(), renderKey);
     }
     setStatus(status);
   } catch (error) {
@@ -2727,6 +2755,10 @@ function bindEvents() {
         const chartName = state.tab === "stacked" ? "stacked" : state.tab === "map" ? "map" : null;
         const chart = chartName ? charts[chartName] : null;
         if (chart && !chart.isDisposed()) {
+          if (chartName === "map") {
+            updateMapForDate();
+            return;
+          }
           chart.resize();
           if (chartRenderState[chartName]) {
             chartRenderState[chartName].width = chart.getWidth();
