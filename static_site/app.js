@@ -46,7 +46,7 @@ const DAILY_TREND_PAPER = "#f5f3ee";
 const DAILY_TREND_INK = "#1c1c1a";
 const DAILY_TREND_MUTED = "#77746c";
 const DAILY_TREND_GRID = "#dedbd3";
-const DAILY_TREND_INACTIVE_COLOR = "#d1cec6";
+const DAILY_TREND_INACTIVE_COLOR = "#8c8981";
 const DAILY_TREND_DRAW_DURATION = 1100;
 const CONTINENT_SCATTER_COLORS = {
   Africa: "#5070dd",
@@ -571,9 +571,13 @@ function styledDailyTrendLegendItems(items) {
     const name = typeof item === "string" ? item : item.name;
     return {
       ...(typeof item === "string" ? { name } : item),
-      icon: "roundRect"
+      icon: "none"
     };
   });
+}
+
+function dailyTrendLegendSwatchToken(name) {
+  return `dailySwatch${String(name).replace(/\W/g, "")}`;
 }
 
 function dailyTrendLegendYearToken(name) {
@@ -581,20 +585,29 @@ function dailyTrendLegendYearToken(name) {
 }
 
 function dailyTrendLegendFormatter(name) {
-  return `{${dailyTrendLegendYearToken(name)}|${name}}`;
+  return `{${dailyTrendLegendSwatchToken(name)}| }{${dailyTrendLegendYearToken(name)}|${name}}`;
 }
 
 function dailyTrendLegendRichStyles(yearColors, selected = {}) {
-  return Object.fromEntries(Object.entries(yearColors).map(([name, color]) => {
+  const styles = {};
+  Object.entries(yearColors).forEach(([name, color]) => {
     const isSelected = dailyTrendYearSelected(selected, name);
-    return [dailyTrendLegendYearToken(name), {
+    styles[dailyTrendLegendSwatchToken(name)] = {
+      width: 24,
+      height: isSelected ? 4 : 1,
+      verticalAlign: "middle",
+      backgroundColor: isSelected ? color : DAILY_TREND_INACTIVE_COLOR,
+      borderRadius: isSelected ? 2 : 0
+    };
+    styles[dailyTrendLegendYearToken(name)] = {
       color: isSelected
-        ? interpolateDailyTrendColor(color, DAILY_TREND_INK, 0.1)
-        : interpolateDailyTrendColor(color, DAILY_TREND_PAPER, 0.66),
-      fontWeight: isSelected ? 800 : 500,
-      padding: [2, 3, 2, 3]
-    }];
-  }));
+        ? interpolateDailyTrendColor(color, DAILY_TREND_INK, 0.22)
+        : DAILY_TREND_INACTIVE_COLOR,
+      fontWeight: 600,
+      padding: [2, 3, 2, 6]
+    };
+  });
+  return styles;
 }
 
 function prepareDailyTrendRuntime(chart, option) {
@@ -1155,8 +1168,8 @@ function applyDailyTrendTheme(option) {
     option.legend.left = "center";
     option.legend.top = 52;
     option.legend.icon = "roundRect";
-    option.legend.itemWidth = 24;
-    option.legend.itemHeight = 2;
+    option.legend.itemWidth = 0;
+    option.legend.itemHeight = 0;
     option.legend.itemGap = 14;
     option.legend.borderWidth = 0;
     option.legend.borderRadius = 0;
