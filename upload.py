@@ -10,7 +10,37 @@ from pathlib import Path
 from html import escape
 from urllib.parse import urlparse
 
-global_path = '/data/xuanrenSong/CM_Power_Website'
+
+PROJECT_ROOT = Path(__file__).resolve().parent
+POWER_DATABASE_CANDIDATES = (
+    Path('/data3/dengz/CM_Power_Database'),
+    Path('/data/xuanrenSong/CM_Power_Database'),
+)
+POWER_DATA_RELATIVE_PATH = Path('data/global/Global_PM_corT.csv')
+IEA_DATA_RELATIVE_PATH = Path('data/other_database/iea/iea_cleaned.csv')
+
+
+def resolve_power_database_root():
+    configured_root = os.environ.get('CM_POWER_DATABASE_ROOT')
+    if configured_root:
+        return Path(configured_root).expanduser().resolve()
+
+    return next(
+        (
+            candidate
+            for candidate in POWER_DATABASE_CANDIDATES
+            if (candidate / POWER_DATA_RELATIVE_PATH).is_file()
+            and (candidate / IEA_DATA_RELATIVE_PATH).is_file()
+        ),
+        POWER_DATABASE_CANDIDATES[0],
+    )
+
+
+POWER_DATABASE_ROOT = resolve_power_database_root()
+POWER_DATA_FILE = POWER_DATABASE_ROOT / POWER_DATA_RELATIVE_PATH
+IEA_DATA_FILE = POWER_DATABASE_ROOT / IEA_DATA_RELATIVE_PATH
+
+global_path = str(PROJECT_ROOT)
 file_path = os.path.join(global_path, 'data')
 tools_path = os.path.join(global_path, 'tools')
 data_description_path = os.path.join(tools_path, 'data_description')
@@ -25,6 +55,7 @@ categories = {
 }
 
 sub_category = ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables']
+BASE_ENERGY_TYPES = ['coal', 'gas', 'hydro', 'nuclear', 'oil', 'other', 'solar', 'wind']
 NON_COUNTRY_AGGREGATES = {'EU27&UK'}
 
 GENERATED_OUTPUTS = [
@@ -71,14 +102,132 @@ CONTINENT_COLORS = {
 
 
 def main():
-    # 先更新数据
+    # auto.sh 会在启动 Python 前拉取 source；这里仍保护手动运行。
+    ensure_clean_git_index(global_path)
     process_data()
-    # 上传
     git_push(global_path)
 
 
+def prepare_runtime_paths():
+    required_files = {
+        'CM Power global data': POWER_DATA_FILE,
+        'IEA comparison data': IEA_DATA_FILE,
+        'website country metadata': Path(file_path) / 'data_description.csv',
+        'EU country list': Path(tools_path) / 'eu_countries.txt',
+    }
+    missing_files = [
+        f'{label}: {path}'
+        for label, path in required_files.items()
+        if not path.is_file()
+    ]
+    if missing_files:
+        details = '\n'.join(f'- {item}' for item in missing_files)
+        raise FileNotFoundError(
+            'Required website inputs are missing:\n'
+            f'{details}\n'
+            'Set CM_POWER_DATABASE_ROOT to the local CM_Power_Database directory if needed.'
+        )
+
+    for output_directory in (
+        Path(file_path),
+        Path(data_description_path),
+        Path(line_path),
+        Path(stacked_area_path),
+    ):
+        output_directory.mkdir(parents=True, exist_ok=True)
+
+
+def retain_cached_country_coverage(dataframe):
+    cache_path = Path(file_path) / 'data_for_download.csv.gz'
+    if not cache_path.is_file():
+        return dataframe
+
+    metadata_countries = set(
+        pd.read_csv(
+            os.path.join(file_path, 'data_description.csv'),
+            usecols=['country'],
+        )['country']
+    )
+    current_base = dataframe[dataframe['type'].isin(BASE_ENERGY_TYPES)].copy()
+    key_columns = ['country', 'date', 'type']
+    current_coverage = pd.MultiIndex.from_frame(current_base[key_columns])
+    retained_chunks = []
+
+    for chunk in pd.read_csv(
+        cache_path,
+        encoding='utf_8_sig',
+        parse_dates=['date'],
+        chunksize=200_000,
+    ):
+        cached_base = chunk[chunk['type'].isin(BASE_ENERGY_TYPES)]
+        cached_coverage = pd.MultiIndex.from_frame(cached_base[key_columns])
+        keep_rows = (
+            cached_base['country'].isin(metadata_countries)
+            & ~cached_coverage.isin(current_coverage)
+        )
+        if keep_rows.any():
+            retained_chunks.append(cached_base.loc[keep_rows, dataframe.columns])
+
+    if not retained_chunks:
+        return dataframe
+
+    retained = pd.concat(retained_chunks, ignore_index=True)
+    combined_base = pd.concat([current_base, retained], ignore_index=True)
+    combined_base = combined_base.drop_duplicates(key_columns, keep='first')
+    retained_countries = ', '.join(sorted(retained['country'].unique()))
+    print(
+        f'Retained {len(retained):,} cached base-energy rows for country-date-type coverage '
+        f'missing from the current upstream input: {retained_countries}'
+    )
+
+    # Recalculate derived types after filling missing base-energy keys. Keeping cached
+    # total/fossil/renewables directly could preserve totals that disagree with newer
+    # upstream base values on the same date.
+    wide = combined_base.pivot(
+        index=['date', 'country', 'year'],
+        columns='type',
+        values='value',
+    ).reset_index()
+    for energy_type in BASE_ENERGY_TYPES:
+        if energy_type not in wide:
+            wide[energy_type] = float('nan')
+    wide['total'] = wide[BASE_ENERGY_TYPES].sum(axis=1)
+    wide = wide[wide['total'] != 0].reset_index(drop=True)
+    wide['fossil'] = wide[['coal', 'gas', 'oil']].sum(axis=1)
+    wide['renewables'] = wide[['hydro', 'other', 'solar', 'wind']].sum(axis=1)
+
+    return wide.set_index(['date', 'country', 'year'])[
+        sub_category
+    ].stack().reset_index().rename(
+        columns={'level_3': 'type', 0: 'value'}
+    ).sort_values(['country', 'date', 'type']).reset_index(drop=True)
+
+
+def retain_cached_comparison_coverage(dataframe):
+    cache_path = Path(file_path) / 'data_for_scatter_plot.csv'
+    if not cache_path.is_file():
+        return dataframe
+
+    cached = pd.read_csv(cache_path, encoding='utf_8_sig')
+    key_columns = ['year', 'month', 'country', 'type']
+    current_keys = pd.MultiIndex.from_frame(dataframe[key_columns])
+    cached_keys = pd.MultiIndex.from_frame(cached[key_columns])
+    retained = cached.loc[~cached_keys.isin(current_keys), dataframe.columns]
+    if retained.empty:
+        return dataframe
+
+    print(
+        f'Retained {len(retained):,} cached IEA comparison rows for keys '
+        'missing from the current upstream inputs.'
+    )
+    return pd.concat([dataframe, retained], ignore_index=True).sort_values(
+        key_columns
+    ).reset_index(drop=True)
+
+
 def process_data():
-    df = pd.read_csv('/data/xuanrenSong/CM_Power_Database/data/global/Global_PM_corT.csv')
+    prepare_runtime_paths()
+    df = pd.read_csv(POWER_DATA_FILE)
 
     df['date'] = pd.to_datetime(df['date'], format='%d/%m/%Y')
     df = pd.pivot_table(df, index=['country', 'date'], values='value', columns='sector').reset_index()
@@ -90,6 +239,7 @@ def process_data():
 
     df['country'] = df['country'].replace({
         'EU27 & UK': 'EU27&UK',
+        'Bosnia And Herz.': 'Bosnia & Herz',
         'UK': 'United Kingdom',
         'US': 'United States',
     })
@@ -98,6 +248,7 @@ def process_data():
 
     df['year'] = df['date'].dt.year
     df = df.set_index(['date', 'country', 'year']).stack().reset_index().rename(columns={'level_3': 'type', 0: 'value'})
+    df = retain_cached_country_coverage(df)
 
     # 生成7日平滑数据
     df_7mean = df.copy()
@@ -128,6 +279,7 @@ def process_data():
     df = load_power_data(df)
     df_iea = load_iea_data()
     df_filtered = prepare_comparison_data(df, df_iea)
+    df_filtered = retain_cached_comparison_coverage(df_filtered)
 
     df_filtered.to_csv(os.path.join(file_path, 'data_for_scatter_plot.csv'), index=False, encoding='utf_8_sig')
     write_iea_compare_metadata(df_daily, df_iea, df_filtered)
@@ -158,7 +310,7 @@ def process_data_description(dataframe):
         df['type'] = selected_energy
 
         # 读取国家信息
-        data_description = pd.read_csv('/data/xuanrenSong/CM_Power_Website/data/data_description.csv')
+        data_description = pd.read_csv(os.path.join(file_path, 'data_description.csv'))
 
         data_description['starting_date'] = pd.to_datetime(data_description['starting_date']).dt.strftime('%Y-%b')
 
@@ -175,7 +327,7 @@ def process_data_description(dataframe):
             # 按照值的大小排序
             df_continent = df_continent.sort_values(by='year_to_date_sum', ascending=False).reset_index(drop=True)
 
-            view_details_list = ["", """style="display: none;" """]
+            view_details_list = ["", 'style="display: none;"']
 
             for view_details in view_details_list:
                 html_content = get_scorecard(df_continent, view_details)
@@ -605,7 +757,7 @@ def load_power_data(df):
 
 
 def load_iea_data():
-    df_iea = pd.read_csv('/data/xuanrenSong/CM_Power_Database/data/other_database/iea/iea_cleaned.csv')
+    df_iea = pd.read_csv(IEA_DATA_FILE)
     country_replacements = {
         'Republic of Turkiye': 'Turkey',
         'Slovak Republic': 'Slovakia',
@@ -644,14 +796,21 @@ def latest_month_label(dataframe):
 
 
 def write_iea_compare_metadata(df_power_daily, df_iea, df_compare):
+    metadata_path = os.path.join(file_path, 'iea_compare_metadata.json')
+    cached_iea_latest_month = ''
+    if os.path.isfile(metadata_path):
+        with open(metadata_path, 'r', encoding='utf-8') as file:
+            cached_iea_latest_month = json.load(file).get('iea_latest_month', '')
+
+    current_iea_latest_month = latest_month_label(df_iea)
     metadata = {
         'cm_power_latest_date': pd.to_datetime(df_power_daily['date']).max().strftime('%Y-%m-%d'),
-        'iea_latest_month': latest_month_label(df_iea),
+        'iea_latest_month': max(current_iea_latest_month, cached_iea_latest_month),
         'comparison_latest_month': latest_month_label(df_compare),
         'unit': 'TWh'
     }
 
-    with open(os.path.join(file_path, 'iea_compare_metadata.json'), 'w', encoding='utf-8') as file:
+    with open(metadata_path, 'w', encoding='utf-8') as file:
         json.dump(metadata, file, ensure_ascii=False, indent=2)
 
 
@@ -678,6 +837,13 @@ def git_has_staged_changes(repo_path):
         message = result.stderr.strip()
         raise RuntimeError(f"git diff --cached --quiet failed: {message}")
     return result.returncode == 1
+
+
+def ensure_clean_git_index(repo_path):
+    if git_has_staged_changes(repo_path):
+        raise RuntimeError(
+            'Refusing to update website data while the Git index already contains staged changes.'
+        )
 
 
 def git_tracks_path(repo_path, relative_path):
@@ -756,9 +922,6 @@ def deploy_to_github_pages(repo_path, commit_message):
 def git_push(repo_path, commit_message=None):
     commit_message = commit_message or f"Update website data {datetime.now():%Y-%m-%d}"
 
-    # 只允许快进更新，避免自动任务在冲突时生成合并提交。
-    run_git(repo_path, ['pull', '--ff-only'])
-
     # 只提交网站需要的生成产物，避免日志、缓存、wandb 等脏文件进入仓库。
     git_add_generated_outputs(repo_path)
 
@@ -766,7 +929,7 @@ def git_push(repo_path, commit_message=None):
         run_git(repo_path, ['commit', '-m', commit_message])
         current_branch = run_git(repo_path, ['rev-parse', '--abbrev-ref', 'HEAD'])
         run_git(repo_path, ['push', 'origin', current_branch])
-        print("Website data changes pulled, committed, and pushed successfully.")
+        print("Website data changes committed and pushed successfully.")
     else:
         print("No website data changes to commit.")
 
@@ -943,7 +1106,7 @@ def get_scorecard(df, view_details):
                     <div class="meta"><i class="calendar alternate outline icon"></i> Updated to: {row['max_date'].strftime("%Y-%m-%d")}</div>
                     <div class="meta"><i class="edit icon"></i> Data Since: {starting_date}</div>
                 </div>
-                <div class="extra content" {view_details}> 
+                <div class="extra content" {view_details}>
                     <div class="meta"><i class="history icon"></i> Time Resolution: {resolution}</div>
                     <div class="meta"><i class="calendar times outline icon"></i> Update Frequency: {update_frequency}</div>
                     <div class="meta"><i class="th icon"></i> Region Data Availability: {region_data}</div>

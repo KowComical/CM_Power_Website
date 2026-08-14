@@ -4,6 +4,16 @@
 
 日期写在 `## YYYY-MM-DD` 标题中；同一天内有多条更新时，必须在日期标题下用 `### HH:MM - 更新标题` 分隔。条目正文不再重复日期和时间。
 
+## 2026-08-15
+
+### 01:36 - 将网站日更与部署链路迁移到 gpu104
+
+- 更新内容：从 GitHub `master` 恢复中断迁移缺失的 Git 元数据和 186 个静态/生成资产，保留本机尚未提交的巴拿马更新记录；将项目根改为脚本位置自动解析，将电力数据库根改为 `CM_POWER_DATABASE_ROOT` 可配置并默认接入 `/data3/dengz/CM_Power_Database`，同时兼容 cm47 旧路径并增加四类运行输入预检。重写 `auto.sh` 的解释器选择、项目内日志/缓存和 `flock` 退出码处理，不再覆盖 `HOME`，真实任务失败会保留非零状态且并发任务不会截断日志。建立项目专用 Python 3.10 环境，并为 `pandas==2.1.1` 增加 `numpy<2` 兼容约束。
+- 数据连续性：本机 Global 输入最新到 2026-08-14，但相对公开站缺少 Canada、Kenya、Mauritius、Mongolia、Panama、Taiwan，且 China、South Africa 等存在部分 country-date-type 缺口。生成器现以当前上游为准，并从上一版下载数据中回填仍在国家元数据表登记、但当前上游缺失的基础能源键，再重新计算派生总量；同步规范化 `Bosnia And Herz.` 为 `Bosnia & Herz`。本机 IEA 源只到 2025-12，因此 IEA Compare 也从上一版产物回填当前输入缺失的 year-month-country-type 键并保留已发布的 2026-03 月份标记，避免迁移造成国家、能源类型或历史月份回退。
+- Git 与调度：将 origin 切换为本机已认证的 GitHub SSH 地址，补齐浅克隆的全部 heads refspec 与 `origin/gh-pages` 最新引用；`auto.sh` 会在 Python 加载生成器前先取得全链路锁、拒绝已有 staged 内容并执行 fast-forward-only source 同步，再生成和发布，避免使用旧生成器产出。在用户 crontab 安装每日 03:30（Asia/Shanghai）任务，显式绑定本机数据根和项目 `.venv`；该时刻较 02:00 上游定时任务近期最晚完成时间留有约 43 分钟缓冲。
+- 验证：项目专用环境为 Python 3.10.13、NumPy 1.26.4、Pandas 2.1.1，`pip check`、`bash -n auto.sh`、`py_compile`、`node --check static_site/app.js` 和 `git diff --check` 通过；故障演练确认 Python 依赖预检会记录阶段、主任务非零退出码会原样传递。`process_data()` 使用本机 1,301,335 行 Global 输入完整运行三次，最终下载数据为 2,078,208 行、70 个国家、11 类能源、无重复 date-country-type、无 `Generation` 行，最新日期 2026-08-14；2026-08-13 公开版的 2,044,220 个下载数据键和 42,801 个 IEA Compare 键全部保留，新增 33,988 个下载数据键，IEA/对比最新月份均保持 2026-03。154 个 Overview HTML、11 个趋势 JSON、3 个堆叠 JSON 均通过解析和数量检查。
+- 影响路径：`.git/`、`.gitignore`、`.venv/`（忽略）、用户 crontab、`AGENTS.md`、`README.md`、`UPDATE_LOG.md`、`auto.sh`、`requirements.txt`、`upload.py`、`data/data_for_download.csv.gz`、`data/data_for_scatter_plot.csv`、`data/iea_compare_metadata.json`、`tools/data_description/`、`tools/line_chart/`、`tools/stacked_area_chart/`。
+
 ## 2026-08-09
 
 ### 19:38 - 将 Global Map 重构为 D3 SVG 世界地图
@@ -109,6 +119,11 @@
 - 影响路径：`data/data_description.csv`、`UPDATE_LOG.md`
 
 ## 2026-07-17
+
+### 16:53 - 新增巴拿马国家数据说明
+
+- 更新内容：在网站国家数据说明表中新增巴拿马记录，标注数据源为 CND、洲别为 North America、网站数据时间分辨率为 Hourly、更新频率为 Daily、具有电厂级数据、起始日期为 2019-01-01。官方 Posdespacho 原始数据为 15 分钟分辨率；具体覆盖缺口、处理流程和风险记录在 CM_Power_Database 项目的 `data_description.md` 与 `UPDATE_LOG.md` 中。
+- 影响路径：`data/data_description.csv`、`UPDATE_LOG.md`
 
 ### 13:31 - 新增哥伦比亚国家数据说明
 
