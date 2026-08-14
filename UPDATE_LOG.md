@@ -14,6 +14,11 @@
 - 验证：项目专用环境为 Python 3.10.13、NumPy 1.26.4、Pandas 2.1.1，`pip check`、`bash -n auto.sh`、`py_compile`、`node --check static_site/app.js` 和 `git diff --check` 通过；故障演练确认 Python 依赖预检会记录阶段、主任务非零退出码会原样传递。`process_data()` 使用本机 1,301,335 行 Global 输入完整运行三次，最终下载数据为 2,078,208 行、70 个国家、11 类能源、无重复 date-country-type、无 `Generation` 行，最新日期 2026-08-14；2026-08-13 公开版的 2,044,220 个下载数据键和 42,801 个 IEA Compare 键全部保留，新增 33,988 个下载数据键，IEA/对比最新月份均保持 2026-03。154 个 Overview HTML、11 个趋势 JSON、3 个堆叠 JSON 均通过解析和数量检查。
 - 影响路径：`.git/`、`.gitignore`、`.venv/`（忽略）、用户 crontab、`AGENTS.md`、`README.md`、`UPDATE_LOG.md`、`auto.sh`、`requirements.txt`、`upload.py`、`data/data_for_download.csv.gz`、`data/data_for_scatter_plot.csv`、`data/iea_compare_metadata.json`、`tools/data_description/`、`tools/line_chart/`、`tools/stacked_area_chart/`。
 
+### 02:25 - 暂停本机网站日更定时任务
+
+- 更新内容：按要求暂停 gpu104 上的 CM_Power_Website 每日自动更新，将原 03:30 crontab 调度行保留为注释，便于后续按指令恢复；其他项目的定时任务未改动。回读 crontab 确认网站已无活动调度行，同时确认当前没有 `auto.sh` 或 `upload.py` 进程在运行。
+- 影响路径：用户 crontab、`UPDATE_LOG.md`。
+
 ## 2026-08-09
 
 ### 19:38 - 将 Global Map 重构为 D3 SVG 世界地图
