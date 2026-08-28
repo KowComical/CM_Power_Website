@@ -316,6 +316,9 @@ def process_data_description(dataframe):
 
         df = pd.merge(df, data_description)
 
+        china_dates = df.loc[df['country'] == 'China', 'max_date']
+        cutoff_date = china_dates.max() if not china_dates.empty else df['max_date'].max()
+
         # 筛选大洲
         continent_list = ['Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America', 'World']
         for continent in continent_list:
@@ -330,7 +333,7 @@ def process_data_description(dataframe):
             view_details_list = ["", 'style="display: none;"']
 
             for view_details in view_details_list:
-                html_content = get_scorecard(df_continent, view_details)
+                html_content = get_scorecard(df_continent, view_details, cutoff_date)
 
                 if view_details == "":
                     view_details_name = 'none'
@@ -1004,7 +1007,7 @@ def last_year_ytd_sum(group):
     return last_year_data[last_year_data['date'] <= lytd_end_date]['value'].sum()
 
 
-def get_scorecard(df, view_details):
+def get_scorecard(df, view_details, cutoff_date):
     if df.empty:
         return """
         <div class="ui warning message">
@@ -1014,7 +1017,7 @@ def get_scorecard(df, view_details):
 
     country_rows = df[~df['country'].isin(NON_COUNTRY_AGGREGATES)]
     n_countries = len(country_rows)
-    latest_date = min(df['max_date'].dt.strftime('%Y-%b'))
+    latest_date = cutoff_date.strftime('%Y-%b')
     selected_energy = safe_html(df['type'].tolist()[0])
 
     table_scorecard = f"""
@@ -1057,7 +1060,7 @@ def get_scorecard(df, view_details):
                 {latest_date}
             </div>
             <div class="label">
-                latest date for all countries
+                latest date for most countries
             </div>
         </div>
         <div class="grey statistic">

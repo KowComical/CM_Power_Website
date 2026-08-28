@@ -4,6 +4,15 @@
 
 日期写在 `## YYYY-MM-DD` 标题中；同一天内有多条更新时，必须在日期标题下用 `### HH:MM - 更新标题` 分隔。条目正文不再重复日期和时间。
 
+## 2026-08-29
+
+### 06:35 - 以中国日期标示多数国家更新并隐藏台湾展示
+
+- 更新内容：将 Overview 的日期说明由“latest date for all countries”改为“latest date for most countries”，日期统一取所选能源下 China 的最新月份；生成器按相同口径写入后续 Overview 产物，前端同时从趋势数据校准当前已发布页面。新增统一的网站展示隐藏名单，仅从 Overview 卡片、Daily Trends、Generation Mix、IEA Compare 散点和 Global Map 几何中隐藏 Taiwan；台湾原始数据、下载文件、生成配置、国家计数、地图合计和 IEA 拟合统计均不因展示隐藏而过滤，未改变数据与汇总口径。同步更新 JavaScript 缓存标识。
+- 数据更新：在用户更新 Power 数据后，用新生成器完整重建全部发布产物。下载数据现有 2,150,956 个唯一 country-date-type 键、71 个实际国家和 `EU27&UK` 聚合，最新日期为 2026-08-29；完整保留自动更新提交 `b91d220` 的 2,115,722 个键并新增 35,234 个键，新增数据国家为 Nigeria 和 Philippines。China Total 截止日期保持 2026-07-31；Taiwan 保留 30,118 行、最新到 2026-06-30。IEA Compare 为 45,672 个唯一比较键，完整保留上一版键，比较最新月份维持 2026-03。
+- 验证：`python -m py_compile upload.py`、`node --check static_site/app.js` 和 `git diff --check` 通过；下载数据无重复键、无 `Generation` 行，154 个 Overview HTML、11 个趋势 JSON 和 3 个 Generation Mix JSON 均通过数量与解析检查。无头浏览器确认 Overview 显示 `2026-Jul` 与新标签，69 个 key countries 的统计仍包含 Taiwan，但台湾卡片不可见；Global Map 的最完整覆盖口径为 71 国且包含 Taiwan 数据，地图几何不展示 Taiwan。其余面板的统一隐藏分支和数据保留分支通过配置检查。
+- 影响路径：`upload.py`、`static_site/app.js`、`index.html`、`data/data_for_download.csv.gz`、`data/data_for_scatter_plot.csv`、`data/iea_compare_metadata.json`、`tools/data_description/`、`tools/line_chart/`、`tools/stacked_area_chart/`、`UPDATE_LOG.md`
+
 ## 2026-08-15
 
 ### 01:36 - 将网站日更与部署链路迁移到 gpu104
