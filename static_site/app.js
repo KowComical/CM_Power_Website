@@ -20,6 +20,7 @@ const PAGE_TITLES = {
 const MAP_DESKTOP_CHART_HEIGHT = 600;
 const MAP_MOBILE_CHART_HEIGHT = 250;
 const NON_MAP_COUNTRIES = new Set(["EU27&UK"]);
+const HIDDEN_COUNTRIES = new Set(["Taiwan"]);
 const MAP_SCALE_COLORS = [
   "#3158a5",
   "#2f7fc1",
@@ -261,6 +262,26 @@ async function renderOverview(renderId) {
       return;
     }
     els.scorecard.innerHTML = html;
+    els.scorecard.querySelectorAll(".card").forEach((card) => {
+      const country = card.querySelector(".header")?.textContent.trim();
+      if (HIDDEN_COUNTRIES.has(country)) {
+        card.remove();
+      }
+    });
+    const cutoffStatistic = [...els.scorecard.querySelectorAll(".statistic")]
+      .find((statistic) => statistic.querySelector(".label")?.textContent
+        .trim().toLowerCase().startsWith("latest date for"));
+    if (cutoffStatistic) {
+      cutoffStatistic.querySelector(".label").textContent = "latest date for most countries";
+      const config = await fetchJson(`tools/line_chart/${state.energy}.json`);
+      if (!isCurrentRender(renderId)) {
+        return;
+      }
+      const chinaCutoff = latestCountryMonth(config, "China");
+      if (chinaCutoff) {
+        cutoffStatistic.querySelector(".value").textContent = chinaCutoff;
+      }
+    }
     setStatus(`${titleCase(state.energy)} / ${state.continent}`);
   } catch (error) {
     if (!isCurrentRender(renderId)) {
@@ -269,6 +290,42 @@ async function renderOverview(renderId) {
     showError(els.scorecard, error);
     setStatus("Overview failed");
   }
+}
+
+function latestCountryMonth(config, countryName) {
+  const countryIndex = (config.countries || [])
+    .findIndex((country) => country.name === countryName);
+  if (countryIndex < 0) {
+    return null;
+  }
+
+  let latestDate = null;
+  (config.option?.series || []).forEach((series) => {
+    if (series.xAxisIndex !== countryIndex) {
+      return;
+    }
+    const year = series.name;
+    (series.data || []).forEach((value, dayIndex) => {
+      if (!Number.isFinite(value)) {
+        return;
+      }
+      const dayLabel = config.option?.xAxis?.[countryIndex]?.data?.[dayIndex];
+      const date = dateFromYearDayLabel(year, dayLabel);
+      if (date && (!latestDate || date > latestDate)) {
+        latestDate = date;
+      }
+    });
+  });
+
+  if (!latestDate) {
+    return null;
+  }
+  const monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  const [year, month] = latestDate.split("-");
+  return `${year}-${monthNames[Number(month) - 1]}`;
 }
 
 function chartHeight(config) {
@@ -1360,13 +1417,20 @@ function reflowDailyTrendLayout(option, layout) {
 
 function filterDailyTrendOption(option, config) {
   const countries = config.countries || [];
-  if (state.continent === "World" || !countries.length) {
+  if (!countries.length) {
     return 0;
   }
 
+  const reportedCountryCount = countries.filter((country) => (
+    state.continent === "World" || country.continent === state.continent
+  )).length;
+
   const selectedIndexes = countries
     .map((country, index) => ({ ...country, index }))
-    .filter((country) => country.continent === state.continent)
+    .filter((country) => (
+      !HIDDEN_COUNTRIES.has(country.name) &&
+      (state.continent === "World" || country.continent === state.continent)
+    ))
     .map((country) => country.index);
   const selectedSet = new Set(selectedIndexes);
   const indexMap = new Map(selectedIndexes.map((oldIndex, newIndex) => [oldIndex, newIndex]));
@@ -1392,7 +1456,40 @@ function filterDailyTrendOption(option, config) {
       };
     });
 
-  return selectedIndexes.length;
+  return reportedCountryCount;
+}
+
+function filterStackedChartOption(option) {
+  const selectedIndexes = (option.graphic || [])
+    .map((graphic, index) => ({
+      index,
+      country: String(graphic.style?.text || "").split(" - ")[0]
+    }))
+    .filter(({ country }) => !HIDDEN_COUNTRIES.has(country))
+    .map(({ index }) => index);
+  const selectedSet = new Set(selectedIndexes);
+  const indexMap = new Map(selectedIndexes.map((oldIndex, newIndex) => [oldIndex, newIndex]));
+
+  option.grid = selectedIndexes.map((index) => option.grid[index]);
+  option.xAxis = selectedIndexes.map((index, newIndex) => ({
+    ...option.xAxis[index],
+    gridIndex: newIndex
+  }));
+  option.yAxis = selectedIndexes.map((index, newIndex) => ({
+    ...option.yAxis[index],
+    gridIndex: newIndex
+  }));
+  option.graphic = selectedIndexes.map((index) => option.graphic[index]);
+  option.series = option.series
+    .filter((series) => selectedSet.has(series.xAxisIndex))
+    .map((series) => {
+      const nextIndex = indexMap.get(series.xAxisIndex);
+      return {
+        ...series,
+        xAxisIndex: nextIndex,
+        yAxisIndex: nextIndex
+      };
+    });
 }
 
 async function renderLineChart(renderId) {
@@ -1441,7 +1538,9 @@ async function renderStackedChart(renderId) {
     if (!isCurrentRender(renderId)) {
       return;
     }
-    setChart(els.stackedChart, "stacked", cloneOption(config.option), chartHeight(config), renderKey);
+    const option = cloneOption(config.option);
+    filterStackedChartOption(option);
+    setChart(els.stackedChart, "stacked", option, chartHeight(config), renderKey);
     setStatus(`${state.stacked} share`);
   } catch (error) {
     if (!isCurrentRender(renderId)) {
@@ -1505,7 +1604,10 @@ async function ensureWorldMap() {
   const countries = topojson.feature(
     topology,
     topology.objects.features
-  ).features.filter((feature) => feature.properties?.id !== "ATA");
+  ).features.filter((feature) => (
+    feature.properties?.id !== "ATA" &&
+    !HIDDEN_COUNTRIES.has(mapCountryName(feature))
+  ));
 
   worldMapGeoJson = {
     type: "FeatureCollection",
@@ -2179,7 +2281,8 @@ function scatterTooltip(params) {
   const value = params.value || params.data || [];
   if (
     scatterSelectedContinents?.[params.seriesName] === false ||
-    !Array.isArray(value) || value.length < 6
+    !Array.isArray(value) || value.length < 6 ||
+    HIDDEN_COUNTRIES.has(value[2])
   ) {
     return "";
   }
@@ -2757,7 +2860,7 @@ async function renderScatterChart(renderId) {
           dimensions: ["CM_Power", "IEA", "country", "year", "month", "type"],
           encode: { x: 0, y: 1 },
           symbol: "circle",
-          symbolSize: 8,
+          symbolSize: (value) => HIDDEN_COUNTRIES.has(value[2]) ? 0 : 8,
           large: false,
           progressive: 3000,
           progressiveThreshold: 5000,
