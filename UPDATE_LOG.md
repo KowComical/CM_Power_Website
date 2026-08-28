@@ -6,6 +6,12 @@
 
 ## 2026-08-29
 
+### 07:43 - 补充尼日利亚与菲律宾网站国家元数据
+
+- 更新内容：将 Nigeria 和 Philippines 补入网站国家说明表。Nigeria 登记为 Nigeria National Grid (NIGGRID) 官方来源，网站发布数据为 Daily、每日更新、具有电厂级来源数据，实际可用起点为 2018-01-01；Philippines 登记为 Independent Electricity Market Operator of the Philippines (IEMOP) 官方来源，网站发布数据为 Hourly、小时级更新，原始采集包含 Luzon、Visayas、Mindanao 区域数据，实际可用起点为 2026-04-22。重新生成 Overview 和趋势等网站产物，使两国进入对应洲别卡片、洲别筛选与 key-country 计数。
+- 验证：国家说明表共 73 个唯一记录（72 个实际国家与 `EU27&UK` 聚合），字段、日期、URL 和洲别检查通过；下载数据保持 2,150,956 个唯一键、71 个实际有数据国家。154 个 Overview HTML 与 11 个趋势 JSON 均通过解析，World Overview 的 key-country 数由 69 增至 71，两国卡片的洲别、起始日期、分辨率、更新频率和区域数据状态与元数据一致；趋势配置正确将 Nigeria 归入 Africa、Philippines 归入 Asia。无头浏览器确认两国卡片可见、台湾卡片继续隐藏，71 国统计仍包含台湾，China cutoff 仍为 2026-Jul。
+- 影响路径：`data/data_description.csv`、`tools/data_description/`、`tools/line_chart/`、`UPDATE_LOG.md`
+
 ### 06:35 - 以中国日期标示多数国家更新并隐藏台湾展示
 
 - 更新内容：将 Overview 的日期说明由“latest date for all countries”改为“latest date for most countries”，日期统一取所选能源下 China 的最新月份；生成器按相同口径写入后续 Overview 产物，前端同时从趋势数据校准当前已发布页面。新增统一的网站展示隐藏名单，仅从 Overview 卡片、Daily Trends、Generation Mix、IEA Compare 散点和 Global Map 几何中隐藏 Taiwan；台湾原始数据、下载文件、生成配置、国家计数、地图合计和 IEA 拟合统计均不因展示隐藏而过滤，未改变数据与汇总口径。同步更新 JavaScript 缓存标识。

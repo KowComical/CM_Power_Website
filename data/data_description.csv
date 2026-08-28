@@ -6,6 +6,7 @@ Turkey,YTBS,https://ytbsbilgi.teias.gov.tr/ytbsbilgi/frm_istatistikler.jsf,Asia,
 South Africa,Eskom,https://www.eskom.co.za/dataportal/supply-side/station-build-up-for-the-last-7-days/,Africa,Hourly,Hourly,Not Available,2018-04-01
 Kenya,KNBS / Kenya Power,https://www.knbs.or.ke/leading-economic-indicators/,Africa,Daily,Monthly,Not Available,2016-01-01
 Mauritius,Statistics Mauritius / Central Electricity Board,https://statsmauritius.govmu.org/Pages/Statistics/By_Subject/Energy_Water/Energy_Water.aspx,Africa,Daily,Monthly,Not Available,2016-01-01
+Nigeria,Nigeria National Grid (NIGGRID),https://www.niggrid.org/GenerationProfile,Africa,Daily,Daily,Available,2018-01-01
 EU27&UK,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
 Germany,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
 France,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGenerationPerProductionType/show,Europe,Hourly,Hourly,Not Available,2015-01-01
@@ -69,4 +70,5 @@ Thailand,Sothailand,https://www.sothailand.com/sysgen/ws/sysgen,Asia,Hourly,Dail
 Singapore,Energy Market Company (NEMS),https://www.nems.emcsg.com/,Asia,Hourly,Daily,Not Available,2018-01-01
 Mongolia,Ministry of Energy of Mongolia,https://energy.gov.mn/contents?type=4,Asia,Daily,Monthly,Not Available,2016-01-01
 Malaysia,GSO / DOSM / Ember,https://www.gso.org.my/SystemData/CurrentGen.aspx,Asia,Hourly,Daily,Not Available,2018-01-01
+Philippines,Independent Electricity Market Operator of the Philippines (IEMOP),https://www.iemop.ph/,Asia,Hourly,Hourly,Available,2026-04-22
 Taiwan,MOEA Energy Administration,https://data.gov.tw/en/datasets/112650,Asia,Daily,Monthly,Not Available,2016-01-01
