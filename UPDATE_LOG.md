@@ -6,6 +6,12 @@
 
 ## 2026-08-29
 
+### 08:27 - 删除独立数据库读取并恢复单一权威来源
+
+- 更新内容：删除 `upload.py` 的数据库目录自动发现、外部 `Global_PM_corT.csv`/IEA 读取、独立 `process_data()` 和两类网站缓存回填逻辑；`upload.py` 现在只保留由当前 Power Database 发布器调用的渲染与 GitHub Pages 部署函数。旧 `auto.sh` 与直接 `python upload.py` 均改为明确返回非零状态，并提示从 `/data3/kow/CM_Power_Database` 执行正式 `publish`。同步更新 README 与维护规则，新增三项唯一数据源回归测试。
+- 数据清理：仅使用当前 `/data3/kow/CM_Power_Database` 的内存网站制品完整重建下载数据、IEA Compare、元数据和全部图表/说明。下载数据现为 1,897,170 行、62 个实体、最新至 2026-08-28，唯一键重复 0；国家集合与当前权威制品完全一致。移除 Nigeria、Philippines 以及 Bosnia & Herz、Georgia、Kosovo、Moldova、Montenegro、North Macedonia、Serbia、Switzerland 等旧混源缓存数据，并从国家说明表同时清除这些国家及无发布数据的 Ukraine；说明表与下载数据国家集合现均为 62 个实体。
+- 验证：网站三项入口/路径测试、Power Database 发布交付相关 16 项测试、AST、Shell 语法和 Git diff 检查通过；下载数据与当前 `Global_PM_corT.csv` 转换结果键和国家集合完全相等，数值在 `2e-11` CSV 浮点容差内完全一致。影响路径：`{upload.py,auto.sh,README.md,AGENTS.md,tests/test_authoritative_source.py,data,tools,UPDATE_LOG.md}`。
+
 ### 07:43 - 补充尼日利亚与菲律宾网站国家元数据
 
 - 更新内容：将 Nigeria 和 Philippines 补入网站国家说明表。Nigeria 登记为 Nigeria National Grid (NIGGRID) 官方来源，网站发布数据为 Daily、每日更新、具有电厂级来源数据，实际可用起点为 2018-01-01；Philippines 登记为 Independent Electricity Market Operator of the Philippines (IEMOP) 官方来源，网站发布数据为 Hourly、小时级更新，原始采集包含 Luzon、Visayas、Mindanao 区域数据，实际可用起点为 2026-04-22。重新生成 Overview 和趋势等网站产物，使两国进入对应洲别卡片、洲别筛选与 key-country 计数。

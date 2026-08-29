@@ -17,8 +17,8 @@ https://kowcomical.github.io/CM_Power_Website/
 
 - `README.md`：项目和部署的简短说明。
 - `index.html`：静态页面壳，包含 Overview、Daily Trends、IEA Compare、Global Map 等面板和侧边栏控件。
-- `upload.py`：数据生成、自动提交、推送和部署流程。
-- `auto.sh`：每日运行入口，设置 cache/log 路径，并用 `flock` 避免重复任务。
+- `upload.py`：只提供网站渲染、Git 提交、推送和部署函数；不得自行读取数据库。
+- `auto.sh`：旧独立更新入口的阻断脚本；执行时必须明确失败并提示从权威 Power Database 发布。
 - `requirements.txt`：固定 `pandas==2.1.1`，并以 `numpy<2` 避免旧版 pandas 与 NumPy 2.x 的二进制 ABI 不兼容。
 - `data/data_description.csv`：overview 卡片使用的国家元数据。
 - `data/data_for_scatter_plot.csv`：IEA Compare 面板消费的生成数据。
@@ -32,12 +32,9 @@ https://kowcomical.github.io/CM_Power_Website/
 
 ## 数据与生成模型
 
-`upload.py` 默认读取本机 `/data3/dengz/CM_Power_Database`，也会兼容旧机的 `/data/xuanrenSong/CM_Power_Database`。可通过 `CM_POWER_DATABASE_ROOT` 指定其他数据库根目录。它依赖仓库外的两个数据文件：
-
-- `<CM_POWER_DATABASE_ROOT>/data/global/Global_PM_corT.csv`
-- `<CM_POWER_DATABASE_ROOT>/data/other_database/iea/iea_cleaned.csv`
-
-不要假设 `upload.py` 能在干净 clone 中直接运行。
+网站数据的唯一权威来源是 `/data3/kow/CM_Power_Database` 的正式 `publish` 制品。Power Website
+不得搜索、猜测、配置或直接读取任何 Power Database 根目录，也不得提供独立数据生成入口。
+`upload.py` 只接收当前 Power Database 发布器传入的 DataFrame/制品并生成静态页面资产。
 
 主要能源类型：
 
@@ -53,11 +50,9 @@ Source Share 堆叠类别：
 - `Nuclear`：`nuclear`
 - `Renewables`：`solar`, `wind`, `other`, `hydro`
 
-生成脚本会规范化部分国家名称，例如 `EU27 & UK` 转为 `EU27&UK`，`UK` 转为 `United Kingdom`，`US` 转为 `United States`；同时会删除误入的 `country == "Generation"` 行。
-
-为避免上游迁移、短时缺数或国家任务故障导致公开站历史覆盖突然缩水，生成脚本会从上一版 `data/data_for_download.csv.gz` 保留当前上游缺失的 country-date-type 基础能源数据；只保留仍登记在 `data/data_description.csv` 中的国家，当前上游同一键的数据始终优先，`total` / `fossil` / `renewables` 会在回填后重新计算。
-
-IEA Compare 采用相同的连续性规则：当前 CM Power/IEA 输入生成的 year-month-country-type 键优先，上一版 `data/data_for_scatter_plot.csv` 只补当前输入缺失的比较键；`iea_compare_metadata.json` 会保留已发布的较新 IEA 月份，避免本机 IEA 镜像较旧时面板倒退。
+国家名称规范化和全部数据质量检查在权威 Power Database 生成发布制品时完成。网站不得从上一版
+`data_for_download.csv.gz`、`data_for_scatter_plot.csv` 或元数据回填当前制品缺失的国家、日期、能源类型
+或月份；每次发布必须以本次收到的制品完整替换网站数据，保证线上国家集合和数值只来自当前项目。
 
 ## 本地开发与验证
 
@@ -93,20 +88,16 @@ python -m http.server 8000
 
 ## 生成与部署注意事项
 
-谨慎运行：
+唯一允许的数据发布入口：
 
 ```bash
-python upload.py
+cd /data3/kow/CM_Power_Database
+.envs/power_env/bin/python main.py publish
 ```
 
-`main()` 会依次调用：
-
-1. `process_data()`
-2. `git_push(global_path)`
-
-`auto.sh` 会在 Python 加载 `upload.py` 前取得全链路锁、拒绝已有 staged 内容并执行 fast-forward-only pull。直接运行 `python upload.py` 时应先手动同步 source checkout；`main()` 会再次拒绝已有 staged 内容。`git_push()` 会 stage 生成文件、commit、push 当前分支，并通过 `/tmp/cm_power_website_gh_pages_auto` 临时 worktree 部署到 `gh-pages`。
-
-如果只需要本地重新生成数据，不要直接调用 `main()`，除非确实准备提交、推送和部署。可以用小段 Python 只调用 `process_data()`，或临时添加安全的本地入口并在提交前移除。
+直接运行 `python upload.py` 或 `auto.sh` 必须返回非零状态，不能生成、提交或部署数据。
+Power Database 发布器会动态加载网站渲染函数，并由 `git_push()` 提交 source branch、推送并通过
+`/tmp/cm_power_website_gh_pages_auto` 临时 worktree 部署到 `gh-pages`。
 
 生成和部署产物在 `upload.py` 的 `GENERATED_OUTPUTS` 和 `REMOVED_OUTPUTS` 中维护。新增、删除或迁移生成资产时，必须同步更新这些列表。
 

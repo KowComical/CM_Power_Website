@@ -1,7 +1,6 @@
 import subprocess
 import pandas as pd
 import os
-import ast
 import math
 import json
 from datetime import datetime
@@ -12,34 +11,6 @@ from urllib.parse import urlparse
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-POWER_DATABASE_CANDIDATES = (
-    Path('/data3/dengz/CM_Power_Database'),
-    Path('/data/xuanrenSong/CM_Power_Database'),
-)
-POWER_DATA_RELATIVE_PATH = Path('data/global/Global_PM_corT.csv')
-IEA_DATA_RELATIVE_PATH = Path('data/other_database/iea/iea_cleaned.csv')
-
-
-def resolve_power_database_root():
-    configured_root = os.environ.get('CM_POWER_DATABASE_ROOT')
-    if configured_root:
-        return Path(configured_root).expanduser().resolve()
-
-    return next(
-        (
-            candidate
-            for candidate in POWER_DATABASE_CANDIDATES
-            if (candidate / POWER_DATA_RELATIVE_PATH).is_file()
-            and (candidate / IEA_DATA_RELATIVE_PATH).is_file()
-        ),
-        POWER_DATABASE_CANDIDATES[0],
-    )
-
-
-POWER_DATABASE_ROOT = resolve_power_database_root()
-POWER_DATA_FILE = POWER_DATABASE_ROOT / POWER_DATA_RELATIVE_PATH
-IEA_DATA_FILE = POWER_DATABASE_ROOT / IEA_DATA_RELATIVE_PATH
-
 global_path = str(PROJECT_ROOT)
 file_path = os.path.join(global_path, 'data')
 tools_path = os.path.join(global_path, 'tools')
@@ -55,7 +26,6 @@ categories = {
 }
 
 sub_category = ['total', 'coal', 'gas', 'oil', 'nuclear', 'hydro', 'wind', 'solar', 'other', 'fossil', 'renewables']
-BASE_ENERGY_TYPES = ['coal', 'gas', 'hydro', 'nuclear', 'oil', 'other', 'solar', 'wind']
 NON_COUNTRY_AGGREGATES = {'EU27&UK'}
 
 GENERATED_OUTPUTS = [
@@ -102,187 +72,10 @@ CONTINENT_COLORS = {
 
 
 def main():
-    # auto.sh 会在启动 Python 前拉取 source；这里仍保护手动运行。
-    ensure_clean_git_index(global_path)
-    process_data()
-    git_push(global_path)
-
-
-def prepare_runtime_paths():
-    required_files = {
-        'CM Power global data': POWER_DATA_FILE,
-        'IEA comparison data': IEA_DATA_FILE,
-        'website country metadata': Path(file_path) / 'data_description.csv',
-        'EU country list': Path(tools_path) / 'eu_countries.txt',
-    }
-    missing_files = [
-        f'{label}: {path}'
-        for label, path in required_files.items()
-        if not path.is_file()
-    ]
-    if missing_files:
-        details = '\n'.join(f'- {item}' for item in missing_files)
-        raise FileNotFoundError(
-            'Required website inputs are missing:\n'
-            f'{details}\n'
-            'Set CM_POWER_DATABASE_ROOT to the local CM_Power_Database directory if needed.'
-        )
-
-    for output_directory in (
-        Path(file_path),
-        Path(data_description_path),
-        Path(line_path),
-        Path(stacked_area_path),
-    ):
-        output_directory.mkdir(parents=True, exist_ok=True)
-
-
-def retain_cached_country_coverage(dataframe):
-    cache_path = Path(file_path) / 'data_for_download.csv.gz'
-    if not cache_path.is_file():
-        return dataframe
-
-    metadata_countries = set(
-        pd.read_csv(
-            os.path.join(file_path, 'data_description.csv'),
-            usecols=['country'],
-        )['country']
+    raise SystemExit(
+        'Direct website data generation is disabled. '
+        'Run the publish command from /data3/kow/CM_Power_Database instead.'
     )
-    current_base = dataframe[dataframe['type'].isin(BASE_ENERGY_TYPES)].copy()
-    key_columns = ['country', 'date', 'type']
-    current_coverage = pd.MultiIndex.from_frame(current_base[key_columns])
-    retained_chunks = []
-
-    for chunk in pd.read_csv(
-        cache_path,
-        encoding='utf_8_sig',
-        parse_dates=['date'],
-        chunksize=200_000,
-    ):
-        cached_base = chunk[chunk['type'].isin(BASE_ENERGY_TYPES)]
-        cached_coverage = pd.MultiIndex.from_frame(cached_base[key_columns])
-        keep_rows = (
-            cached_base['country'].isin(metadata_countries)
-            & ~cached_coverage.isin(current_coverage)
-        )
-        if keep_rows.any():
-            retained_chunks.append(cached_base.loc[keep_rows, dataframe.columns])
-
-    if not retained_chunks:
-        return dataframe
-
-    retained = pd.concat(retained_chunks, ignore_index=True)
-    combined_base = pd.concat([current_base, retained], ignore_index=True)
-    combined_base = combined_base.drop_duplicates(key_columns, keep='first')
-    retained_countries = ', '.join(sorted(retained['country'].unique()))
-    print(
-        f'Retained {len(retained):,} cached base-energy rows for country-date-type coverage '
-        f'missing from the current upstream input: {retained_countries}'
-    )
-
-    # Recalculate derived types after filling missing base-energy keys. Keeping cached
-    # total/fossil/renewables directly could preserve totals that disagree with newer
-    # upstream base values on the same date.
-    wide = combined_base.pivot(
-        index=['date', 'country', 'year'],
-        columns='type',
-        values='value',
-    ).reset_index()
-    for energy_type in BASE_ENERGY_TYPES:
-        if energy_type not in wide:
-            wide[energy_type] = float('nan')
-    wide['total'] = wide[BASE_ENERGY_TYPES].sum(axis=1)
-    wide = wide[wide['total'] != 0].reset_index(drop=True)
-    wide['fossil'] = wide[['coal', 'gas', 'oil']].sum(axis=1)
-    wide['renewables'] = wide[['hydro', 'other', 'solar', 'wind']].sum(axis=1)
-
-    return wide.set_index(['date', 'country', 'year'])[
-        sub_category
-    ].stack().reset_index().rename(
-        columns={'level_3': 'type', 0: 'value'}
-    ).sort_values(['country', 'date', 'type']).reset_index(drop=True)
-
-
-def retain_cached_comparison_coverage(dataframe):
-    cache_path = Path(file_path) / 'data_for_scatter_plot.csv'
-    if not cache_path.is_file():
-        return dataframe
-
-    cached = pd.read_csv(cache_path, encoding='utf_8_sig')
-    key_columns = ['year', 'month', 'country', 'type']
-    current_keys = pd.MultiIndex.from_frame(dataframe[key_columns])
-    cached_keys = pd.MultiIndex.from_frame(cached[key_columns])
-    retained = cached.loc[~cached_keys.isin(current_keys), dataframe.columns]
-    if retained.empty:
-        return dataframe
-
-    print(
-        f'Retained {len(retained):,} cached IEA comparison rows for keys '
-        'missing from the current upstream inputs.'
-    )
-    return pd.concat([dataframe, retained], ignore_index=True).sort_values(
-        key_columns
-    ).reset_index(drop=True)
-
-
-def process_data():
-    prepare_runtime_paths()
-    df = pd.read_csv(POWER_DATA_FILE)
-
-    df['date'] = pd.to_datetime(df['date'], format='%d/%m/%Y')
-    df = pd.pivot_table(df, index=['country', 'date'], values='value', columns='sector').reset_index()
-    df.columns = ['country', 'date', 'coal', 'gas', 'hydro', 'nuclear', 'oil', 'other', 'solar', 'wind']
-    df['total'] = df.sum(axis=1, numeric_only=True)
-    df = df[df['total'] != 0].reset_index(drop=True)
-    df['fossil'] = df[['coal', 'gas', 'oil']].sum(axis=1)
-    df['renewables'] = df[['hydro', 'other', 'solar', 'wind']].sum(axis=1)
-
-    df['country'] = df['country'].replace({
-        'EU27 & UK': 'EU27&UK',
-        'Bosnia And Herz.': 'Bosnia & Herz',
-        'UK': 'United Kingdom',
-        'US': 'United States',
-    })
-    # 上游原始数据里偶尔会把表头/汇总块读成 country=Generation，这不是国家，前端不应展示。
-    df = df[df['country'] != 'Generation'].reset_index(drop=True)
-
-    df['year'] = df['date'].dt.year
-    df = df.set_index(['date', 'country', 'year']).stack().reset_index().rename(columns={'level_3': 'type', 0: 'value'})
-    df = retain_cached_country_coverage(df)
-
-    # 生成7日平滑数据
-    df_7mean = df.copy()
-    df_7mean['value'] = df_7mean.groupby(['country', 'type'])['value'].transform(
-        lambda x: x.rolling(window=7, min_periods=1).mean())
-
-    # 四舍五入到2位小数
-    df_7mean['value'] = round(df_7mean['value'], 2)
-
-    # 输出阶段
-    # 先输出一版给首页data description 用的
-    df.to_csv(
-        os.path.join(file_path, 'data_for_download.csv.gz'),
-        index=False,
-        encoding='utf_8_sig',
-        compression='gzip',
-    )
-    process_data_description(df)
-
-    # 再输出一版给line图用的
-    process_line_data(df_7mean)
-
-    # 再输出一版给stacked area用的
-    process_stacked_area_data(df_7mean)
-
-    # 再计算一版散点图用的
-    df_daily = df.copy()
-    df = load_power_data(df)
-    df_iea = load_iea_data()
-    df_filtered = prepare_comparison_data(df, df_iea)
-    df_filtered = retain_cached_comparison_coverage(df_filtered)
-
-    df_filtered.to_csv(os.path.join(file_path, 'data_for_scatter_plot.csv'), index=False, encoding='utf_8_sig')
-    write_iea_compare_metadata(df_daily, df_iea, df_filtered)
 
 
 def process_data_description(dataframe):
@@ -751,70 +544,6 @@ def process_stacked_area_data(dataframe):
                 "ROWS_PER_GRID": ROWS_PER_GRID,
                 "PLOT_HEIGHT": PLOT_HEIGHT
             }, config_file)
-
-
-def load_power_data(df):
-    df['date'] = pd.to_datetime(df['date'])
-    df['month'] = df['date'].dt.month
-    return df.drop(columns=['date']).groupby(['year', 'month', 'country', 'type']).sum().reset_index()
-
-
-def load_iea_data():
-    df_iea = pd.read_csv(IEA_DATA_FILE)
-    country_replacements = {
-        'Republic of Turkiye': 'Turkey',
-        'Slovak Republic': 'Slovakia',
-        "People's Republic of China": 'China'
-    }
-    df_iea['country'] = df_iea['country'].replace(country_replacements)
-
-    with open(os.path.join(tools_path, 'eu_countries.txt'), 'r') as file:
-        eu_countries = ast.literal_eval(file.read())
-
-    df_iea_eu = df_iea[df_iea['country'].isin(eu_countries)].reset_index(drop=True)
-    df_iea_eu['country'] = 'EU27&UK'
-    df_iea_eu = df_iea_eu.groupby(['country', 'year', 'month']).sum().reset_index()
-
-    df_iea = pd.concat([df_iea, df_iea_eu]).reset_index(drop=True)
-
-    df_iea['total'] = df_iea[['coal', 'gas', 'oil', 'nuclear', 'hydro', 'solar', 'wind', 'other']].sum(axis=1)
-    df_iea['fossil'] = df_iea[['coal', 'gas', 'oil']].sum(axis=1)
-    df_iea['renewables'] = df_iea[['hydro', 'solar', 'wind', 'other']].sum(axis=1)
-
-    return df_iea.melt(id_vars=['country', 'year', 'month'], var_name='type', value_name='iea')
-
-
-def prepare_comparison_data(df, df_iea):
-    df_compare = pd.merge(df, df_iea)
-    df_compare['value'] = round(df_compare['value'] / 1000, 2)
-    df_compare['iea'] = round(df_compare['iea'] / 1000, 2)
-    return df_compare
-
-
-def latest_month_label(dataframe):
-    if dataframe.empty:
-        return ""
-    latest = dataframe[['year', 'month']].drop_duplicates().sort_values(['year', 'month']).iloc[-1]
-    return f"{int(latest['year']):04d}-{int(latest['month']):02d}"
-
-
-def write_iea_compare_metadata(df_power_daily, df_iea, df_compare):
-    metadata_path = os.path.join(file_path, 'iea_compare_metadata.json')
-    cached_iea_latest_month = ''
-    if os.path.isfile(metadata_path):
-        with open(metadata_path, 'r', encoding='utf-8') as file:
-            cached_iea_latest_month = json.load(file).get('iea_latest_month', '')
-
-    current_iea_latest_month = latest_month_label(df_iea)
-    metadata = {
-        'cm_power_latest_date': pd.to_datetime(df_power_daily['date']).max().strftime('%Y-%m-%d'),
-        'iea_latest_month': max(current_iea_latest_month, cached_iea_latest_month),
-        'comparison_latest_month': latest_month_label(df_compare),
-        'unit': 'TWh'
-    }
-
-    with open(metadata_path, 'w', encoding='utf-8') as file:
-        json.dump(metadata, file, ensure_ascii=False, indent=2)
 
 
 def run_git(repo_path, args):

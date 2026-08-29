@@ -6,10 +6,14 @@ Default site:
 
 https://kowcomical.github.io/CM_Power_Website/
 
-The daily data workflow regenerates the static files in this repository and deploys them to the `gh-pages` branch for GitHub Pages.
+Website data is generated only by the authoritative CM Power Database and then deployed to the `gh-pages` branch for GitHub Pages.
 
 ## Runtime
 
-`auto.sh` discovers the repository from its own location, selects an available Python interpreter, writes ignored runtime files under the project, and holds one `flock` lock while it fast-forward syncs source, generates data, commits, and deploys.
+Direct data generation from this repository is disabled. Run the publication command from `/data3/kow/CM_Power_Database`:
 
-On gpu104, the generator reads the upstream database from `/data3/dengz/CM_Power_Database`. Set `CM_POWER_DATABASE_ROOT` to use a different database checkout and `CM_POWER_WEBSITE_PYTHON` to select a specific interpreter.
+```bash
+.envs/power_env/bin/python main.py publish
+```
+
+That command builds the website artifacts from the current CM Power Database, passes them to this repository, commits the generated files, and deploys GitHub Pages. `auto.sh` and direct `python upload.py` execution intentionally fail to prevent an alternate database source from being selected.
