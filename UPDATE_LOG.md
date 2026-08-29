@@ -6,6 +6,12 @@
 
 ## 2026-08-29
 
+### 09:35 - 恢复八个 ENTSO-E 国家并重新采用 Power Database 制品
+
+- 纠正范围：确认 08:27 清理时移除的 Bosnia & Herz、Georgia、Kosovo、Moldova、Montenegro、North Macedonia、Serbia、Switzerland 并非外部项目污染，而是原网站在外部数据介入前已经发布的 ENTSO-E 官方国家序列；Nigeria、Philippines 仍不恢复。八国官方来源说明重新加入国家说明表。
+- 数据恢复：上游 `/data3/kow/CM_Power_Database` 已从自身审计归档恢复八国 canonical ENTSO-E 历史，并按当前统一处理规则生成本次网站制品。网站下载数据现为 2,115,740 行、70 个实体，排除 `EU27&UK` 区域汇总后为 69 个国家，`country/date/type` 重复键为 0，整体最新日期为 2026-08-28；八国各有完整 11 类网站指标，多数更新至 2026-08-20，North Macedonia 官方序列更新至 2026-08-04。
+- 验证：八国在污染前网站版本中的 217,266 个共同键全部保留，本次另增加 1,304 个后续键；数值以当前 Power Database 的统一能源映射和缺口规则重新计算，不沿用网站旧缓存。全部折线和堆叠图已重建，网站入口/权威来源测试通过。影响路径：`{data/data_description.csv,data/data_for_download.csv.gz,data/data_for_scatter_plot.csv,data/iea_compare_metadata.json,tools,UPDATE_LOG.md}`。
+
 ### 08:27 - 删除独立数据库读取并恢复单一权威来源
 
 - 更新内容：删除 `upload.py` 的数据库目录自动发现、外部 `Global_PM_corT.csv`/IEA 读取、独立 `process_data()` 和两类网站缓存回填逻辑；`upload.py` 现在只保留由当前 Power Database 发布器调用的渲染与 GitHub Pages 部署函数。旧 `auto.sh` 与直接 `python upload.py` 均改为明确返回非零状态，并提示从 `/data3/kow/CM_Power_Database` 执行正式 `publish`。同步更新 README 与维护规则，新增三项唯一数据源回归测试。
