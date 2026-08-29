@@ -6,6 +6,11 @@
 
 ## 2026-08-29
 
+### 14:33 - 补回 Nigeria 网站国家元数据
+
+- 更新内容：确认权威 Power Database 发布制品和网站下载/趋势数据已包含 Nigeria，但 `data/data_description.csv` 在此前清理混源国家时同步删除 Nigeria、正式接入后未补回，导致 Overview 通过内连接生成卡片时丢失 Nigeria，World 仍显示 69 个 key countries。按已审计的 NigGrid 正式来源补回 Nigeria：来源为 Nigeria National Grid (NIGGRID)，官方链接为 `https://www.niggrid.org/GenerationProfile`，洲别 Africa，网站日度分辨率、每日更新、具有电厂级区域数据，起点 2018-01-01。重新通过 Power Database 正式 `publish` 生成并部署网站后，口径应为 70 个真实国家加 `EU27&UK` 合成区域，共 71 个数据实体。
+- 影响路径：`data/data_description.csv`、`tools/data_description/`、`tools/line_chart/`、`tools/stacked_area_chart/`、`UPDATE_LOG.md`。
+
 ### 09:35 - 恢复八个 ENTSO-E 国家并重新采用 Power Database 制品
 
 - 纠正范围：确认 08:27 清理时移除的 Bosnia & Herz、Georgia、Kosovo、Moldova、Montenegro、North Macedonia、Serbia、Switzerland 并非外部项目污染，而是原网站在外部数据介入前已经发布的 ENTSO-E 官方国家序列；Nigeria、Philippines 仍不恢复。八国官方来源说明重新加入国家说明表。
