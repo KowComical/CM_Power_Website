@@ -282,7 +282,7 @@ async function renderOverview(renderId) {
         cutoffStatistic.querySelector(".value").textContent = chinaCutoff;
       }
     }
-    setStatus(`${titleCase(state.energy)} / ${state.continent}`);
+    setStatus("");
   } catch (error) {
     if (!isCurrentRender(renderId)) {
       return;
