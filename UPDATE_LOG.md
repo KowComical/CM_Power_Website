@@ -6,6 +6,12 @@
 
 ## 2026-09-26
 
+### 01:27 - 删除首页右上角能源与区域文字
+
+- 更新内容：Overview 加载成功后清空右上角状态文字，删除默认 `Total / World` 及筛选后对应标签；保留加载/失败提示和其他面板状态。同步更新 JavaScript 缓存标识，发布本次前端资产。
+- 影响路径：`static_site/app.js`、`index.html`、`UPDATE_LOG.md`。
+- 验证：JavaScript 语法检查通过；核对 Overview 成功分支与缓存标识，待部署资产仅有首页和脚本两项差异；本次不重新生成数据库制品。
+
 ### 01:19 - 完成 GitHub 连接配置并核对新环境入口
 
 - 更新内容：当前仓库提交身份设为 `kowcomical <kowdataanalyze@gmail.com>`；复用本机已添加到 GitHub 的 `id_ed25519_github` 密钥，认证账号为 `KowComical`，仓库远程读取验证通过。核对数据库 `.venv/bin/python` 已存在，将发布提示和使用文档统一到实际环境路径。未连接 gpu104，未执行正式数据发布。
