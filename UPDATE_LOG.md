@@ -4,6 +4,27 @@
 
 日期写在 `## YYYY-MM-DD` 标题中；同一天内有多条更新时，必须在日期标题下用 `### HH:MM - 更新标题` 分隔。条目正文不再重复日期和时间。
 
+## 2026-09-26
+
+### 01:19 - 完成 GitHub 连接配置并核对新环境入口
+
+- 更新内容：当前仓库提交身份设为 `kowcomical <kowdataanalyze@gmail.com>`；复用本机已添加到 GitHub 的 `id_ed25519_github` 密钥，认证账号为 `KowComical`，仓库远程读取验证通过。核对数据库 `.venv/bin/python` 已存在，将发布提示和使用文档统一到实际环境路径。未连接 gpu104，未执行正式数据发布。
+- 影响路径：`.git/config`（本地配置）、`README.md`、`auto.sh`、`AGENTS.md`、`UPDATE_LOG.md`；GitHub 主机公钥校验记录位于本机 `/root/.ssh/known_hosts`。
+- 验证：依赖检查、三项回归测试、Shell 语法和差异检查通过；SSH 认证成功，GitHub source branch 可读取。
+
+### 01:01 - 更新服务器迁移后的项目路径
+
+- 更新内容：将发布入口提示及当前使用文档中的权威数据库路径改为 `/srv/kow/CM_Power_Database`，明确网站位于 `/srv/kow/CM_Power_Website`，继续使用脚本位置自动解析网站资源路径；保留历史日志原始路径。补充迁移后需重建 Python 环境的说明：本项目旧 `.venv/bin/python` 仍指向旧解释器，当前数据库目录下尚无文档指定的 `.envs/power_env/bin/python`。将直接运行入口的阻断检查移至依赖导入前，确保缺少 pandas 时仍显示正确发布路径。全程未连接 gpu104，未运行正式数据发布。
+- 影响路径：`upload.py`、`auto.sh`、`README.md`、`AGENTS.md`、`UPDATE_LOG.md`。
+- 验证：Python 编译、Shell 语法和三项入口/唯一来源回归测试通过；正式渲染与发布因运行环境尚未就绪未执行。
+- Git 同步：本机缺少 Git 提交身份且 GitHub SSH 主机校验失败，提交与推送未完成；本次改动已单独暂存，原有维护文档改动保留为未暂存。
+
+### 01:07 - 重建当前服务器的网站 Python 环境
+
+- 更新内容：将旧 `.venv` 保留到项目内 `.cache/venv-before-migration-20260926T010541Z`，使用本机 Python 3.12.3 重建 `.venv`，按 `requirements.txt` 安装 pandas 2.1.1、NumPy 1.26.4 及配套依赖；网站环境已不再依赖旧服务器解释器。Git 配置等待用户确认提交身份，未连接 gpu104，未运行数据发布。
+- 影响路径：`.venv/`、`.cache/venv-before-migration-20260926T010541Z/`（均被 Git 忽略）、`UPDATE_LOG.md`。
+- 验证：`pip check`、三项入口/唯一来源回归测试、Python 编译、渲染模块导入及日期轴/坐标轴辅助函数检查全部通过。
+
 ## 2026-08-29
 
 ### 14:33 - 补回 Nigeria 网站国家元数据

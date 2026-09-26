@@ -32,7 +32,7 @@ https://kowcomical.github.io/CM_Power_Website/
 
 ## 数据与生成模型
 
-网站数据的唯一权威来源是 `/data3/kow/CM_Power_Database` 的正式 `publish` 制品。Power Website
+网站数据的唯一权威来源是 `/srv/kow/CM_Power_Database` 的正式 `publish` 制品。Power Website
 不得搜索、猜测、配置或直接读取任何 Power Database 根目录，也不得提供独立数据生成入口。
 `upload.py` 只接收当前 Power Database 发布器传入的 DataFrame/制品并生成静态页面资产。
 
@@ -91,8 +91,8 @@ python -m http.server 8000
 唯一允许的数据发布入口：
 
 ```bash
-cd /data3/kow/CM_Power_Database
-.envs/power_env/bin/python main.py publish
+cd /srv/kow/CM_Power_Database
+.venv/bin/python main.py publish
 ```
 
 直接运行 `python upload.py` 或 `auto.sh` 必须返回非零状态，不能生成、提交或部署数据。

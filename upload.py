@@ -1,3 +1,15 @@
+def main():
+    raise SystemExit(
+        'Direct website data generation is disabled. '
+        'Run the publish command from /srv/kow/CM_Power_Database instead.'
+    )
+
+
+# Fail with the publication instructions even before dependencies are installed.
+if __name__ == "__main__":
+    main()
+
+
 import subprocess
 import pandas as pd
 import os
@@ -71,11 +83,6 @@ CONTINENT_COLORS = {
 }
 
 
-def main():
-    raise SystemExit(
-        'Direct website data generation is disabled. '
-        'Run the publish command from /data3/kow/CM_Power_Database instead.'
-    )
 
 
 def process_data_description(dataframe):
@@ -889,7 +896,3 @@ def color_percentage(value):
 
 def header_bg(continent):
     return CONTINENT_COLORS.get(continent, "#BAD2DE")  # A soft warm default color
-
-
-if __name__ == "__main__":
-    main()
