@@ -72,3 +72,4 @@ Switzerland,Entsoe,https://transparency.entsoe.eu/generation/r2/actualGeneration
 Nigeria,Nigeria National Grid (NIGGRID),https://www.niggrid.org/GenerationProfile,Africa,Daily,Daily,Available,2018-01-01
 Vietnam,EVN,https://www.evn.com.vn/vi-VN/news-l/Thong-tin-tom-tat-van-hanh-HTD-Quoc-gia-60-2015,Asia,Daily,Daily,Not Available,2023-05-28
 Pakistan,NEPRA / CPPA-G (KE excluded),https://nepra.org.pk/publications/State%20of%20Industry%20Reports.php,Asia,Daily; estimated from monthly after Jun 2025,Monthly; checked daily,Not Available,2017-07-01
+Ecuador,ARCONEL (national gross generation),https://reportes.arconel.gob.ec/,South America,Daily estimated from monthly,Monthly; checked daily,Not Available,2016-01-01
