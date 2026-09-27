@@ -595,7 +595,8 @@ def git_tracks_path(repo_path, relative_path):
     return result.returncode == 0
 
 
-def git_add_generated_outputs(repo_path):
+def git_add_generated_outputs(repo_path, publication_overrides=None):
+    publication_overrides = validated_publication_overrides(publication_overrides)
     paths_to_add = [
         relative_path
         for relative_path in GENERATED_OUTPUTS + REMOVED_OUTPUTS
@@ -604,6 +605,20 @@ def git_add_generated_outputs(repo_path):
 
     if paths_to_add:
         run_git(repo_path, ['add', '-A', *paths_to_add])
+    for relative_path, payload in validated_publication_overrides(publication_overrides).items():
+        blob = subprocess.run(
+            ['git', '-C', repo_path, 'hash-object', '-w', '--stdin'],
+            input=payload, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True,
+        ).stdout.decode().strip()
+        run_git(repo_path, ['update-index', '--add', '--cacheinfo', f'100644,{blob},{relative_path}'])
+
+
+def validated_publication_overrides(overrides):
+    overrides = overrides or {}
+    for path, payload in overrides.items():
+        if path not in GENERATED_OUTPUTS or Path(path).suffix != '.csv' or not isinstance(payload, bytes):
+            raise ValueError('Invalid publication file override')
+    return overrides
 
 
 def remove_path(path):
@@ -633,7 +648,8 @@ def copy_generated_output(repo_path, pages_path, relative_path):
         shutil.copy2(source, target)
 
 
-def deploy_to_github_pages(repo_path, commit_message):
+def deploy_to_github_pages(repo_path, commit_message, publication_overrides=None):
+    publication_overrides = validated_publication_overrides(publication_overrides)
     pages_path = PAGES_WORKTREE
 
     # 使用独立的临时 worktree 发布 gh-pages，避免把自动部署过程混进主工作区。
@@ -648,6 +664,11 @@ def deploy_to_github_pages(repo_path, commit_message):
     for relative_path in GENERATED_OUTPUTS:
         copy_generated_output(repo_path, pages_path, relative_path)
 
+    for relative_path, payload in validated_publication_overrides(publication_overrides).items():
+        target = pages_path / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(payload)
+
     run_git(str(pages_path), ['add', '-A'])
     if not git_has_staged_changes(str(pages_path)):
         print("No GitHub Pages changes to deploy.")
@@ -658,11 +679,11 @@ def deploy_to_github_pages(repo_path, commit_message):
     print(f"GitHub Pages deployed to {PAGES_BRANCH}.")
 
 
-def git_push(repo_path, commit_message=None):
+def git_push(repo_path, commit_message=None, publication_overrides=None):
     commit_message = commit_message or f"Update website data {datetime.now():%Y-%m-%d}"
 
     # 只提交网站需要的生成产物，避免日志、缓存、wandb 等脏文件进入仓库。
-    git_add_generated_outputs(repo_path)
+    git_add_generated_outputs(repo_path, publication_overrides)
 
     if git_has_staged_changes(repo_path):
         run_git(repo_path, ['commit', '-m', commit_message])
@@ -672,7 +693,7 @@ def git_push(repo_path, commit_message=None):
     else:
         print("No website data changes to commit.")
 
-    deploy_to_github_pages(repo_path, commit_message)
+    deploy_to_github_pages(repo_path, commit_message, publication_overrides)
 
 
 def map_to_category(type_):
