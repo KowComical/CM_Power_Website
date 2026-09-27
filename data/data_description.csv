@@ -73,3 +73,4 @@ Vietnam,EVN,https://www.evn.com.vn/vi-VN/news-l/Thong-tin-tom-tat-van-hanh-HTD-Q
 Pakistan,NEPRA / CPPA-G (KE excluded),https://nepra.org.pk/publications/State%20of%20Industry%20Reports.php,Asia,Daily; estimated from monthly after Jun 2025,Monthly; checked daily,Not Available,2017-07-01
 Ecuador,ARCONEL (national gross generation),https://reportes.arconel.gob.ec/,South America,Daily estimated from monthly,Monthly; checked daily,Not Available,2016-01-01
 Philippines,NGCP（电网监测范围；日值由月量温度拆分）,https://www.ngcp.ph/operations,Asia,Daily,Monthly,Available,2016-01-01
+Madagascar,INSTAT / JIRAMA（非全国全覆盖；火电暂归油电）,https://www.instat.mg/statistiques/annuaires-statistiques/item/tableau-de-bord-de-leconomie-tbe,Africa,Daily estimated from monthly,Quarterly; checked daily,JIRAMA system only; partial national coverage,2019-01-01
