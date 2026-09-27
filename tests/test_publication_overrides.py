@@ -36,6 +36,15 @@ class PublicationOverridesTests(unittest.TestCase):
             self.assertEqual((pages / 'data/data_description.csv').read_bytes(), public)
             self.assertEqual(local.read_bytes(), full)
 
+    def test_no_change_retry_pushes_existing_unpublished_commit(self):
+        with (patch.object(website, 'git_add_generated_outputs'),
+              patch.object(website, 'git_has_staged_changes', return_value=False),
+              patch.object(website, 'run_git', return_value='master') as git,
+              patch.object(website, 'deploy_to_github_pages') as deploy):
+            website.git_push('/unused', 'resume publication')
+        self.assertEqual(git.call_args_list[1].args, ('/unused', ['push', 'origin', 'master']))
+        deploy.assert_called_once()
+
     def test_override_cannot_target_unlisted_or_non_csv_paths(self):
         for name in ('../outside.csv', 'static_site', 'index.html'):
             with self.assertRaises(ValueError):

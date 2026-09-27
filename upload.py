@@ -687,12 +687,15 @@ def git_push(repo_path, commit_message=None, publication_overrides=None):
 
     if git_has_staged_changes(repo_path):
         run_git(repo_path, ['commit', '-m', commit_message])
-        current_branch = run_git(repo_path, ['rev-parse', '--abbrev-ref', 'HEAD'])
-        run_git(repo_path, ['push', 'origin', current_branch])
-        print("Website data changes committed and pushed successfully.")
+        print("Website data changes committed successfully.")
     else:
         print("No website data changes to commit.")
 
+    # A previous attempt may have committed successfully but failed to push.
+    # A no-change retry still has to synchronize that existing commit.
+    current_branch = run_git(repo_path, ['rev-parse', '--abbrev-ref', 'HEAD'])
+    run_git(repo_path, ['push', 'origin', current_branch])
+    print("Website source branch synchronized successfully.")
     deploy_to_github_pages(repo_path, commit_message, publication_overrides)
 
 
